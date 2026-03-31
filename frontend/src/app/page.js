@@ -1,14 +1,23 @@
 /**
  * @file src/app/page.js
  * @description
- * Page d'accueil temporaire du projet Kasa.
+ * Page d'accueil du projet Kasa.
  */
 
 import AppFooter from '@/components/layout/AppFooter/AppFooter';
 import AppHeader from '@/components/layout/AppHeader/AppHeader';
-import Button from '@/components/ui/Button/Button';
-import PageHeading from '@/components/ui/PageHeading/PageHeading';
-import TextBlock from '@/components/ui/TextBlock/TextBlock';
+import HomeHeroSection from '@/components/home/HomeHeroSection/HomeHeroSection';
+import HomeHowItWorksSection from '@/components/home/HomeHowItWorksSection/HomeHowItWorksSection';
+import PropertyGridSection from '@/components/home/PropertyGridSection/PropertyGridSection';
+
+import {
+	featuredPropertiesSectionOne,
+	featuredPropertiesSectionTwo,
+	homeHeroContent,
+	homeHowItWorksContent,
+} from '@/data/home';
+
+import styles from './page.module.css';
 
 export default function HomePage() {
 	return (
@@ -16,22 +25,24 @@ export default function HomePage() {
 			<AppHeader currentPath="/" />
 
 			<main className="page-main">
-				<section className="section">
-					<div className="container">
-						<div className="stack stack--md">
-							<PageHeading size="hero">Kasa</PageHeading>
+				<div className={styles.content}>
+					<HomeHeroSection
+						title={homeHeroContent.title}
+						subtitle={homeHeroContent.subtitle}
+						image={homeHeroContent.image}
+						imageAlt={homeHeroContent.imageAlt}
+					/>
 
-							<TextBlock size="lg" tone="muted">
-								Base UI commune en cours de mise en place.
-							</TextBlock>
+					<PropertyGridSection properties={featuredPropertiesSectionOne} />
 
-							<div className="cluster">
-								<Button variant="primary">Action principale</Button>
-								<Button variant="secondary">Action secondaire</Button>
-							</div>
-						</div>
-					</div>
-				</section>
+					<PropertyGridSection properties={featuredPropertiesSectionTwo} />
+
+					<HomeHowItWorksSection
+						title={homeHowItWorksContent.title}
+						subtitle={homeHowItWorksContent.subtitle}
+						items={homeHowItWorksContent.items}
+					/>
+				</div>
 			</main>
 
 			<AppFooter />
