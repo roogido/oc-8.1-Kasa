@@ -3,9 +3,9 @@
 	// EDITOR - BASIC BEHAVIOR
 	// ----------------------------
 	// Disable hover popup (tooltip)
-	"editor.hover.enabled": "off",
+	"editor.hover.enabled": "on",
 	// Delay before hover shows
-	"editor.hover.delay": 1200,
+	"editor.hover.delay": 800,
 
 	// Indentation
 	"editor.tabSize": 4,

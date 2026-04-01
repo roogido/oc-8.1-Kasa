@@ -1,0 +1,75 @@
+.content {
+	width: 100%;
+	max-width: 971px;
+	margin-inline: auto;
+	padding-top: 86px;
+	padding-bottom: 80px;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.backRow {
+	width: 100%;
+	padding: 16px 7px;
+	border-bottom: 0.5px solid var(--color-border-soft);
+}
+
+.topRow {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	width: 100%;
+}
+
+.infoRow {
+	width: 616px;
+}
+
+.mobileHostRow {
+	display: none;
+}
+
+@media (max-width: 767px) {
+	.content {
+		max-width: none;
+		padding-top: 10px;
+		padding-right: 16px;
+		padding-bottom: 80px;
+		padding-left: 16px;
+		gap: 10px;
+	}
+
+	.backRow {
+		padding: 0;
+		border-bottom: 0;
+	}
+
+	.topRow {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.topRow :global(article),
+	.topRow :global(aside) {
+		width: 100%;
+	}
+
+	.topRow > :last-child {
+		display: none;
+	}
+
+	.infoRow {
+		width: 100%;
+	}
+
+	.mobileHostRow {
+		display: block;
+		width: 100%;
+	}
+
+	.mobileHostRow :global(aside) {
+		width: 100%;
+		max-width: 345px;
+	}
+}

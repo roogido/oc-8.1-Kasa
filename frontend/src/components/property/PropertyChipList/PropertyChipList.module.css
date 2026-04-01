@@ -1,0 +1,42 @@
+.section {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.title {
+	margin: 0;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-sm);
+	color: var(--color-text-strong);
+}
+
+.gridList {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, max-content));
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.rowList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 18px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (max-width: 767px) {
+	.gridList {
+		grid-template-columns: repeat(3, minmax(0, max-content));
+		gap: 8px;
+	}
+
+	.rowList {
+		gap: 18px;
+	}
+}

@@ -1,0 +1,28 @@
+.button {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 36px;
+	padding: 8px 16px;
+	background-color: var(--color-surface-alt);
+	border-radius: var(--radius-lg);
+	text-decoration: none;
+	color: var(--color-text-muted);
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	font-size: 14px;
+	line-height: 1;
+}
+
+.label {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-sm);
+	color: var(--color-text-muted);
+}
