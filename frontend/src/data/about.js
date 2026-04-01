@@ -1,7 +1,7 @@
 /**
  * @file src/data/about.js
  * @description
- * Donnees mockees de la page A propos Kasa.
+ * Données mockées de la page À propos de Kasa.
  */
 
 import aboutBannerDesktop01 from '@/assets/images/about/about-banner-desktop-01.png';
@@ -18,7 +18,7 @@ export const aboutPageContent = {
 	],
 	heroImage: {
 		src: aboutBannerDesktop01,
-		alt: 'Image a propos 01',
+		alt: 'Image à propos 01',
 	},
 	missionTitle: 'Notre mission est simple :',
 	missionItemsDesktop: [
@@ -33,7 +33,7 @@ export const aboutPageContent = {
 	],
 	missionImage: {
 		src: aboutBannerDesktop02,
-		alt: 'Image a propos 02',
+		alt: 'Image à propos 02',
 	},
 	highlight:
 		'Que vous cherchiez un appartement cosy en centre-ville, une maison en bord de mer ou un chalet à la montagne, Kasa vous accompagne pour que chaque séjour devienne un souvenir inoubliable.',

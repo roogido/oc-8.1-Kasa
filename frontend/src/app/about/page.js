@@ -1,7 +1,7 @@
 /**
  * @file src/app/about/page.js
  * @description
- * Page A propos Kasa.
+ * Page À propos de Kasa.
  */
 
 import AppFooter from '@/components/layout/AppFooter/AppFooter';
@@ -20,7 +20,7 @@ export const metadata = {
 };
 
 /**
- * Page A propos.
+ * Page À propos.
  *
  * @returns {JSX.Element}
  */

@@ -1,7 +1,7 @@
 /**
  * @file src/components/about/AboutIntroSection/AboutIntroSection.js
  * @description
- * Bloc d'introduction de la page A propos.
+ * Bloc d'introduction de la page À propos.
  */
 
 import Image from 'next/image';

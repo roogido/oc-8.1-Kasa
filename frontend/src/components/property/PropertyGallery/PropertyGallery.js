@@ -1,7 +1,7 @@
 /**
  * @file src/components/property/PropertyGallery/PropertyGallery.js
  * @description
- * Galerie d'images de la page detail logement.
+ * Galerie d'images de la page détail logement.
  */
 
 import Image from 'next/image';

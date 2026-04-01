@@ -1,7 +1,7 @@
 /**
  * @file src/components/property/PropertyChip/PropertyChip.js
  * @description
- * Puce de la page detail logement.
+ * Puce de la page détail logement.
  */
 
 import styles from './PropertyChip.module.css';

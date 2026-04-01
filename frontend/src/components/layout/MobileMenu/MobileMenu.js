@@ -13,7 +13,7 @@ import Button from '@/components/ui/Button/Button';
 import styles from './MobileMenu.module.css';
 
 /**
- * Retourne la classe d'etat d'un lien de navigation.
+ * Retourne la classe d'état d'un lien de navigation.
  *
  * @param {string} href
  * @param {string} currentPath
@@ -82,7 +82,7 @@ export default function MobileMenu({
 							className={`${styles.navLink} ${getNavLinkStateClass('/about', currentPath)}`.trim()}
 							onClick={onClose}
 						>
-							A propos
+							À propos
 						</Link>
 					</li>
 

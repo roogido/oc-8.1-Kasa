@@ -1,7 +1,7 @@
 /**
  * @file src/components/property/PropertyBackButton/PropertyBackButton.js
  * @description
- * Bouton retour de la page detail logement.
+ * Bouton retour de la page détail logement.
  */
 
 import Link from 'next/link';

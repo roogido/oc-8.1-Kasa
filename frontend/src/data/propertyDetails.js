@@ -1,7 +1,7 @@
 /**
  * @file src/data/propertyDetails.js
  * @description
- * Donnees mockees de la page detail logement Kasa.
+ * Données mockées de la page détail logement de Kasa.
  */
 
 import propertyGallery01 from '@/assets/images/property/property-gallery-01.png';
@@ -15,18 +15,18 @@ export const propertyDetailsById = {
 	'property-01': {
 		id: 'property-01',
 		title: 'Appartement cosy',
-		location: 'Ile de France - Paris 17e',
+		location: 'Île de France - Paris 17e',
 		description:
 			"Votre maison loin de chez vous. Que vous veniez de l'autre bout du monde, ou juste de quelques stations de RER, vous vous sentirez chez vous dans notre appartement.",
 		equipments: [
-			'Cafetiere',
+			'Cafetière',
 			'Bouilloire',
 			'Vaisselle',
 			'Micro-onde',
-			'Seche-linge',
-			'Seche Cheveux',
-			'Lit pour bebe',
-			'Television',
+			'Sèche-linge',
+			'Sèche-cheveux',
+			'Lit pour bébé',
+			'Télévision',
 		],
 		categories: ['Batignolle', 'Montmartre'],
 		gallery: {
@@ -61,7 +61,7 @@ export const propertyDetailsById = {
 			name: 'Nathalie Jean',
 			rating: 3,
 			avatar: hostAvatarNathalieJean,
-			avatarAlt: 'Photo hote 01',
+			avatarAlt: 'Photo hôte 01',
 		},
 	},
 };

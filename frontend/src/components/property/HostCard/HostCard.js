@@ -1,7 +1,7 @@
 /**
  * @file src/components/property/HostCard/HostCard.js
  * @description
- * Carte hote de la page detail logement.
+ * Carte hôte de la page détail logement.
  */
 
 import Image from 'next/image';
@@ -9,7 +9,7 @@ import Image from 'next/image';
 import styles from './HostCard.module.css';
 
 /**
- * Carte hote.
+ * Carte hôte.
  *
  * @param {Object} props
  * @param {string} props.name

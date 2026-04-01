@@ -1,7 +1,7 @@
 /**
  * @file src/data/home.js
  * @description
- * Donnees mockees de la page d'accueil Kasa.
+ * Données mockées de la page d'accueil de Kasa.
  */
 
 import homeHeroDesktop from '@/assets/images/home/home-hero-desktop.png';
@@ -22,7 +22,7 @@ import homeListingCard12 from '@/assets/images/home/home-listing-card-12.png';
 export const homeHeroContent = {
 	title: 'Chez vous, partout et ailleurs',
 	subtitle:
-		'Avec Kasa, vivez des sejours uniques dans des hebergements chaleureux, selectionnes avec soin par nos hotes.',
+		'Avec Kasa, vivez des séjours uniques dans des hébergements chaleureux, sélectionnés avec soin par nos hôtes.',
 	image: homeHeroDesktop,
 	imageAlt: 'Image hero home',
 };
@@ -31,7 +31,7 @@ export const featuredPropertiesSectionOne = [
 	{
 		id: 'property-01',
 		title: 'Appartement cosy',
-		location: 'Ile de France - Paris 17e',
+		location: 'Île de France - Paris 17e',
 		price: 100,
 		image: homeListingCard01,
 		imageAlt: 'Image card home 01',
@@ -40,7 +40,7 @@ export const featuredPropertiesSectionOne = [
 	{
 		id: 'property-02',
 		title: 'Magnifique appartement proche Canal Saint Martin',
-		location: 'Ile de France - Paris 10e',
+		location: 'Île de France - Paris 10e',
 		price: 110,
 		image: homeListingCard02,
 		imageAlt: 'Image card home 02',
@@ -49,7 +49,7 @@ export const featuredPropertiesSectionOne = [
 	{
 		id: 'property-03',
 		title: 'Studio de charme - Buttes Chaumont',
-		location: 'Ile de France - Paris 20e',
+		location: 'Île de France - Paris 20e',
 		price: 120,
 		image: homeListingCard03,
 		imageAlt: 'Image card home 03',
@@ -57,8 +57,8 @@ export const featuredPropertiesSectionOne = [
 	},
 	{
 		id: 'property-04',
-		title: 'Nid douillet au coeur du 11eme',
-		location: 'Ile de France - Paris 11e',
+		title: 'Nid douillet au cœur du 11ème',
+		location: 'Île de France - Paris 11e',
 		price: 130,
 		image: homeListingCard04,
 		imageAlt: 'Image card home 04',
@@ -67,7 +67,7 @@ export const featuredPropertiesSectionOne = [
 	{
 		id: 'property-05',
 		title: 'Appartement de Standing - 10e',
-		location: 'Ile de France - Paris 10e',
+		location: 'Île de France - Paris 10e',
 		price: 140,
 		image: homeListingCard05,
 		imageAlt: 'Image card home 05',
@@ -76,7 +76,7 @@ export const featuredPropertiesSectionOne = [
 	{
 		id: 'property-06',
 		title: "Studio d'artiste",
-		location: 'Ile de France - Paris 18e',
+		location: 'Île de France - Paris 18e',
 		price: 150,
 		image: homeListingCard06,
 		imageAlt: 'Image card home 06',
@@ -88,7 +88,7 @@ export const featuredPropertiesSectionTwo = [
 	{
 		id: 'property-07',
 		title: 'Appartement cosy',
-		location: 'Ile de France - Paris 17e',
+		location: 'Île de France - Paris 17e',
 		price: 100,
 		image: homeListingCard07,
 		imageAlt: 'Image card home 07',
@@ -97,7 +97,7 @@ export const featuredPropertiesSectionTwo = [
 	{
 		id: 'property-08',
 		title: 'Magnifique appartement proche Canal Saint Martin',
-		location: 'Ile de France - Paris 10e',
+		location: 'Île de France - Paris 10e',
 		price: 110,
 		image: homeListingCard08,
 		imageAlt: 'Image card home 08',
@@ -106,7 +106,7 @@ export const featuredPropertiesSectionTwo = [
 	{
 		id: 'property-09',
 		title: 'Studio de charme - Buttes Chaumont',
-		location: 'Ile de France - Paris 20e',
+		location: 'Île de France - Paris 20e',
 		price: 120,
 		image: homeListingCard09,
 		imageAlt: 'Image card home 09',
@@ -114,8 +114,8 @@ export const featuredPropertiesSectionTwo = [
 	},
 	{
 		id: 'property-10',
-		title: 'Nid douillet au coeur du 11eme',
-		location: 'Ile de France - Paris 11e',
+		title: 'Nid douillet au cœur du 11ème',
+		location: 'Île de France - Paris 11e',
 		price: 130,
 		image: homeListingCard10,
 		imageAlt: 'Image card home 10',
@@ -124,7 +124,7 @@ export const featuredPropertiesSectionTwo = [
 	{
 		id: 'property-11',
 		title: 'Appartement de Standing - 10e',
-		location: 'Ile de France - Paris 10e',
+		location: 'Île de France - Paris 10e',
 		price: 140,
 		image: homeListingCard11,
 		imageAlt: 'Image card home 11',
@@ -133,7 +133,7 @@ export const featuredPropertiesSectionTwo = [
 	{
 		id: 'property-12',
 		title: "Studio d'artiste",
-		location: 'Ile de France - Paris 18e',
+		location: 'Île de France - Paris 18e',
 		price: 150,
 		image: homeListingCard12,
 		imageAlt: 'Image card home 12',
@@ -142,9 +142,9 @@ export const featuredPropertiesSectionTwo = [
 ];
 
 export const homeHowItWorksContent = {
-	title: 'Comment ca marche ?',
+	title: 'Comment ça marche ?',
 	subtitle:
-		'Que vous partiez pour un week-end improvise, des vacances en famille ou un voyage professionnel, Kasa vous aide a trouver un lieu qui vous ressemble.',
+		'Que vous partiez pour un week-end improvisé, des vacances en famille ou un voyage professionnel, Kasa vous aide à trouver un lieu qui vous ressemble.',
 	items: [
 		{
 			id: 'how-it-works-01',
@@ -154,15 +154,15 @@ export const homeHowItWorksContent = {
 		},
 		{
 			id: 'how-it-works-02',
-			title: 'Reservez',
+			title: 'Réservez',
 			description:
-				'Profitez d une plateforme securisee et de profils d hotes verifies.',
+				"Profitez d'une plateforme sécurisée et de profils d'hôtes vérifiés.",
 		},
 		{
 			id: 'how-it-works-03',
-			title: "Vivez l'experience",
+			title: "Vivez l'expérience",
 			description:
-				'Soyez chez vous, partout, dans un logement pense pour votre sejour.',
+				'Soyez chez vous, partout, dans un logement pensé pour votre séjour.',
 		},
 	],
 };

@@ -1,7 +1,7 @@
 /**
  * @file src/app/properties/[propertyId]/page.js
  * @description
- * Page détail d'un logement Kasa.
+ * Page détail d'un logement de Kasa.
  */
 
 import { notFound } from 'next/navigation';

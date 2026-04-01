@@ -1,7 +1,7 @@
 /**
  * @file src/components/about/AboutMissionSection/AboutMissionSection.js
  * @description
- * Bloc mission de la page A propos.
+ * Bloc mission de la page À propos.
  */
 
 import Image from 'next/image';

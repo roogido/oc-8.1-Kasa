@@ -1,7 +1,7 @@
 /**
  * @file src/components/property/PropertyChipList/PropertyChipList.js
  * @description
- * Liste de puces de la page detail logement.
+ * Liste de puces de la page détail logement.
  */
 
 import PropertyChip from '@/components/property/PropertyChip/PropertyChip';
