@@ -4,9 +4,6 @@
  * Page À propos de Kasa.
  */
 
-import AppFooter from '@/components/layout/AppFooter/AppFooter';
-import AppHeader from '@/components/layout/AppHeader/AppHeader';
-
 import AboutIntroSection from '@/components/about/AboutIntroSection/AboutIntroSection';
 import AboutMissionSection from '@/components/about/AboutMissionSection/AboutMissionSection';
 
@@ -26,35 +23,21 @@ export const metadata = {
  */
 export default function AboutPage() {
 	return (
-		<div className="page-shell">
-			<AppHeader currentPath="/about" />
+		<div className={styles.content}>
+			<AboutIntroSection
+				title={aboutPageContent.title}
+				introParagraphsDesktop={aboutPageContent.introParagraphsDesktop}
+				introParagraphsMobile={aboutPageContent.introParagraphsMobile}
+				heroImage={aboutPageContent.heroImage}
+			/>
 
-			<main className="page-main">
-				<div className={styles.content}>
-					<AboutIntroSection
-						title={aboutPageContent.title}
-						introParagraphsDesktop={
-							aboutPageContent.introParagraphsDesktop
-						}
-						introParagraphsMobile={
-							aboutPageContent.introParagraphsMobile
-						}
-						heroImage={aboutPageContent.heroImage}
-					/>
-
-					<AboutMissionSection
-						missionTitle={aboutPageContent.missionTitle}
-						missionItemsDesktop={
-							aboutPageContent.missionItemsDesktop
-						}
-						missionItemsMobile={aboutPageContent.missionItemsMobile}
-						missionImage={aboutPageContent.missionImage}
-						highlight={aboutPageContent.highlight}
-					/>
-				</div>
-			</main>
-
-			<AppFooter />
+			<AboutMissionSection
+				missionTitle={aboutPageContent.missionTitle}
+				missionItemsDesktop={aboutPageContent.missionItemsDesktop}
+				missionItemsMobile={aboutPageContent.missionItemsMobile}
+				missionImage={aboutPageContent.missionImage}
+				highlight={aboutPageContent.highlight}
+			/>
 		</div>
 	);
 }

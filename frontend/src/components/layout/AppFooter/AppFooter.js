@@ -16,16 +16,14 @@ import styles from './AppFooter.module.css';
 export default function AppFooter() {
 	return (
 		<footer className={styles.footer}>
-			<div className="container">
-				<div className={styles.inner}>
-					<div className={styles.logoWrapper}>
-						<Logo variant="footer" />
-					</div>
-
-					<p className={styles.text}>
-						© 2025 Kasa. All rights reserved
-					</p>
+			<div className={styles.inner}>
+				<div className={styles.logoWrapper}>
+					<Logo variant="footer" />
 				</div>
+
+				<p className={styles.text}>
+					© 2025 Kasa. All rights reserved
+				</p>
 			</div>
 		</footer>
 	);

@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Heart, Menu, MessageSquare } from 'lucide-react';
 
 import Logo from '@/components/ui/Logo/Logo';
@@ -29,11 +30,10 @@ function getNavLinkStateClass(href, currentPath) {
 /**
  * Header global Kasa.
  *
- * @param {Object} props
- * @param {string} [props.currentPath='/']
  * @returns {JSX.Element}
  */
-export default function AppHeader({ currentPath = '/' }) {
+export default function AppHeader() {
+	const pathname = usePathname();
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 	useEffect(() => {
@@ -54,22 +54,19 @@ export default function AppHeader({ currentPath = '/' }) {
 		};
 	}, [isMobileMenuOpen]);
 
-    /**
-     * Ferme automatiquement le menu mobile quand on repasse en desktop.
-     */
-    useEffect(() => {
-        function handleResize() {
-            if (window.innerWidth > 767) {
-                setIsMobileMenuOpen(false);
-            }
-        }
+	useEffect(() => {
+		function handleResize() {
+			if (window.innerWidth > 767) {
+				setIsMobileMenuOpen(false);
+			}
+		}
 
-        window.addEventListener('resize', handleResize);
+		window.addEventListener('resize', handleResize);
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
 
 	return (
 		<header className={styles.header}>
@@ -82,14 +79,14 @@ export default function AppHeader({ currentPath = '/' }) {
 					<div className={styles.leftGroup}>
 						<Link
 							href="/"
-							className={`${styles.navLink} ${getNavLinkStateClass('/', currentPath)}`.trim()}
+							className={`${styles.navLink} ${getNavLinkStateClass('/', pathname)}`.trim()}
 						>
 							Accueil
 						</Link>
 
 						<Link
 							href="/about"
-							className={`${styles.navLink} ${getNavLinkStateClass('/about', currentPath)}`.trim()}
+							className={`${styles.navLink} ${getNavLinkStateClass('/about', pathname)}`.trim()}
 						>
 							À propos
 						</Link>
@@ -144,7 +141,7 @@ export default function AppHeader({ currentPath = '/' }) {
 				</div>
 
 				<MobileMenu
-					currentPath={currentPath}
+					currentPath={pathname}
 					isOpen={isMobileMenuOpen}
 					onClose={() => setIsMobileMenuOpen(false)}
 				/>

@@ -6,8 +6,6 @@
 
 import { notFound } from 'next/navigation';
 
-import AppFooter from '@/components/layout/AppFooter/AppFooter';
-import AppHeader from '@/components/layout/AppHeader/AppHeader';
 import HostCard from '@/components/property/HostCard/HostCard';
 import PropertyBackButton from '@/components/property/PropertyBackButton/PropertyBackButton';
 import PropertyGallery from '@/components/property/PropertyGallery/PropertyGallery';
@@ -33,51 +31,43 @@ export default async function PropertyDetailPage({ params }) {
 	}
 
 	return (
-		<div className="page-shell">
-			<AppHeader currentPath="" />
+		<div className={styles.content}>
+			<div className={styles.backRow}>
+				<PropertyBackButton href="/" />
+			</div>
 
-			<main className="page-main">
-				<div className={styles.content}>
-					<div className={styles.backRow}>
-						<PropertyBackButton href="/" />
-					</div>
+			<div className={styles.topRow}>
+				<PropertyGallery
+					featuredImage={property.gallery.featuredImage}
+					thumbnails={property.gallery.thumbnails}
+				/>
 
-					<div className={styles.topRow}>
-						<PropertyGallery
-							featuredImage={property.gallery.featuredImage}
-							thumbnails={property.gallery.thumbnails}
-						/>
+				<HostCard
+					name={property.host.name}
+					rating={property.host.rating}
+					avatar={property.host.avatar}
+					avatarAlt={property.host.avatarAlt}
+				/>
+			</div>
 
-						<HostCard
-							name={property.host.name}
-							rating={property.host.rating}
-							avatar={property.host.avatar}
-							avatarAlt={property.host.avatarAlt}
-						/>
-					</div>
+			<div className={styles.infoRow}>
+				<PropertyInfoCard
+					title={property.title}
+					location={property.location}
+					description={property.description}
+					equipments={property.equipments}
+					categories={property.categories}
+				/>
+			</div>
 
-					<div className={styles.infoRow}>
-						<PropertyInfoCard
-							title={property.title}
-							location={property.location}
-							description={property.description}
-							equipments={property.equipments}
-							categories={property.categories}
-						/>
-					</div>
-
-					<div className={styles.mobileHostRow}>
-						<HostCard
-							name={property.host.name}
-							rating={property.host.rating}
-							avatar={property.host.avatar}
-							avatarAlt={property.host.avatarAlt}
-						/>
-					</div>
-				</div>
-			</main>
-
-			<AppFooter />
+			<div className={styles.mobileHostRow}>
+				<HostCard
+					name={property.host.name}
+					rating={property.host.rating}
+					avatar={property.host.avatar}
+					avatarAlt={property.host.avatarAlt}
+				/>
+			</div>
 		</div>
 	);
 }
