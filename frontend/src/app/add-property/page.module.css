@@ -1,343 +1,50 @@
-.pageSection {
-    width: 100%;
-    padding: 40px 16px 80px;
-    background: var(--color-page-bg);
+.page {
+	width: 100%;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	background-color: var(--color-bg-page);
 }
 
 .container {
-    width: 100%;
-    max-width: 1168px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
+	width: 100%;
+	max-width: 1168px;
+	margin-inline: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
 }
 
-.headerBlock {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
+.row {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+	align-items: start;
 }
 
-.backButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 93px;
-    height: 36px;
-    padding: 8px 16px;
-    border: 0;
-    border-radius: var(--radius-lg);
-    background: var(--color-surface-muted);
-    color: var(--color-text-muted);
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.426;
-    text-decoration: none;
-}
-
-.titleRow {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    min-height: 36px;
-}
-
-.pageTitle {
-    margin: 0;
-    color: var(--color-text-strong);
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1.426;
-}
-
-.primaryAction {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 96px;
-    height: 36px;
-    padding: 8px 16px;
-    border: 0;
-    border-radius: var(--radius-lg);
-    background: var(--color-primary);
-    color: #ffffff;
-    font: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.426;
-    cursor: pointer;
-}
-
-.topGrid,
-.bottomGrid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 576px));
-    gap: 16px;
-}
-
-.rightStack {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.panel {
-    border: 1px solid var(--color-border-muted);
-    border-radius: var(--radius-lg);
-    background: var(--color-surface);
-}
-
-.panelInner {
-    width: 100%;
-    padding: 48px 80px 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.topGrid > .panel:first-child {
-    min-height: 544.2px;
-}
-
-.rightStack .panel {
-    min-height: 264px;
-}
-
-.bottomGrid > .panel:first-child {
-    min-height: 584px;
-}
-
-.bottomGrid > .panel:last-child {
-    min-height: 444px;
-}
-
-.fieldGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.label,
-.sectionTitle {
-    margin: 0;
-    color: var(--color-text-strong);
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.426;
-}
-
-.input,
-.textarea {
-    width: 100%;
-    border: 1px solid var(--color-border-muted);
-    border-radius: var(--radius-lg);
-    background: var(--color-surface);
-    color: var(--color-text-strong);
-    font: inherit;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.426;
-}
-
-.input {
-    height: 40px;
-    padding: 8px 10px;
-}
-
-.textarea {
-    min-height: 108px;
-    padding: 8px 10px;
-    resize: none;
-}
-
-.input::placeholder,
-.textarea::placeholder {
-    color: var(--color-text-muted);
-    opacity: 1;
-}
-
-.uploadRow {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 24px;
-    gap: 8px;
-    align-items: center;
-}
-
-.iconAction {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: 0;
-    border-radius: 5px;
-    background: var(--color-primary);
-    color: #ffffff;
-    font: inherit;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.inlineTextAction {
-    width: fit-content;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--color-primary);
-    font: inherit;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.426;
-    cursor: pointer;
-}
-
-.checkboxColumns {
-    display: grid;
-    grid-template-columns: 170px 170px;
-    justify-content: space-between;
-    gap: 0 76px;
-    margin-top: 16px;
-}
-
-.checkboxColumn {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.checkboxItem {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 25px;
-    color: var(--color-text-strong);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.426;
-}
-
-.checkbox {
-    width: 12px;
-    height: 12px;
-    margin: 0;
-    accent-color: var(--color-primary);
-}
-
-.tagsBlock {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    max-width: 416px;
-    margin-top: 16px;
-    margin-bottom: 16px;
-}
-
-.tag {
-    display: inline-flex;
-    align-items: center;
-    min-height: 33px;
-    padding: 8px 16px;
-    border-radius: var(--radius-md);
-    background: var(--color-surface-muted);
-    color: var(--color-text-muted);
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.426;
-    white-space: nowrap;
-}
-
-.srOnly {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+.stack {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
 }
 
 @media (max-width: 767px) {
-    .pageSection {
-        padding: 0 0 80px;
-    }
+	.page {
+		padding-top: 16px;
+		padding-bottom: 16px;
+	}
 
-    .container {
-        max-width: none;
-        gap: 0;
-    }
+	.container {
+		max-width: 390px;
+		padding-inline: 16px;
+		gap: 16px;
+	}
 
-    .headerBlock {
-        gap: 10px;
-    }
+	.row {
+		grid-template-columns: 1fr;
+		gap: 16px;
+	}
 
-    .backButton {
-        width: 189px;
-        margin: 16px 0 0 16px;
-    }
-
-    .titleRow {
-        padding: 0 16px;
-        margin-top: 10px;
-        gap: 12px;
-    }
-
-    .pageTitle {
-        font-size: 24px;
-        line-height: 1.2;
-    }
-
-    .topGrid,
-    .bottomGrid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        padding: 42px 16px 0;
-    }
-
-    .rightStack {
-        gap: 16px;
-    }
-
-    .panel {
-        width: 100%;
-    }
-
-    .panelInner {
-        padding: 16px;
-    }
-
-    .topGrid > .panel:first-child {
-        min-height: 416.2px;
-    }
-
-    .rightStack .panel {
-        min-height: 200px;
-    }
-
-    .bottomGrid > .panel:first-child {
-        min-height: 456px;
-    }
-
-    .bottomGrid > .panel:last-child {
-        min-height: 242px;
-    }
-
-    .checkboxColumns {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 0 16px;
-    }
-
-    .checkboxItem {
-        font-size: 12px;
-    }
-
-    .tagsBlock {
-        max-width: 326px;
-    }
+	.stack {
+		gap: 16px;
+	}
 }

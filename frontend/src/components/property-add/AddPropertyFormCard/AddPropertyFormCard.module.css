@@ -1,0 +1,20 @@
+.card {
+	min-height: 544px;
+}
+
+.inner {
+	padding: 80px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+@media (max-width: 767px) {
+	.card {
+		min-height: auto;
+	}
+
+	.inner {
+		padding: 16px;
+	}
+}

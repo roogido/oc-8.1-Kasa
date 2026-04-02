@@ -101,7 +101,7 @@ export default function AppHeader() {
 					</div>
 
 					<div className={styles.rightGroup}>
-						<Link href="/properties/new" className={styles.addPropertyLink}>
+						<Link href="/add-property" className={styles.addPropertyLink}>
 							+Ajouter un logement
 						</Link>
 
