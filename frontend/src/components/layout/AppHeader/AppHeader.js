@@ -106,13 +106,13 @@ export default function AppHeader() {
 						</Link>
 
 						<div className={styles.iconGroup} aria-label="Actions utilisateur">
-							<button
-								type="button"
-								className={styles.iconButton}
-								aria-label="Favoris"
-							>
-								<Heart size={16} strokeWidth={1.75} />
-							</button>
+                            <Link
+                                href="/favorites"
+                                className={styles.iconButton}
+                                aria-label="Favoris"
+                            >
+                                <Heart size={16} strokeWidth={1.75} />
+                            </Link>
 
 							<span className={styles.separator} aria-hidden="true" />
 

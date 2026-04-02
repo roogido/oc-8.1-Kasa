@@ -109,7 +109,7 @@ export default function MobileMenu({
 			</nav>
 
 			<div className={styles.ctaWrapper}>
-				<Button href="/properties/new" variant="primary" size="md">
+				<Button href="/add-property" variant="primary" size="md">
 					Ajouter un logement
 				</Button>
 			</div>
