@@ -1,0 +1,55 @@
+.footer {
+	margin-top: auto;
+	width: 100%;
+	background-color: var(--color-surface);
+	border-top: 1px solid #F5F5F5;
+}
+
+.inner {
+	width: 100%;
+	min-height: 69.362px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 40px;
+}
+
+.logoWrapper {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+.logoWrapper :global(img) {
+	width: 46.042px;
+	height: 53.362px;
+	object-fit: contain;
+}
+
+.text {
+	margin: 0;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.426;
+	color: #565656;
+	text-align: right;
+	white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+	.inner {
+		min-height: 61px;
+		padding: 8px 16px;
+	}
+
+	.logoWrapper :global(img) {
+		width: 46.042px;
+		height: 53.362px;
+	}
+
+	.text {
+		font-size: 12px;
+		font-weight: 500;
+		line-height: 1.426;
+	}
+}

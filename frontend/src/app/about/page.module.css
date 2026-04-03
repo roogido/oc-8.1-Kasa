@@ -1,0 +1,21 @@
+.content {
+	width: 100%;
+	max-width: 1116px;
+	margin-inline: auto;
+	padding-top: 40px;
+	padding-bottom: 80px;
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}
+
+@media (max-width: 767px) {
+	.content {
+		max-width: none;
+		padding-top: 51px;
+		padding-right: 16px;
+		padding-bottom: 80px;
+		padding-left: 16px;
+		gap: 40px;
+	}
+}

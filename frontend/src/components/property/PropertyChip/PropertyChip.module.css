@@ -1,0 +1,13 @@
+.chip {
+	display: inline-flex;
+	align-items: center;
+	min-height: 33px;
+	padding: 8px 16px;
+	background-color: var(--color-surface-alt);
+	border-radius: var(--radius-md);
+	font-size: 12px;
+	font-weight: var(--font-weight-regular);
+	line-height: 1.4;
+	color: var(--color-text-muted);
+	list-style: none;
+}

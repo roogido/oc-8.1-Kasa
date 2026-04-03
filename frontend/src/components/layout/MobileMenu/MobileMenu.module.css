@@ -1,0 +1,94 @@
+.panel {
+	width: 100%;
+	background-color: var(--color-surface);
+}
+
+@media (max-width: 767px) {
+	.panel {
+		display: block;
+		width: 100%;
+		background-color: var(--color-surface);
+		padding-top: 0;
+		padding-left: 16px;
+		padding-right: 16px;
+		padding-bottom: 24px;
+	}
+
+	.topBar {
+		min-height: 53.36px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.logoWrapper {
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.logoWrapper :global(img) {
+		width: 46.04px;
+		height: 53.36px;
+		object-fit: contain;
+	}
+
+	.closeButton {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 45.88px;
+		height: 45.88px;
+		padding: 0;
+		color: var(--color-text-strong);
+		background: transparent;
+	}
+
+	.closeButton :global(svg) {
+		width: 28px;
+		height: 28px;
+	}
+
+	.nav {
+		margin-top: 40px;
+	}
+
+	.navList {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.navList li {
+		border-bottom: 1px solid var(--color-border-soft);
+	}
+
+	.navLink {
+		display: flex;
+		align-items: center;
+		min-height: 56px;
+		padding-left: 0;
+		font-size: 24px;
+		font-weight: 400;
+		line-height: 1.426;
+		color: var(--color-text-strong);
+		text-decoration: none;
+	}
+
+	.navLinkActive {
+		font-weight: 500;
+		color: var(--color-text-strong);
+		text-decoration: none;
+	}
+
+	.ctaWrapper {
+		margin-top: 40px;
+		padding-left: 0;
+	}
+
+	.ctaWrapper :global(a),
+	.ctaWrapper :global(button) {
+		min-width: 200px;
+		font-size: var(--font-size-sm);
+		font-weight: 500;
+		line-height: 1.426;
+	}
+}

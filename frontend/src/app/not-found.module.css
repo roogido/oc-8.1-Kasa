@@ -1,0 +1,114 @@
+.main {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.section {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	padding-top: 40px;
+	padding-right: 24px;
+	padding-bottom: 40px;
+	padding-left: 24px;
+}
+
+.content {
+    width: 342px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.textBlock {
+	width: 342px;
+	min-height: 183px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	text-align: center;
+}
+
+.code {
+    margin: 0;
+    font-size: var(--font-size-display-404);
+    font-weight: var(--font-weight-black);
+    line-height: 1;
+    color: var(--color-primary);
+}
+
+.message {
+    margin: 0;
+    max-width: 342px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-sm);
+    color: var(--color-text-strong);
+}
+
+.actions {
+    width: 342px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.actions::before {
+    content: '';
+    display: block;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.actionButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 36px;
+    padding: 8px 32px;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-sm);
+    color: var(--color-surface);
+    text-decoration: none;
+}
+
+.actionButton:hover,
+.actionButton:focus-visible {
+    background-color: var(--color-primary-dark);
+}
+
+@media (max-width: 767px) {
+    .section {
+        padding-top: 51px;
+        padding-right: 24px;
+        padding-bottom: 40px;
+        padding-left: 24px;
+    }
+
+    .content {
+        width: 342px;
+    }
+
+    .textBlock {
+        width: 342px;
+    }
+
+    .actions {
+        width: 342px;
+    }
+}

@@ -1,0 +1,11 @@
+.logoLink {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+.logoImage {
+	display: block;
+	width: auto;
+	height: auto;
+}

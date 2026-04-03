@@ -1,0 +1,74 @@
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}
+
+.backButton {
+	width: fit-content;
+	min-height: 36px;
+	padding: 8px 16px;
+	border-radius: var(--radius-lg);
+	background-color: var(--color-surface-alt);
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-sm);
+	color: var(--color-text-muted);
+	text-decoration: none;
+}
+
+.backIcon {
+	font-size: 16px;
+	line-height: 1;
+}
+
+.titleRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+.title {
+	margin: 0;
+	font-size: var(--font-size-xl);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-xl);
+	color: var(--color-text-strong);
+}
+
+.submitButton {
+	min-width: 96px;
+	height: 36px;
+	padding: 8px 32px;
+	border: 0;
+	border-radius: var(--radius-lg);
+	background-color: var(--color-primary);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-sm);
+	color: var(--color-surface);
+	cursor: pointer;
+}
+
+@media (max-width: 767px) {
+	.wrapper {
+		gap: 16px;
+	}
+
+	.backButton {
+		min-width: 189px;
+	}
+
+	.titleRow {
+		align-items: center;
+	}
+
+	.title {
+		font-size: 18px;
+		line-height: 1.426;
+	}
+}

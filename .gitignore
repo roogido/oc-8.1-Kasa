@@ -32,12 +32,11 @@ lerna-debug.log*
 # ----------------------------
 # ENVIRONMENT FILES
 # ----------------------------
-backend/.env
-frontend/.env
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # ----------------------------
 # BACKEND LOCAL DATA
@@ -70,6 +69,20 @@ cache/
 Thumbs.db
 
 # ----------------------------
-# OPTIONAL / LOCAL OVERRIDES
+# PROJECT SPECIFIC
 # ----------------------------
+**/draft/*
+!**/draft/.gitkeep
+
+# Database dumps
+**/sql/dumps/*
+!**/sql/dumps/.gitkeep
+
+# Local DB config (PHP context)
+**/config/database.local.php
+
+# ----------------------------
+# OPTIONAL / CLEANUP
+# ----------------------------
+# Local overrides
 *.local

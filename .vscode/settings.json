@@ -1,118 +1,123 @@
 {
-    // ----------------------------
-    // EDITOR - BASIC BEHAVIOR
-    // ----------------------------
-    // Disable hover popup (tooltip)
-    "editor.hover.enabled":"off",
-    // Delay before hover shows
-    "editor.hover.delay": 1200,
+	// ----------------------------
+	// EDITOR - BASIC BEHAVIOR
+	// ----------------------------
+	// Disable hover popup (tooltip)
+	"editor.hover.enabled": "on",
+	// Delay before hover shows
+	"editor.hover.delay": 800,
 
-    // Disable minimap (less visual noise)
-    "editor.minimap.enabled": false,
-    // Disable code lens (top inline info)
-    "editor.codeLens": false,
+	// Indentation
+	"editor.tabSize": 4,
+	"editor.insertSpaces": true,
+	"editor.detectIndentation": false,
 
-    // Disable smart occurrences highlight
-    "editor.occurrencesHighlight":"multiFile",
-    // Highlight selected word occurrences
-    "editor.selectionHighlight": true,
+	// Disable minimap (less visual noise)
+	"editor.minimap.enabled": false,
+	// Disable code lens (top inline info)
+	"editor.codeLens": false,
 
-    // Show bracket match near cursor
-    "editor.matchBrackets": "near",
-    // Show bracket guides
-    "editor.guides.bracketPairs":false,
+	// Disable smart occurrences highlight
+	"editor.occurrencesHighlight": "multiFile",
+	// Highlight selected word occurrences
+	"editor.selectionHighlight": true,
 
-    // Show spaces only when selecting text
-    "editor.renderWhitespace": "selection",
-    "editor.renderControlCharacters": false,
+	// Show bracket match near cursor
+	"editor.matchBrackets": "near",
+	// Show bracket guides
+	"editor.guides.bracketPairs": false,
 
-    // Disable suggestions icons/lightbulb
-    "editor.lightbulb.enabled": "off",
-    "editor.inlayHints.enabled": "off",
+	// Show spaces only when selecting text
+	"editor.renderWhitespace": "selection",
+	"editor.renderControlCharacters": false,
 
-    // Enable inline suggestions (Copilot / AI)
-    "editor.inlineSuggest.enabled": true,
+	// Disable suggestions icons/lightbulb
+	"editor.lightbulb.enabled": "off",
+	"editor.inlayHints.enabled": "off",
 
-    // Auto format settings
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": false,
-    "editor.formatOnType": false,
+	// Enable inline suggestions (Copilot / AI)
+	"editor.inlineSuggest.enabled": true,
 
-    // Disable word wrap
-    "editor.wordWrap": "off",
-    "editor.smoothScrolling": false,
+	// Auto format settings
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": false,
+	"editor.formatOnType": false,
 
-    // ----------------------------
-    // WORKBENCH - UI BEHAVIOR
-    // ----------------------------
-    // Open files in full tab (no preview)
-    "workbench.editor.enablePreview": false,
-    // No startup page
-    "workbench.startupEditor": "none",
-    // Tree indentation size
-    "workbench.tree.indent": 16,
-    "workbench.list.smoothScrolling": false,
+	// Disable word wrap
+	"editor.wordWrap": "off",
+	"editor.smoothScrolling": false,
 
-    // ----------------------------
-    // EXPLORER
-    // ----------------------------
-    // Confirm delete and drag actions
-    "explorer.confirmDelete": true,
-    "explorer.confirmDragAndDrop": true,
+	// ----------------------------
+	// WORKBENCH - UI BEHAVIOR
+	// ----------------------------
+	// Open files in full tab (no preview)
+	"workbench.editor.enablePreview": false,
+	// No startup page
+	"workbench.startupEditor": "none",
+	// Tree indentation size
+	"workbench.tree.indent": 16,
+	"workbench.list.smoothScrolling": false,
 
-    // ----------------------------
-    // FILES
-    // ----------------------------
-    // Auto save after delay
-    "files.autoSave": "afterDelay",
-    // Clean code on save
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "files.eol": "\n",
+	// ----------------------------
+	// EXPLORER
+	// ----------------------------
+	// Confirm delete and drag actions
+	"explorer.confirmDelete": true,
+	"explorer.confirmDragAndDrop": true,
 
-    // ----------------------------
-    // NAVIGATION
-    // ----------------------------
-    // Show breadcrumbs (file path)
-    "breadcrumbs.enabled": true,
+	// ----------------------------
+	// FILES
+	// ----------------------------
+	// Auto save after delay
+	"files.autoSave": "afterDelay",
+	// Clean code on save
+	"files.trimTrailingWhitespace": true,
+	"files.insertFinalNewline": true,
+	"files.eol": "\n",
 
-    // ----------------------------
-    // GIT
-    // ----------------------------
-    // Show diff in gutter
-    "scm.diffDecorations": "gutter",
-    // Show git status decorations
-    "git.decorations.enabled": true,
+	// ----------------------------
+	// NAVIGATION
+	// ----------------------------
+	// Show breadcrumbs (file path)
+	"breadcrumbs.enabled": true,
 
-    // ----------------------------
-    // JAVASCRIPT / TYPESCRIPT
-    // ----------------------------
-    // Auto update imports on file move
-    "js/ts.updateImportsOnFileMove.enabled": "always",
+	// ----------------------------
+	// GIT
+	// ----------------------------
+	// Show diff in gutter
+	"scm.diffDecorations": "gutter",
+	// Show git status decorations
+	"git.decorations.enabled": true,
 
-    // ----------------------------
-    // EXTENSIONS - DISABLED FEATURES
-    // ----------------------------
-    // Disable GitHD inline blame (clean UI)
-    "githd.blameView.enabled": "disabled",
+	// ----------------------------
+	// JAVASCRIPT / TYPESCRIPT
+	// ----------------------------
+	// Auto update imports on file move
+	"js/ts.updateImportsOnFileMove.enabled": "always",
 
-    // ----------------------------
-    // SEARCH / EXCLUDE
-    // ----------------------------
-    // Exclude heavy folders from search
-    "search.exclude": {
-        "**/.next": true,
-        "**/node_modules": true,
-        "**/dist": true,
-        "**/build": true,
-        "**/coverage": true
-    },
+	// ----------------------------
+	// EXTENSIONS - DISABLED FEATURES
+	// ----------------------------
+	// Disable GitHD inline blame (clean UI)
+	"githd.blameView.enabled": "disabled",
 
-    // Hide folders in explorer
-    "files.exclude": {
-        "**/.next": true,
-        "**/dist": true,
-        "**/build": true,
-        "**/coverage": true
-    },
+	// ----------------------------
+	// SEARCH / EXCLUDE
+	// ----------------------------
+	// Exclude heavy folders from search
+	"search.exclude": {
+		"**/.next": true,
+		"**/node_modules": true,
+		"**/dist": true,
+		"**/build": true,
+		"**/coverage": true
+	},
+
+	// Hide folders in explorer
+	"files.exclude": {
+		"**/.next": true,
+		"**/dist": true,
+		"**/build": true,
+		"**/coverage": true
+	}
 }
