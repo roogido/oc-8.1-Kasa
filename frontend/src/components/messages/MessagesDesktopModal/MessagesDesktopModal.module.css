@@ -1,0 +1,331 @@
+.overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 2000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 40px 16px;
+	background: rgba(0, 0, 0, 0.68);
+}
+
+.modal {
+	position: relative;
+	z-index: 1;
+	isolation: isolate;
+	display: flex;
+	width: 1059px;
+	max-width: 100%;
+	height: 814px;
+	overflow: hidden;
+	border-radius: var(--radius-lg);
+	background: var(--color-bg-page);
+	box-shadow: 0 4px 14px 3px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex: 0 0 376px;
+	flex-direction: column;
+	width: 376px;
+	padding: 11px 8px;
+	background: var(--color-surface);
+	border-right: 1px solid var(--color-surface-alt);
+}
+
+.sidebarBackArea {
+	display: flex;
+	align-items: flex-start;
+	min-height: 68px;
+	padding: 16px 8px;
+}
+
+.backButton {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-xs);
+	padding: 8px 16px;
+	border: 0;
+	border-radius: var(--radius-md);
+	background: var(--color-surface-alt);
+	color: var(--color-text-muted);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-sm);
+	cursor: pointer;
+}
+
+.sidebarTitle {
+	margin: 0;
+	padding: 0 8px;
+	color: var(--color-text-strong);
+	font-size: var(--font-size-2xl);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-xl);
+}
+
+.conversationList {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	margin-top: 7px;
+	min-height: 0;
+	overflow-y: auto;
+}
+
+.conversationRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	min-height: 61.05px;
+	padding: 8px 10px;
+	border: 0;
+	border-bottom: 1px solid var(--color-surface-alt);
+	background: var(--color-surface);
+	text-align: left;
+	cursor: pointer;
+}
+
+.conversationRowSelected {
+	background: var(--color-bg-page);
+}
+
+.conversationLeft {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	min-width: 0;
+}
+
+.conversationAvatar {
+	flex: 0 0 44.5px;
+	width: 44.5px;
+	height: 45.05px;
+	border-radius: 5.494px;
+	background: var(--color-surface-alt);
+}
+
+.conversationText {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+
+.conversationName {
+	color: var(--color-text-strong);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-sm);
+}
+
+.conversationNameSelected {
+	font-weight: var(--font-weight-medium);
+}
+
+.conversationSnippet {
+	display: block;
+	max-width: 190px;
+	overflow: hidden;
+	color: var(--color-text-muted);
+	font-size: 10px;
+	font-weight: var(--font-weight-regular);
+	line-height: 1.4;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.conversationRight {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 8px;
+	flex: 0 0 auto;
+}
+
+.conversationTime {
+	color: var(--color-text-muted);
+	font-size: 10px;
+	font-weight: var(--font-weight-regular);
+	line-height: 1.4;
+}
+
+.conversationDot {
+	width: 6px;
+	height: 6px;
+	border-radius: 999px;
+	background: var(--color-primary);
+}
+
+.threadPanel {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	min-width: 0;
+	background-color: var(--color-bg-page);
+	isolation: isolate;
+}
+
+.threadHistory {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 24px;
+	padding: 40px 42px;
+	overflow-y: auto;
+	background-color: var(--color-bg-page);
+	background-image: none;
+}
+
+.messageRow {
+	display: flex;
+	gap: 6px;
+}
+
+.messageRowIncoming {
+	justify-content: flex-start;
+}
+
+.messageRowOutgoing {
+	justify-content: flex-end;
+}
+
+.messageAvatar {
+	flex: 0 0 28px;
+	width: 28px;
+	height: 28px;
+	border-radius: 6px;
+	background: var(--color-text-muted);
+}
+
+.messageContent {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-width: 320px;
+}
+
+.messageContentIncoming {
+	align-items: flex-start;
+}
+
+.messageContentOutgoing {
+	align-items: flex-end;
+}
+
+.messageMeta {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	color: var(--color-text-muted);
+	font-size: 8px;
+	font-weight: var(--font-weight-regular);
+	line-height: 1.4;
+}
+
+.messageBubble {
+	max-width: 273px;
+	padding: 12px;
+	border: 1px solid var(--color-surface-alt);
+	font-size: 10px;
+	font-weight: var(--font-weight-regular);
+	line-height: 1.5;
+}
+
+.messageBubbleIncoming {
+	border-radius: 8px 20px 20px 20px;
+	background: var(--color-surface);
+	color: var(--color-text-strong);
+}
+
+.messageBubbleOutgoing {
+	border-radius: 20px 8px 20px 20px;
+	background: var(--color-primary-dark);
+	color: var(--color-surface);
+}
+
+.dateSeparator {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+}
+
+.dateLine {
+	flex: 1 1 auto;
+	height: 1px;
+	background: #d4d4d4;
+}
+
+.dateLabel {
+	flex: 0 0 auto;
+	color: var(--color-text-muted);
+	font-size: 8px;
+	font-weight: var(--font-weight-regular);
+	line-height: 1.4;
+}
+
+.composerArea {
+	position: relative;
+	z-index: 2;
+	flex: 0 0 auto;
+	padding: 21px 30px;
+	background: var(--color-surface);
+	border-top: 1px solid var(--color-surface-alt);
+}
+
+.composerBox {
+	position: relative;
+	width: 100%;
+	height: 95px;
+	border: 1px solid var(--color-surface-alt);
+	border-radius: var(--radius-md);
+	background: var(--color-surface);
+}
+
+.composerLabel {
+	position: absolute;
+	top: 16px;
+	left: 15px;
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-xs);
+	pointer-events: none;
+}
+
+.composerInput {
+	width: 100%;
+	height: 100%;
+	padding: 34px 56px 16px 15px;
+	border: 0;
+	outline: none;
+	resize: none;
+	background: transparent;
+	color: var(--color-text-strong);
+	font: inherit;
+}
+
+.sendButton {
+	position: absolute;
+	right: 15px;
+	bottom: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border: 0;
+	border-radius: var(--radius-sm);
+	background: var(--color-primary);
+	color: var(--color-surface);
+	cursor: pointer;
+}

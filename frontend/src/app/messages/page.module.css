@@ -1,0 +1,144 @@
+.desktopOnly {
+	display: block;
+}
+
+.mobileOnly {
+	display: none;
+}
+
+.mobilePage {
+	padding-top: 40px;
+	padding-bottom: 40px;
+	background: var(--color-bg-page);
+}
+
+.mobileBackArea {
+	padding: 0 16px;
+}
+
+.backButton {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-xs);
+	padding: 8px 16px;
+	border-radius: var(--radius-md);
+	background: var(--color-surface-alt);
+	color: var(--color-text-muted);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-sm);
+	text-decoration: none;
+}
+
+.mobileTitle {
+	margin: 0;
+	padding: 24px 16px 0;
+	color: var(--color-text-strong);
+	font-size: var(--font-size-2xl);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-xl);
+}
+
+.mobileConversationList {
+	display: flex;
+	flex-direction: column;
+	margin-top: 16px;
+	border-top: 1px solid var(--color-surface-alt);
+}
+
+.mobileConversationRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	min-height: 61.05px;
+	padding: 8px 10px;
+	border-bottom: 1px solid var(--color-surface-alt);
+	background: var(--color-surface);
+	color: inherit;
+	text-align: left;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.mobileConversationRowSelected {
+	background: var(--color-bg-page);
+}
+
+.conversationLeft {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	min-width: 0;
+}
+
+.conversationAvatar {
+	flex: 0 0 44.5px;
+	width: 44.5px;
+	height: 45.05px;
+	border-radius: 5.494px;
+	background: var(--color-surface-alt);
+}
+
+.conversationText {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+
+.conversationName {
+	color: var(--color-text-strong);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-sm);
+}
+
+.conversationNameSelected {
+	font-weight: var(--font-weight-medium);
+}
+
+.conversationSnippet {
+	display: block;
+	max-width: 190px;
+	overflow: hidden;
+	color: var(--color-text-muted);
+	font-size: 10px;
+	font-weight: var(--font-weight-regular);
+	line-height: 1.4;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.conversationRight {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 8px;
+	flex: 0 0 auto;
+}
+
+.conversationTime {
+	color: var(--color-text-muted);
+	font-size: 10px;
+	font-weight: var(--font-weight-regular);
+	line-height: 1.4;
+}
+
+.conversationDot {
+	width: 6px;
+	height: 6px;
+	border-radius: 999px;
+	background: var(--color-primary);
+}
+
+@media (max-width: 767px) {
+	.desktopOnly {
+		display: none;
+	}
+
+	.mobileOnly {
+		display: block;
+	}
+}
