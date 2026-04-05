@@ -4,7 +4,7 @@
  * Section de grille de logements de la page d'accueil.
  */
 
-import PropertyCard from '@/components/home/PropertyCard/PropertyCard';
+import PropertyCard from '@/components/property/PropertyCard/PropertyCard';
 
 import styles from './PropertyGridSection.module.css';
 

@@ -25,13 +25,11 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang="fr">
 			<body className={inter.className}>
-                <div className="site-shell">
-                    <AppHeader />
-                    <main className="site-main">
-                        {children}
-                    </main>
-                    <AppFooter />
-                </div>
+				<div className="site-shell">
+					<AppHeader />
+					<main className="site-main">{children}</main>
+					<AppFooter />
+				</div>
 			</body>
 		</html>
 	);

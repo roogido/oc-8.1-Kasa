@@ -1,11 +1,15 @@
 /**
- * @file src/components/home/PropertyCard/PropertyCard.js
+ * @file src/components/property/PropertyCard/PropertyCard.js
  * @description
  * Carte de logement de la page d'accueil.
  */
 
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Heart } from 'lucide-react';
 
 import styles from './PropertyCard.module.css';
 
@@ -16,9 +20,10 @@ import styles from './PropertyCard.module.css';
  * @param {string} props.title
  * @param {string} props.location
  * @param {number} props.price
- * @param {string} props.image
+ * @param {string|Object} props.image
  * @param {string} props.imageAlt
  * @param {string} props.href
+ * @param {boolean} [props.isFavorite=false]
  * @returns {JSX.Element}
  */
 export default function PropertyCard({
@@ -28,7 +33,17 @@ export default function PropertyCard({
 	image,
 	imageAlt,
 	href,
+	isFavorite = false,
 }) {
+	const [isLocallyFavorite, setIsLocallyFavorite] = useState(isFavorite);
+
+	function handleFavoriteClick(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		setIsLocallyFavorite((previousValue) => !previousValue);
+	}
+
 	return (
 		<article className={styles.card}>
 			<Link href={href} className={styles.cardLink}>
@@ -40,6 +55,27 @@ export default function PropertyCard({
 						sizes="(max-width: 767px) 100vw, 355px"
 						className={styles.image}
 					/>
+
+					<button
+						type="button"
+						className={`${styles.favoriteButton} ${
+							isLocallyFavorite ? styles.favoriteButtonActive : ''
+						}`}
+						aria-label={
+							isLocallyFavorite
+								? 'Retirer ce logement des favoris'
+								: 'Ajouter ce logement aux favoris'
+						}
+						aria-pressed={isLocallyFavorite}
+						onClick={handleFavoriteClick}
+					>
+						<Heart
+							className={styles.favoriteIcon}
+							size={16}
+							strokeWidth={1.5}
+							aria-hidden="true"
+						/>
+					</button>
 				</div>
 
 				<div className={styles.content}>

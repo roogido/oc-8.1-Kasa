@@ -7,6 +7,35 @@
 	gap: 40px;
 }
 
+.feedbackSection {
+	padding-block: var(--space-2xl);
+}
+
+.feedbackCard {
+	max-width: 720px;
+	margin-inline: auto;
+	padding: var(--space-xl);
+	background-color: var(--color-surface);
+	border: var(--border-soft);
+	border-radius: var(--radius-lg);
+	text-align: center;
+}
+
+.feedbackTitle {
+	margin: 0 0 var(--space-sm);
+	font-size: var(--font-size-xl);
+	font-weight: var(--font-weight-bold);
+	line-height: var(--line-height-xl);
+	color: var(--color-text-strong);
+}
+
+.feedbackText {
+	margin: 0;
+	font-size: var(--font-size-md);
+	line-height: var(--line-height-md);
+	color: var(--color-text-muted);
+}
+
 @media (max-width: 767px) {
 	.content {
 		padding-top: 51px;
