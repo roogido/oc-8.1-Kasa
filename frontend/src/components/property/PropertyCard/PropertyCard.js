@@ -6,10 +6,15 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
+
+import {
+	isFavorite as isPropertyFavorite,
+	toggleFavorite,
+} from '@/services/favoriteStorageService';
 
 import styles from './PropertyCard.module.css';
 
@@ -17,31 +22,36 @@ import styles from './PropertyCard.module.css';
  * Carte de logement.
  *
  * @param {Object} props
+ * @param {string} props.propertyId
  * @param {string} props.title
  * @param {string} props.location
  * @param {number} props.price
  * @param {string|Object} props.image
  * @param {string} props.imageAlt
  * @param {string} props.href
- * @param {boolean} [props.isFavorite=false]
  * @returns {JSX.Element}
  */
 export default function PropertyCard({
+	propertyId,
 	title,
 	location,
 	price,
 	image,
 	imageAlt,
 	href,
-	isFavorite = false,
 }) {
-	const [isLocallyFavorite, setIsLocallyFavorite] = useState(isFavorite);
+	const [isLocallyFavorite, setIsLocallyFavorite] = useState(false);
+
+	useEffect(() => {
+		setIsLocallyFavorite(isPropertyFavorite(propertyId));
+	}, [propertyId]);
 
 	function handleFavoriteClick(event) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		setIsLocallyFavorite((previousValue) => !previousValue);
+		const nextState = toggleFavorite(propertyId);
+		setIsLocallyFavorite(nextState.isFavorite);
 	}
 
 	return (

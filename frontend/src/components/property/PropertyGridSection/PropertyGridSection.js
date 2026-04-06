@@ -1,5 +1,5 @@
 /**
- * @file src/components/home/PropertyGridSection/PropertyGridSection.js
+ * @file src/components/property/PropertyGridSection/PropertyGridSection.js
  * @description
  * Section de grille de logements de la page d'accueil.
  */
@@ -22,6 +22,7 @@ export default function PropertyGridSection({ properties }) {
 				{properties.map((property) => (
 					<PropertyCard
 						key={property.id}
+						propertyId={property.propertyId}
 						title={property.title}
 						location={property.location}
 						price={property.price}

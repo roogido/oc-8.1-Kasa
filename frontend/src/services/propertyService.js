@@ -4,7 +4,7 @@
  * Services métier liés aux propriétés.
  */
 
-import { apiRequest } from '@/lib/apiClient';
+import { ApiClientError, apiRequest } from '@/lib/apiClient';
 
 /**
  * Retourne une image sûre pour la card.
@@ -53,6 +53,7 @@ export function mapPropertyToHomeCard(property) {
 
 	return {
 		id: String(id ?? ''),
+		propertyId: String(id ?? ''),
 		title:
 			typeof property?.title === 'string' && property.title.trim() !== ''
 				? property.title.trim()
@@ -94,7 +95,10 @@ export async function getHomeProperties() {
  * Retourne la galerie normalisée d'un logement.
  *
  * @param {Object} property
- * @returns {{ featuredImage: { src: string, alt: string }, thumbnails: Array<{ id: string, src: string, alt: string }> }}
+ * @returns {{
+ *   featuredImage: { src: string, alt: string },
+ *   thumbnails: Array<{ id: string, src: string, alt: string }>
+ * }}
  */
 function mapPropertyGallery(property) {
 	const pictures = Array.isArray(property?.pictures)
@@ -109,7 +113,6 @@ function mapPropertyGallery(property) {
 			? property.cover.trim()
 			: null;
 
-	// Construit la liste finale des images à afficher, puis enlève les doublons.
 	const imageSources = cover ? [cover, ...pictures] : [...pictures];
 	const uniqueSources = [...new Set(imageSources)];
 
