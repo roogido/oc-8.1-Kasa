@@ -26,6 +26,28 @@
 	width: 616px;
 }
 
+.feedbackSection {
+	padding-block: var(--space-xl);
+}
+
+.feedbackCard {
+	max-width: 720px;
+	margin-inline: auto;
+	padding: var(--space-xl);
+	background-color: var(--color-surface);
+	border: var(--border-soft);
+	border-radius: var(--radius-lg);
+	text-align: center;
+}
+
+.feedbackTitle {
+	margin: 0 0 var(--space-sm);
+	font-size: var(--font-size-xl);
+	font-weight: var(--font-weight-bold);
+	line-height: var(--line-height-xl);
+	color: var(--color-text-strong);
+}
+
 .mobileHostRow {
 	display: none;
 }

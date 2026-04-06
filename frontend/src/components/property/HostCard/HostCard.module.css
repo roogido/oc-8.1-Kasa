@@ -1,98 +1,98 @@
 .card {
-	width: 100%;
-	max-width: 345px;
-	padding: 24px;
-	background-color: var(--color-surface);
-	border: 1px solid var(--color-border-soft);
-	border-radius: var(--radius-lg);
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
+    width: 100%;
+    max-width: 345px;
+    padding: 24px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .title {
-	margin: 0;
-	font-size: 16px;
-	font-weight: var(--font-weight-medium);
-	line-height: 1.426;
-	color: var(--color-text-strong);
+    margin: 0;
+    font-size: 16px;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.426;
+    color: var(--color-text-strong);
 }
 
 .profileRow {
-	display: flex;
-	align-items: center;
-	gap: 18px;
-	min-height: 114px;
-	padding-block: 16px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 114px;
+    padding-block: 16px;
 }
 
 .avatarWrapper {
-	position: relative;
-	width: 82px;
-	height: 82px;
-	overflow: hidden;
-	border-radius: var(--radius-lg);
-	flex-shrink: 0;
-	background-color: var(--color-surface-alt);
+    position: relative;
+    width: 82px;
+    height: 82px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+    background-color: var(--color-surface-alt);
 }
 
 .avatar {
-	object-fit: cover;
+    object-fit: cover;
 }
 
 .name {
-	margin: 0;
-	font-size: 16px;
-	font-weight: var(--font-weight-regular);
-	line-height: 1.426;
-	color: var(--color-text-strong);
-	flex: 1;
+    margin: 0;
+    font-size: 16px;
+    font-weight: var(--font-weight-regular);
+    line-height: 1.426;
+    color: var(--color-text-strong);
+    flex: 1;
 }
 
 .ratingBadge {
-	display: inline-flex;
-	align-items: center;
-	gap: 4px;
-	padding: 8px;
-	background-color: var(--color-surface-alt);
-	border-radius: var(--radius-lg);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-lg);
 }
 
 .ratingStar {
-	font-size: 16px;
-	line-height: 1;
-	color: var(--color-primary);
+    font-size: 16px;
+    line-height: 1;
+    color: var(--color-primary);
 }
 
 .ratingValue {
-	font-size: 16px;
-	font-weight: var(--font-weight-regular);
-	line-height: 1.426;
-	color: var(--color-text-strong);
+    font-size: 16px;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.426;
+    color: var(--color-text-strong);
 }
 
 .actions {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .button {
-	width: 100%;
-	min-height: 36px;
-	padding: 8px 32px;
-	border: 0;
-	border-radius: var(--radius-lg);
-	background-color: var(--color-primary);
-	font-size: var(--font-size-sm);
-	font-weight: var(--font-weight-medium);
-	line-height: var(--line-height-sm);
-	color: var(--color-surface);
-	cursor: pointer;
+    width: 100%;
+    min-height: 36px;
+    padding: 8px 32px;
+    border: 0;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-light);
+    line-height: var(--line-height-sm);
+    color: var(--color-surface);
+    cursor: pointer;
 }
 
 @media (max-width: 767px) {
-	.card {
-		max-width: 345px;
-	}
+    .card {
+        max-width: 345px;
+    }
 }

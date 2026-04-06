@@ -11,7 +11,7 @@ import PropertyBackButton from '@/components/property/PropertyBackButton/Propert
 import PropertyGallery from '@/components/property/PropertyGallery/PropertyGallery';
 import PropertyInfoCard from '@/components/property/PropertyInfoCard/PropertyInfoCard';
 
-import { propertyDetailsById } from '@/data/propertyDetails';
+import { getPropertyDetail } from '@/services/propertyService';
 
 import styles from './page.module.css';
 
@@ -24,10 +24,43 @@ import styles from './page.module.css';
  */
 export default async function PropertyDetailPage({ params }) {
 	const { propertyId } = await params;
-	const property = propertyDetailsById[propertyId];
 
-	if (!property) {
+	let property = null;
+	let propertyErrorMessage = '';
+
+	try {
+		property = await getPropertyDetail(propertyId);
+	} catch (error) {
+		propertyErrorMessage =
+			error instanceof Error
+				? error.message
+				: 'Impossible de charger le logement.';
+	}
+
+	if (property === null && propertyErrorMessage === '') {
 		notFound();
+	}
+
+	if (property === null) {
+		return (
+			<div className={styles.content}>
+				<div className={styles.backRow}>
+					<PropertyBackButton href="/" />
+				</div>
+
+				<section
+					className={styles.feedbackSection}
+					aria-labelledby="property-error-title"
+				>
+					<div className={styles.feedbackCard}>
+						<h1 id="property-error-title" className={styles.feedbackTitle}>
+							Impossible de charger ce logement
+						</h1>
+						<p className={styles.feedbackText}>{propertyErrorMessage}</p>
+					</div>
+				</section>
+			</div>
+		);
 	}
 
 	return (

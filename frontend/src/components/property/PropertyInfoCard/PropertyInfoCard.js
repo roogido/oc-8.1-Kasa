@@ -4,6 +4,8 @@
  * Carte d'informations du logement.
  */
 
+import { MapPin } from 'lucide-react';
+
 import PropertyChipList from '@/components/property/PropertyChipList/PropertyChipList';
 
 import styles from './PropertyInfoCard.module.css';
@@ -33,9 +35,10 @@ export default function PropertyInfoCard({
 					<h1 className={styles.title}>{title}</h1>
 
 					<div className={styles.locationRow}>
-						<span className={styles.locationIcon} aria-hidden="true">
-							&#9673;
-						</span>
+						<MapPin
+							className={styles.locationIcon}
+							aria-hidden="true"
+						/>
 						<p className={styles.location}>{location}</p>
 					</div>
 				</div>
