@@ -70,10 +70,7 @@ export default async function PropertyDetailPage({ params }) {
 			</div>
 
 			<div className={styles.topRow}>
-				<PropertyGallery
-					featuredImage={property.gallery.featuredImage}
-					thumbnails={property.gallery.thumbnails}
-				/>
+				<PropertyGallery images={property.gallery.images} />
 
 				<HostCard
 					name={property.host.name}

@@ -92,13 +92,10 @@ export async function getHomeProperties() {
 }
 
 /**
- * Retourne la galerie normalisée d'un logement.
+ * Retourne la galerie normalisée d'un logement pour le carrousel.
  *
  * @param {Object} property
- * @returns {{
- *   featuredImage: { src: string, alt: string },
- *   thumbnails: Array<{ id: string, src: string, alt: string }>
- * }}
+ * @returns {{ images: Array<{ id: string, src: string, alt: string }> }}
  */
 function mapPropertyGallery(property) {
 	const pictures = Array.isArray(property?.pictures)
@@ -115,8 +112,10 @@ function mapPropertyGallery(property) {
 
 	const imageSources = cover ? [cover, ...pictures] : [...pictures];
 	const uniqueSources = [...new Set(imageSources)];
-
-	const featuredSource = uniqueSources[0] ?? '/placeholder-property.png';
+	const safeSources =
+		uniqueSources.length > 0
+			? uniqueSources
+			: ['/placeholder-property.png'];
 
 	const title =
 		typeof property?.title === 'string' && property.title.trim() !== ''
@@ -124,14 +123,13 @@ function mapPropertyGallery(property) {
 			: 'Logement';
 
 	return {
-		featuredImage: {
-			src: featuredSource,
-			alt: `Image principale du logement ${title}`,
-		},
-		thumbnails: uniqueSources.slice(1).map((source, index) => ({
-			id: `thumb-${index + 1}`,
+		images: safeSources.map((source, index) => ({
+			id: `image-${index + 1}`,
 			src: source,
-			alt: `Image ${index + 2} du logement ${title}`,
+			alt:
+				index === 0
+					? `Image principale du logement ${title}`
+					: `Image ${index + 1} du logement ${title}`,
 		})),
 	};
 }
