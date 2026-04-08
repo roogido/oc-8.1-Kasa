@@ -8,6 +8,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import { buildPropertyRouteSegment } from '@/lib/slug';
 import FavoritesGrid from '@/components/favorites/FavoritesGrid/FavoritesGrid';
 import FavoritesIntro from '@/components/favorites/FavoritesIntro/FavoritesIntro';
 import { internalApiRequest } from '@/lib/internalApiClient';
@@ -44,13 +45,17 @@ function getFavoriteImage(property) {
 }
 
 /**
- * Mappe une propriété backend vers le contrat UI de la page Favoris.
+ * Mappe une propriété backend vers le contrat UI d'une carte de la page Favoris.
  *
  * @param {Object} property
  * @returns {Object}
  */
 function mapPropertyToFavoriteCard(property) {
 	const id = String(property?.id ?? '');
+	const routeSegment = buildPropertyRouteSegment(
+		id,
+		typeof property?.title === 'string' ? property.title : '',
+	);
 
 	return {
 		id,
@@ -71,7 +76,7 @@ function mapPropertyToFavoriteCard(property) {
 			typeof property?.title === 'string' && property.title.trim() !== ''
 				? `Photo du logement ${property.title.trim()}`
 				: 'Photo du logement',
-		href: `/properties/${encodeURIComponent(id)}`,
+		href: `/properties/${encodeURIComponent(routeSegment)}`,
 	};
 }
 

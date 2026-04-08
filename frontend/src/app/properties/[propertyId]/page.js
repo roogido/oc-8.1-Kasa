@@ -6,6 +6,7 @@
 
 import { notFound } from 'next/navigation';
 
+import { extractPropertyIdFromRouteSegment } from '@/lib/slug';
 import HostCard from '@/components/property/HostCard/HostCard';
 import PropertyBackButton from '@/components/property/PropertyBackButton/PropertyBackButton';
 import PropertyGallery from '@/components/property/PropertyGallery/PropertyGallery';
@@ -24,12 +25,17 @@ import styles from './page.module.css';
  */
 export default async function PropertyDetailPage({ params }) {
 	const { propertyId } = await params;
+	const backendPropertyId = extractPropertyIdFromRouteSegment(propertyId);
+
+	if (backendPropertyId === '') {
+		notFound();
+	}
 
 	let property = null;
 	let propertyErrorMessage = '';
 
 	try {
-		property = await getPropertyDetail(propertyId);
+		property = await getPropertyDetail(backendPropertyId);
 	} catch (error) {
 		propertyErrorMessage =
 			error instanceof Error

@@ -4,6 +4,7 @@
  * Services métier liés aux propriétés.
  */
 
+import { buildPropertyRouteSegment } from '@/lib/slug';
 import { ApiClientError, apiRequest } from '@/lib/apiClient';
 
 /**
@@ -43,17 +44,22 @@ function getPropertyCardAlt(property) {
 }
 
 /**
- * Mappe une propriété backend vers le contrat UI de la Home.
+ * Mappe une propriété backend vers le contrat UI d'une carte de la page Home.
  *
  * @param {Object} property
  * @returns {Object}
  */
 export function mapPropertyToHomeCard(property) {
 	const id = property?.id;
+	const normalizedId = String(id ?? '');
+	const routeSegment = buildPropertyRouteSegment(
+		normalizedId,
+		typeof property?.title === 'string' ? property.title : '',
+	);
 
 	return {
-		id: String(id ?? ''),
-		propertyId: String(id ?? ''),
+		id: normalizedId,
+		propertyId: normalizedId,
 		title:
 			typeof property?.title === 'string' && property.title.trim() !== ''
 				? property.title.trim()
@@ -68,7 +74,7 @@ export function mapPropertyToHomeCard(property) {
 			: 0,
 		image: getPropertyCardImage(property),
 		imageAlt: getPropertyCardAlt(property),
-		href: `/properties/${encodeURIComponent(String(id ?? ''))}`,
+		href: `/properties/${encodeURIComponent(routeSegment)}`,
 	};
 }
 
