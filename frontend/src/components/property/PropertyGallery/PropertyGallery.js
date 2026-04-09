@@ -63,15 +63,26 @@ export default function PropertyGallery({ images }) {
 	return (
 		<section className={styles.gallery} aria-label="Galerie du logement">
 			<div className={styles.imageStage}>
-				<div className={styles.imageWrapper}>
-					<Image
-						src={activeImage.src}
-						alt={activeImage.alt}
-						fill
-						priority
-						sizes="(max-width: 767px) 100vw, 616px"
-						className={styles.image}
-					/>
+				<div
+					className={styles.track}
+					style={{
+						transform: `translateX(-${currentIndex * 100}%)`,
+					}}
+				>
+					{normalizedImages.map((image) => (
+						<div key={image.id} className={styles.slide}>
+							<div className={styles.imageWrapper}>
+								<Image
+									src={image.src}
+									alt={image.alt}
+									fill
+									priority={image.id === activeImage.id}
+									sizes="(max-width: 767px) 100vw, 616px"
+									className={styles.image}
+								/>
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 

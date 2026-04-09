@@ -4,6 +4,8 @@
  * Carte de bien pour la page Favoris.
  */
 
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
@@ -14,22 +16,33 @@ import styles from './FavoritePropertyCard.module.css';
  * Carte d'un bien favori.
  *
  * @param {Object} props
+ * @param {string} props.propertyId
  * @param {string} props.title
  * @param {string} props.location
  * @param {number} props.price
  * @param {string} props.imageAlt
  * @param {string} props.href
  * @param {*} props.image
+ * @param {(propertyId: string) => void} props.onRemoveFavorite
  * @returns {JSX.Element}
  */
 export default function FavoritePropertyCard({
+	propertyId,
 	title,
 	location,
 	price,
 	image,
 	imageAlt,
 	href,
+	onRemoveFavorite,
 }) {
+	function handleRemoveFavorite(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		onRemoveFavorite(propertyId);
+	}
+
 	return (
 		<article className={styles.card}>
 			<Link href={href} className={styles.mediaLink}>
@@ -46,6 +59,8 @@ export default function FavoritePropertyCard({
 						type="button"
 						className={styles.favoriteButton}
 						aria-label={`Retirer ${title} des favoris`}
+						aria-pressed="true"
+						onClick={handleRemoveFavorite}
 					>
 						<Heart className={styles.favoriteIcon} aria-hidden="true" />
 					</button>

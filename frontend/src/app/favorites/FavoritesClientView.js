@@ -12,7 +12,10 @@ import { buildPropertyRouteSegment } from '@/lib/slug';
 import FavoritesGrid from '@/components/favorites/FavoritesGrid/FavoritesGrid';
 import FavoritesIntro from '@/components/favorites/FavoritesIntro/FavoritesIntro';
 import { internalApiRequest } from '@/lib/internalApiClient';
-import { getFavoriteIds } from '@/services/favoriteStorageService';
+import {
+	getFavoriteIds,
+	removeFavorite,
+} from '@/services/favoriteStorageService';
 
 import styles from './page.module.css';
 
@@ -112,9 +115,7 @@ export default function FavoritesClientView() {
 					storedFavoriteIds.includes(String(property?.id ?? '')),
 				);
 
-				setProperties(
-					filteredProperties.map(mapPropertyToFavoriteCard),
-				);
+				setProperties(filteredProperties.map(mapPropertyToFavoriteCard));
 			} catch (error) {
 				setErrorMessage(
 					error instanceof Error
@@ -128,6 +129,15 @@ export default function FavoritesClientView() {
 
 		loadFavorites();
 	}, []);
+
+	function handleRemoveFavorite(propertyId) {
+		const nextFavoriteIds = removeFavorite(propertyId);
+
+		setFavoriteIds(nextFavoriteIds);
+		setProperties((previousProperties) =>
+			previousProperties.filter((property) => property.id !== propertyId),
+		);
+	}
 
 	const hasFavorites = useMemo(() => properties.length > 0, [properties]);
 
@@ -199,7 +209,10 @@ export default function FavoritesClientView() {
 						</div>
 					</section>
 				) : (
-					<FavoritesGrid items={properties} />
+					<FavoritesGrid
+						items={properties}
+						onRemoveFavorite={handleRemoveFavorite}
+					/>
 				)}
 			</div>
 		</div>

@@ -8,6 +8,20 @@
 
 .imageStage {
 	width: 100%;
+	overflow: hidden;
+	border-radius: var(--radius-lg);
+}
+
+.track {
+	display: flex;
+	width: 100%;
+	transition: transform 0.5s ease;
+	will-change: transform;
+}
+
+.slide {
+	flex: 0 0 100%;
+	width: 100%;
 }
 
 .imageWrapper {
@@ -15,7 +29,6 @@
 	width: 100%;
 	aspect-ratio: 616 / 358;
 	overflow: hidden;
-	border-radius: var(--radius-lg);
 	background-color: var(--color-surface-alt);
 }
 

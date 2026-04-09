@@ -16,20 +16,6 @@ import { getHomeProperties } from '@/services/propertyService';
 
 import styles from './page.module.css';
 
-/**
- * Découpe un tableau en deux groupes pour conserver la structure UI
- * actuelle de la Home.
- *
- * @param {Array<Object>} properties
- * @returns {{ sectionOne: Array<Object>, sectionTwo: Array<Object> }}
- */
-function splitHomeProperties(properties) {
-	return {
-		sectionOne: properties.slice(0, 6),
-		sectionTwo: properties.slice(6, 12),
-	};
-}
-
 export default async function HomePage() {
 	let properties = [];
 	let propertiesErrorMessage = '';
@@ -43,7 +29,6 @@ export default async function HomePage() {
 				: 'Impossible de charger les logements.';
 	}
 
-	const { sectionOne, sectionTwo } = splitHomeProperties(properties);
 	const hasProperties = properties.length > 0;
 
 	return (
@@ -61,29 +46,29 @@ export default async function HomePage() {
 					aria-labelledby="home-properties-error-title"
 				>
 					<div className={styles.feedbackCard}>
-						<h2 id="home-properties-error-title" className={styles.feedbackTitle}>
+						<h2
+							id="home-properties-error-title"
+							className={styles.feedbackTitle}
+						>
 							Impossible de charger les logements
 						</h2>
-						<p className={styles.feedbackText}>{propertiesErrorMessage}</p>
+						<p className={styles.feedbackText}>
+							{propertiesErrorMessage}
+						</p>
 					</div>
 				</section>
 			) : hasProperties ? (
-				<>
-					{sectionOne.length > 0 ? (
-						<PropertyGridSection properties={sectionOne} />
-					) : null}
-
-					{sectionTwo.length > 0 ? (
-						<PropertyGridSection properties={sectionTwo} />
-					) : null}
-				</>
+				<PropertyGridSection properties={properties} />
 			) : (
 				<section
 					className={styles.feedbackSection}
 					aria-labelledby="home-properties-empty-title"
 				>
 					<div className={styles.feedbackCard}>
-						<h2 id="home-properties-empty-title" className={styles.feedbackTitle}>
+						<h2
+							id="home-properties-empty-title"
+							className={styles.feedbackTitle}
+						>
 							Aucun logement disponible
 						</h2>
 						<p className={styles.feedbackText}>

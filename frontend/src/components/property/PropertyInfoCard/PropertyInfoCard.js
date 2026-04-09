@@ -6,6 +6,7 @@
 
 import { MapPin } from 'lucide-react';
 
+import Collapse from '@/components/disclosure/Collapse/Collapse';
 import PropertyChipList from '@/components/property/PropertyChipList/PropertyChipList';
 
 import styles from './PropertyInfoCard.module.css';
@@ -30,29 +31,35 @@ export default function PropertyInfoCard({
 }) {
 	return (
 		<article className={styles.card}>
-			<div className={styles.identitySection}>
-				<div className={styles.headingBlock}>
-					<h1 className={styles.title}>{title}</h1>
+			<div className={styles.headingBlock}>
+				<h1 className={styles.title}>{title}</h1>
 
-					<div className={styles.locationRow}>
-						<MapPin
-							className={styles.locationIcon}
-							aria-hidden="true"
-						/>
-						<p className={styles.location}>{location}</p>
-					</div>
+				<div className={styles.locationRow}>
+					<MapPin
+						className={styles.locationIcon}
+						aria-hidden="true"
+					/>
+					<p className={styles.location}>{location}</p>
 				</div>
-
-				<p className={styles.description}>{description}</p>
 			</div>
 
-			<PropertyChipList title="Équipements" items={equipments} />
+			<div className={styles.collapseGroup}>
+				<Collapse title="Description" defaultOpen={true}>
+					<p className={styles.description}>{description}</p>
+				</Collapse>
 
-			<PropertyChipList
-				title="Catégorie"
-				items={categories}
-				variant="row"
-			/>
+				<Collapse title="Équipements">
+					<PropertyChipList title="" items={equipments} />
+				</Collapse>
+
+				<Collapse title="Catégorie">
+					<PropertyChipList
+						title=""
+						items={categories}
+						variant="row"
+					/>
+				</Collapse>
+			</div>
 		</article>
 	);
 }
