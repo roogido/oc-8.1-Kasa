@@ -1,7 +1,7 @@
 /**
  * @file src/app/favorites/FavoritesClientView.js
  * @description
- * Vue client de la page Favoris alimentée par localStorage.
+ * Vue client de la page Favoris alimentée par localStorage via contexte.
  */
 
 'use client';
@@ -11,11 +11,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { buildPropertyRouteSegment } from '@/lib/slug';
 import FavoritesGrid from '@/components/favorites/FavoritesGrid/FavoritesGrid';
 import FavoritesIntro from '@/components/favorites/FavoritesIntro/FavoritesIntro';
+import { useFavorites } from '@/hooks/useFavorites';
 import { internalApiRequest } from '@/lib/internalApiClient';
-import {
-	getFavoriteIds,
-	removeFavorite,
-} from '@/services/favoriteStorageService';
 
 import styles from './page.module.css';
 
@@ -84,7 +81,8 @@ function mapPropertyToFavoriteCard(property) {
 }
 
 export default function FavoritesClientView() {
-	const [favoriteIds, setFavoriteIds] = useState([]);
+	const { favoriteIds, removeFavorite } = useFavorites();
+
 	const [properties, setProperties] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [errorMessage, setErrorMessage] = useState('');
@@ -95,10 +93,7 @@ export default function FavoritesClientView() {
 			setErrorMessage('');
 
 			try {
-				const storedFavoriteIds = getFavoriteIds();
-				setFavoriteIds(storedFavoriteIds);
-
-				if (storedFavoriteIds.length === 0) {
+				if (favoriteIds.length === 0) {
 					setProperties([]);
 					return;
 				}
@@ -112,7 +107,7 @@ export default function FavoritesClientView() {
 					: [];
 
 				const filteredProperties = apiProperties.filter((property) =>
-					storedFavoriteIds.includes(String(property?.id ?? '')),
+					favoriteIds.includes(String(property?.id ?? '')),
 				);
 
 				setProperties(filteredProperties.map(mapPropertyToFavoriteCard));
@@ -128,12 +123,10 @@ export default function FavoritesClientView() {
 		}
 
 		loadFavorites();
-	}, []);
+	}, [favoriteIds]);
 
 	function handleRemoveFavorite(propertyId) {
-		const nextFavoriteIds = removeFavorite(propertyId);
-
-		setFavoriteIds(nextFavoriteIds);
+		removeFavorite(propertyId);
 		setProperties((previousProperties) =>
 			previousProperties.filter((property) => property.id !== propertyId),
 		);
@@ -189,7 +182,7 @@ export default function FavoritesClientView() {
 							</h2>
 							<p className={styles.feedbackText}>
 								Ajoutez des logements à vos favoris depuis la
-								{"page d'accueil pour les retrouver ici."}
+								{" page d'accueil pour les retrouver ici."}
 							</p>
 						</div>
 					</section>

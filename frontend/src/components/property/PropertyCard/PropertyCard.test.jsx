@@ -2,18 +2,13 @@
  * @file src/components/property/PropertyCard/PropertyCard.test.jsx
  * @description
  * Tests unitaires de la carte logement et du toggle favori.
- *       Ici, on teste :
- *          - l’état favori initial lu depuis localStorage
- *          - le clic sur le coeur
- *          - aria-pressed
- *          - le libellé du bouton qui change
- *
  */
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import PropertyCard from './PropertyCard';
+import { FavoritesProvider } from '@/context/FavoritesContext';
 
 vi.mock('next/link', () => ({
 	default: ({ children, href, ...props }) => (
@@ -24,11 +19,15 @@ vi.mock('next/link', () => ({
 }));
 
 vi.mock('next/image', () => ({
-	default: ({ alt, fill, ...props }) => {
+	default: ({ alt, fill, priority, ...props }) => {
 		// eslint-disable-next-line @next/next/no-img-element
 		return <img alt={alt} {...props} />;
 	},
 }));
+
+function renderWithFavorites(ui) {
+	return render(<FavoritesProvider>{ui}</FavoritesProvider>);
+}
 
 describe('PropertyCard', () => {
 	beforeEach(() => {
@@ -36,7 +35,7 @@ describe('PropertyCard', () => {
 	});
 
 	it('affiche un bouton non actif par défaut si le logement n’est pas favori', () => {
-		render(
+		renderWithFavorites(
 			<PropertyCard
 				propertyId="10"
 				title="Appartement cosy"
@@ -58,7 +57,7 @@ describe('PropertyCard', () => {
 	it('lit l’état favori initial depuis localStorage', () => {
 		window.localStorage.setItem('kasa:favorites', JSON.stringify(['10']));
 
-		render(
+		renderWithFavorites(
 			<PropertyCard
 				propertyId="10"
 				title="Appartement cosy"
@@ -80,7 +79,7 @@ describe('PropertyCard', () => {
 	it('bascule en favori au clic et persiste l’id', async () => {
 		const user = userEvent.setup();
 
-		render(
+		renderWithFavorites(
 			<PropertyCard
 				propertyId="10"
 				title="Appartement cosy"
@@ -109,7 +108,7 @@ describe('PropertyCard', () => {
 		const user = userEvent.setup();
 		window.localStorage.setItem('kasa:favorites', JSON.stringify(['10']));
 
-		render(
+		renderWithFavorites(
 			<PropertyCard
 				propertyId="10"
 				title="Appartement cosy"

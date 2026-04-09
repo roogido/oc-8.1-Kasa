@@ -6,15 +6,11 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
 
-import {
-	isFavorite as isPropertyFavorite,
-	toggleFavorite,
-} from '@/services/favoriteStorageService';
+import { useFavorites } from '@/hooks/useFavorites';
 
 import styles from './PropertyCard.module.css';
 
@@ -40,18 +36,15 @@ export default function PropertyCard({
 	imageAlt,
 	href,
 }) {
-	const [isLocallyFavorite, setIsLocallyFavorite] = useState(false);
+	const { isFavorite, toggleFavorite } = useFavorites();
 
-	useEffect(() => {
-		setIsLocallyFavorite(isPropertyFavorite(propertyId));
-	}, [propertyId]);
+	const isLocallyFavorite = isFavorite(propertyId);
 
 	function handleFavoriteClick(event) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		const nextState = toggleFavorite(propertyId);
-		setIsLocallyFavorite(nextState.isFavorite);
+		toggleFavorite(propertyId);
 	}
 
 	return (
