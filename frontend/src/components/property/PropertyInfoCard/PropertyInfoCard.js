@@ -8,6 +8,7 @@ import { MapPin } from 'lucide-react';
 
 import Collapse from '@/components/disclosure/Collapse/Collapse';
 import PropertyChipList from '@/components/property/PropertyChipList/PropertyChipList';
+import PropertyFavoriteButton from '@/components/property/PropertyFavoriteButton/PropertyFavoriteButton';
 
 import styles from './PropertyInfoCard.module.css';
 
@@ -15,6 +16,7 @@ import styles from './PropertyInfoCard.module.css';
  * Carte d'informations logement.
  *
  * @param {Object} props
+ * @param {string} props.propertyId
  * @param {string} props.title
  * @param {string} props.location
  * @param {string} props.description
@@ -23,6 +25,7 @@ import styles from './PropertyInfoCard.module.css';
  * @returns {JSX.Element}
  */
 export default function PropertyInfoCard({
+	propertyId,
 	title,
 	location,
 	description,
@@ -31,16 +34,20 @@ export default function PropertyInfoCard({
 }) {
 	return (
 		<article className={styles.card}>
-			<div className={styles.headingBlock}>
-				<h1 className={styles.title}>{title}</h1>
+			<div className={styles.headingRow}>
+				<div className={styles.headingBlock}>
+					<h1 className={styles.title}>{title}</h1>
 
-				<div className={styles.locationRow}>
-					<MapPin
-						className={styles.locationIcon}
-						aria-hidden="true"
-					/>
-					<p className={styles.location}>{location}</p>
+					<div className={styles.locationRow}>
+						<MapPin
+							className={styles.locationIcon}
+							aria-hidden="true"
+						/>
+						<p className={styles.location}>{location}</p>
+					</div>
 				</div>
+
+				<PropertyFavoriteButton propertyId={propertyId} />
 			</div>
 
 			<div className={styles.collapseGroup}>

@@ -24,57 +24,6 @@
 	object-fit: cover;
 }
 
-.favoriteButton {
-	position: absolute;
-	top: 16px;
-	right: 16px;
-	z-index: 2;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 32px;
-	height: 32px;
-	padding: 0;
-	border: 0;
-	border-radius: var(--radius-md);
-	background-color: var(--color-surface-alt);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-	transition:
-		background-color var(--transition-fast),
-		transform var(--transition-fast);
-}
-
-.favoriteIcon {
-	width: 16px;
-	height: 16px;
-	flex-shrink: 0;
-	fill: var(--color-text-muted);
-	color: transparent;
-	stroke: transparent;
-	transition: stroke var(--transition-fast);
-}
-
-.favoriteButton:hover {
-	background-color: var(--color-primary);
-}
-
-.favoriteButton:hover .favoriteIcon {
-	stroke: var(--color-surface);
-}
-
-.favoriteButtonActive {
-	background-color: var(--color-primary);
-}
-
-.favoriteButtonActive .favoriteIcon {
-	stroke: var(--color-surface);
-}
-
-.favoriteButton:focus-visible {
-	outline: 2px solid var(--color-primary);
-	outline-offset: 2px;
-}
-
 .content {
 	display: flex;
 	flex-direction: column;

@@ -6,17 +6,75 @@
 
 'use client';
 
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+	createContext,
+	useCallback,
+	useMemo,
+	useSyncExternalStore,
+} from 'react';
 
 import {
 	addFavorite as addFavoriteToStorage,
 	getFavoriteIds,
-	isFavorite as isFavoriteInStorage,
+	getFavoritesUpdatedEventName,
 	removeFavorite as removeFavoriteFromStorage,
 	toggleFavorite as toggleFavoriteInStorage,
 } from '@/services/favoriteStorageService';
 
 export const FavoritesContext = createContext(null);
+
+const EMPTY_FAVORITES_SNAPSHOT = '[]';
+
+/**
+ * Abonne React aux changements de favoris.
+ *
+ * @param {() => void} onStoreChange
+ * @returns {() => void}
+ */
+function subscribeFavorites(onStoreChange) {
+	if (typeof window === 'undefined') {
+		return () => {};
+	}
+
+	const customEventName = getFavoritesUpdatedEventName();
+
+	function handleChange() {
+		onStoreChange();
+	}
+
+	window.addEventListener('storage', handleChange);
+	window.addEventListener(customEventName, handleChange);
+
+	return () => {
+		window.removeEventListener('storage', handleChange);
+		window.removeEventListener(customEventName, handleChange);
+	};
+}
+
+/**
+ * Retourne le snapshot brut courant des favoris côté client.
+ *
+ * @returns {string}
+ */
+function getFavoritesSnapshot() {
+	if (typeof window === 'undefined' || !window.localStorage) {
+		return EMPTY_FAVORITES_SNAPSHOT;
+	}
+
+	return (
+		window.localStorage.getItem('kasa:favorites') ??
+		EMPTY_FAVORITES_SNAPSHOT
+	);
+}
+
+/**
+ * Retourne le snapshot initial côté serveur.
+ *
+ * @returns {string}
+ */
+function getFavoritesServerSnapshot() {
+	return EMPTY_FAVORITES_SNAPSHOT;
+}
 
 /**
  * Provider global des favoris.
@@ -26,44 +84,55 @@ export const FavoritesContext = createContext(null);
  * @returns {JSX.Element}
  */
 export function FavoritesProvider({ children }) {
-	const [favoriteIds, setFavoriteIds] = useState(() => getFavoriteIds());
+	const rawFavoriteIds = useSyncExternalStore(
+		subscribeFavorites,
+		getFavoritesSnapshot,
+		getFavoritesServerSnapshot,
+	);
 
-	useEffect(() => {
-		function handleStorage(event) {
-			if (event.key !== 'kasa:favorites') {
-				return;
+	const favoriteIds = useMemo(() => {
+		try {
+			const parsedValue = JSON.parse(rawFavoriteIds);
+
+			if (!Array.isArray(parsedValue)) {
+				return [];
 			}
 
-			setFavoriteIds(getFavoriteIds());
+			return [
+				...new Set(
+					parsedValue
+						.map((propertyId) => String(propertyId ?? '').trim())
+						.filter((propertyId) => propertyId !== ''),
+				),
+			];
+		} catch {
+			return [];
 		}
+	}, [rawFavoriteIds]);
 
-		window.addEventListener('storage', handleStorage);
+	const isFavorite = useCallback(
+		(propertyId) => {
+			const normalizedPropertyId = String(propertyId ?? '').trim();
 
-		return () => {
-			window.removeEventListener('storage', handleStorage);
-		};
-	}, []);
+			if (normalizedPropertyId === '') {
+				return false;
+			}
 
-	const isFavorite = useCallback((propertyId) => {
-		return isFavoriteInStorage(propertyId);
-	}, []);
+			return favoriteIds.includes(normalizedPropertyId);
+		},
+		[favoriteIds],
+	);
 
 	const addFavorite = useCallback((propertyId) => {
-		const nextFavoriteIds = addFavoriteToStorage(propertyId);
-		setFavoriteIds(nextFavoriteIds);
-		return nextFavoriteIds;
+		return addFavoriteToStorage(propertyId);
 	}, []);
 
 	const removeFavorite = useCallback((propertyId) => {
-		const nextFavoriteIds = removeFavoriteFromStorage(propertyId);
-		setFavoriteIds(nextFavoriteIds);
-		return nextFavoriteIds;
+		return removeFavoriteFromStorage(propertyId);
 	}, []);
 
 	const toggleFavorite = useCallback((propertyId) => {
-		const nextState = toggleFavoriteInStorage(propertyId);
-		setFavoriteIds(nextState.favoriteIds);
-		return nextState;
+		return toggleFavoriteInStorage(propertyId);
 	}, []);
 
 	const value = useMemo(

@@ -10,10 +10,19 @@
 	gap: 32px;
 }
 
+.headingRow {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+}
+
 .headingBlock {
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	gap: 16px;
+	min-width: 0;
 }
 
 .title {
@@ -66,5 +75,9 @@
 @media (max-width: 767px) {
 	.card {
 		max-width: none;
+	}
+
+	.headingRow {
+		gap: 12px;
 	}
 }

@@ -5,6 +5,7 @@
  */
 
 const FAVORITES_STORAGE_KEY = 'kasa:favorites';
+const FAVORITES_UPDATED_EVENT = 'kasa:favorites-updated';
 
 /**
  * Normalise un identifiant de propriété.
@@ -26,6 +27,19 @@ function canUseLocalStorage() {
 		typeof window !== 'undefined' &&
 		typeof window.localStorage !== 'undefined'
 	);
+}
+
+/**
+ * Émet un événement local lorsque les favoris changent.
+ *
+ * @returns {void}
+ */
+function emitFavoritesUpdated() {
+	if (typeof window === 'undefined') {
+		return;
+	}
+
+	window.dispatchEvent(new Event(FAVORITES_UPDATED_EVENT));
 }
 
 /**
@@ -87,6 +101,8 @@ function saveFavoriteIds(favoriteIds) {
 		FAVORITES_STORAGE_KEY,
 		JSON.stringify(favoriteIds),
 	);
+
+	emitFavoritesUpdated();
 }
 
 /**
@@ -174,4 +190,13 @@ export function toggleFavorite(propertyId) {
 		favoriteIds: addFavorite(normalizedPropertyId),
 		isFavorite: true,
 	};
+}
+
+/**
+ * Retourne le nom de l'événement local de mise à jour des favoris.
+ *
+ * @returns {string}
+ */
+export function getFavoritesUpdatedEventName() {
+	return FAVORITES_UPDATED_EVENT;
 }

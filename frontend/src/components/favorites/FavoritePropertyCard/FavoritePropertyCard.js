@@ -8,7 +8,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart } from 'lucide-react';
+
+import FavoriteToggleButton from '@/components/property/FavoriteToggleButton/FavoriteToggleButton';
 
 import styles from './FavoritePropertyCard.module.css';
 
@@ -55,15 +56,12 @@ export default function FavoritePropertyCard({
 						className={styles.image}
 					/>
 
-					<button
-						type="button"
-						className={styles.favoriteButton}
-						aria-label={`Retirer ${title} des favoris`}
-						aria-pressed="true"
+					<FavoriteToggleButton
+						isActive={true}
 						onClick={handleRemoveFavorite}
-					>
-						<Heart className={styles.favoriteIcon} aria-hidden="true" />
-					</button>
+						addLabel={`Ajouter ${title} aux favoris`}
+						removeLabel={`Retirer ${title} des favoris`}
+					/>
 				</div>
 			</Link>
 

@@ -88,6 +88,7 @@ export default async function PropertyDetailPage({ params }) {
 
 			<div className={styles.infoRow}>
 				<PropertyInfoCard
+					propertyId={property.id}
 					title={property.title}
 					location={property.location}
 					description={property.description}

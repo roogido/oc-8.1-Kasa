@@ -8,9 +8,9 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart } from 'lucide-react';
 
 import { useFavorites } from '@/hooks/useFavorites';
+import FavoriteToggleButton from '@/components/property/FavoriteToggleButton/FavoriteToggleButton';
 
 import styles from './PropertyCard.module.css';
 
@@ -59,26 +59,12 @@ export default function PropertyCard({
 						className={styles.image}
 					/>
 
-					<button
-						type="button"
-						className={`${styles.favoriteButton} ${
-							isLocallyFavorite ? styles.favoriteButtonActive : ''
-						}`}
-						aria-label={
-							isLocallyFavorite
-								? 'Retirer ce logement des favoris'
-								: 'Ajouter ce logement aux favoris'
-						}
-						aria-pressed={isLocallyFavorite}
+					<FavoriteToggleButton
+						isActive={isLocallyFavorite}
 						onClick={handleFavoriteClick}
-					>
-						<Heart
-							className={styles.favoriteIcon}
-							size={16}
-							strokeWidth={1.5}
-							aria-hidden="true"
-						/>
-					</button>
+						addLabel="Ajouter ce logement aux favoris"
+						removeLabel="Retirer ce logement des favoris"
+					/>
 				</div>
 
 				<div className={styles.content}>
