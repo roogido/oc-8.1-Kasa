@@ -7,7 +7,7 @@
 import AboutIntroSection from '@/components/about/AboutIntroSection/AboutIntroSection';
 import AboutMissionSection from '@/components/about/AboutMissionSection/AboutMissionSection';
 
-import { aboutPageContent } from '@/data/about';
+import { aboutPageContent } from '@/data/aboutContent';
 
 import styles from './page.module.css';
 

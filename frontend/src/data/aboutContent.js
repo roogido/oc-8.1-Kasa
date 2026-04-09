@@ -1,7 +1,7 @@
 /**
- * @file src/data/about.js
+ * @file src/data/aboutContent.js
  * @description
- * Données mockées de la page À propos de Kasa.
+ * Contenu éditorial statique de la page À propos de Kasa.
  */
 
 import aboutBannerDesktop01 from '@/assets/images/about/about-banner-desktop-01.png';
