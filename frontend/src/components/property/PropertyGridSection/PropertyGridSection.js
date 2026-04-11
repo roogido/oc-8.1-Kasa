@@ -13,6 +13,7 @@ import PropertyCard from '@/components/property/PropertyCard/PropertyCard';
 import styles from './PropertyGridSection.module.css';
 
 const PROPERTIES_PER_SLIDE = 12;
+const PRIORITY_CARDS_COUNT = 3;
 
 /**
  * Découpe les propriétés en groupes de 12 pour le slider Home.
@@ -87,7 +88,7 @@ export default function PropertyGridSection({ properties }) {
 							className={styles.slide}
 						>
 							<div className={styles.grid}>
-								{slideProperties.map((property) => (
+								{slideProperties.map((property, propertyIndex) => (
 									<PropertyCard
 										key={property.id}
 										propertyId={property.propertyId}
@@ -97,6 +98,10 @@ export default function PropertyGridSection({ properties }) {
 										image={property.image}
 										imageAlt={property.imageAlt}
 										href={property.href}
+										isPriorityImage={
+											slideIndex === 0 &&
+											propertyIndex < PRIORITY_CARDS_COUNT
+										}
 									/>
 								))}
 							</div>

@@ -15,14 +15,14 @@ export function slugify(value) {
 		return '';
 	}
 
-	return value
-		.normalize('NFD')
-		.replace(/[\u0300-\u036f]/g, '')
-		.toLowerCase()
-		.trim()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-+|-+$/g, '')
-		.replace(/-{2,}/g, '-');
+    return value
+        .normalize('NFD')              // décompose les accents
+        .replace(/[\u0300-\u036f]/g, '') // supprime les accents
+        .toLowerCase()                 // minuscules
+        .trim()                        // retire espaces début/fin
+        .replace(/[^a-z0-9]+/g, '-')   // remplace groupes invalides par "-"
+        .replace(/^-+|-+$/g, '')       // supprime tirets début/fin
+        .replace(/-{2,}/g, '-');       // compacte les tirets multiples
 }
 
 /**

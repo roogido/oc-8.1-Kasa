@@ -25,6 +25,7 @@ import styles from './PropertyCard.module.css';
  * @param {string|Object} props.image
  * @param {string} props.imageAlt
  * @param {string} props.href
+ * @param {boolean} [props.isPriorityImage=false]
  * @returns {JSX.Element}
  */
 export default function PropertyCard({
@@ -35,6 +36,7 @@ export default function PropertyCard({
 	image,
 	imageAlt,
 	href,
+	isPriorityImage = false,
 }) {
 	const { isFavorite, toggleFavorite } = useFavorites();
 
@@ -57,6 +59,8 @@ export default function PropertyCard({
 						fill
 						sizes="(max-width: 767px) 100vw, 355px"
 						className={styles.image}
+						loading={isPriorityImage ? 'eager' : undefined}
+						fetchPriority={isPriorityImage ? 'high' : undefined}
 					/>
 
 					<FavoriteToggleButton

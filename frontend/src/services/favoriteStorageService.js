@@ -18,15 +18,24 @@ function normalizePropertyId(propertyId) {
 }
 
 /**
- * Vérifie si localStorage est disponible.
+ * Vérifie si localStorage est réellement utilisable.
  *
  * @returns {boolean}
  */
 function canUseLocalStorage() {
-	return (
-		typeof window !== 'undefined' &&
-		typeof window.localStorage !== 'undefined'
-	);
+	try {
+		if (typeof window === 'undefined' || !window.localStorage) {
+			return false;
+		}
+
+		const testKey = '__storage_test__';
+		window.localStorage.setItem(testKey, '1');
+		window.localStorage.removeItem(testKey);
+
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 /**
