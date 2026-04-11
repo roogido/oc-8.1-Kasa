@@ -1,6 +1,7 @@
 /**
  * @file src/app/messages/page.js
- * @description Page mobile de messagerie : liste des conversations.
+ * @description
+ * Page mobile de messagerie : liste des conversations.
  */
 
 'use client';

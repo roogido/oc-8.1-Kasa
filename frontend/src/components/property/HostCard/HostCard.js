@@ -6,6 +6,8 @@
 
 import Image from 'next/image';
 
+import HostContactActions from '@/components/property/HostContactActions/HostContactActions';
+
 import styles from './HostCard.module.css';
 
 /**
@@ -44,15 +46,7 @@ export default function HostCard({ name, rating, avatar, avatarAlt }) {
 				</div>
 			</div>
 
-			<div className={styles.actions}>
-				<button type="button" className={styles.button}>
-					{"Contacter l'hôte"}
-				</button>
-
-				<button type="button" className={styles.button}>
-					Envoyer un message
-				</button>
-			</div>
+			<HostContactActions />
 		</aside>
 	);
 }
