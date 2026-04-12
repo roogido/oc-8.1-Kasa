@@ -69,8 +69,8 @@ export default function LoginPage() {
 					</h1>
 
 					<p className={styles.description}>
-						Connectez-vous pour retrouver vos réservations, vos
-						annonces et tout ce qui rend vos séjours uniques.
+						Connectez-vous pour retrouver vos reservations, vos
+						annonces et tout ce qui rend vos sejours uniques.
 					</p>
 				</header>
 
@@ -126,7 +126,7 @@ export default function LoginPage() {
 
 						<div className={styles.links}>
 							<Link href="/" className={styles.textLink}>
-								Mot de passe oublié
+								Mot de passe oublie
 							</Link>
 
 							<Link href="/sign-in" className={styles.textLink}>

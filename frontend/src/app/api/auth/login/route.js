@@ -63,7 +63,7 @@ export async function POST(request) {
 			return NextResponse.json(
 				{
 					success: false,
-					message: 'Réponse d’authentification invalide.',
+					message: "Reponse d'authentification invalide.",
 				},
 				{ status: 502 },
 			);

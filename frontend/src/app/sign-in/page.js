@@ -194,7 +194,7 @@ export default function SignInPage() {
 							className={styles.submitButton}
 							disabled={isSubmitting}
 						>
-							{isSubmitting ? 'Inscription...' : 'S&apos;inscrire'}
+							{isSubmitting ? 'Inscription...' : "S'inscrire"}
 						</button>
 
 						<Link href="/login" className={styles.textLink}>
