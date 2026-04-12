@@ -47,7 +47,7 @@ export default function LoginPage() {
 				password: normalizedPassword,
 			});
 
-			router.push('/');
+			router.replace('/');
 			router.refresh();
 		} catch (error) {
 			setErrorMessage(

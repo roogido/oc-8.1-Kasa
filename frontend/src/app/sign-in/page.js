@@ -66,7 +66,7 @@ export default function SignInPage() {
 				password: normalizedPassword,
 			});
 
-			router.push('/');
+			router.replace('/');
 			router.refresh();
 		} catch (error) {
 			setErrorMessage(

@@ -34,7 +34,10 @@ export default async function RootLayout({ children }) {
 			<body className={inter.className}>
 				<Providers>
 					<div className="site-shell">
-						<AppHeader isAuthenticated={isAuthenticated} />
+						<AppHeader
+							key={isAuthenticated ? 'auth' : 'guest'}
+							isAuthenticated={isAuthenticated}
+						/>
 						<main className="site-main">{children}</main>
 						<AppFooter />
 					</div>
