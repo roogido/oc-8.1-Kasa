@@ -5,7 +5,7 @@
  */
 
 import Link from 'next/link';
-import { X } from 'lucide-react';
+import { LogIn, LogOut, UserPlus, X } from 'lucide-react';
 
 import Logo from '@/components/ui/Logo/Logo';
 import Button from '@/components/ui/Button/Button';
@@ -29,14 +29,28 @@ function getNavLinkStateClass(href, currentPath) {
  * @param {Object} props
  * @param {string} [props.currentPath='/']
  * @param {boolean} props.isOpen
+ * @param {boolean} [props.isAuthenticated=false]
+ * @param {boolean} [props.isLoggingOut=false]
  * @param {Function} props.onClose
+ * @param {Function} props.onLogout
  * @returns {JSX.Element|null}
  */
 export default function MobileMenu({
 	currentPath = '/',
 	isOpen,
+	isAuthenticated = false,
+	isLoggingOut = false,
 	onClose,
+	onLogout,
 }) {
+	if (!isOpen) {
+		return null;
+	}
+
+	const messagingHref = isAuthenticated
+		? '/messages'
+		: '/login?next=/messages';
+
 	if (!isOpen) {
 		return null;
 	}
@@ -88,7 +102,7 @@ export default function MobileMenu({
 
 					<li>
 						<Link
-							href="/messages"
+							href={messagingHref}
 							className={styles.navLink}
 							onClick={onClose}
 						>
@@ -107,6 +121,42 @@ export default function MobileMenu({
 					</li>
 				</ul>
 			</nav>
+
+			<div className={styles.authSection}>
+				{isAuthenticated ? (
+					<button
+						type="button"
+						className={styles.authButton}
+						onClick={onLogout}
+						disabled={isLoggingOut}
+					>
+						<LogOut size={16} strokeWidth={1.75} />
+						<span>
+							{isLoggingOut ? 'Déconnexion...' : 'Se déconnecter'}
+						</span>
+					</button>
+				) : (
+					<>
+						<Link
+							href="/login"
+							className={styles.authLink}
+							onClick={onClose}
+						>
+							<LogIn size={16} strokeWidth={1.75} />
+							<span>Se connecter</span>
+						</Link>
+
+						<Link
+							href="/sign-in"
+							className={styles.authLink}
+							onClick={onClose}
+						>
+							<UserPlus size={16} strokeWidth={1.75} />
+							<span>{"S'inscrire"}</span>
+						</Link>
+					</>
+				)}
+			</div>
 
 			<div className={styles.ctaWrapper}>
 				<Button href="/add-property" variant="primary" size="md">

@@ -46,3 +46,14 @@ export async function registerUser({
 
 	return data?.data?.user ?? null;
 }
+
+/**
+ * Déconnecte l'utilisateur courant.
+ *
+ * @returns {Promise<void>}
+ */
+export async function logoutUser() {
+	await internalApiRequest('/api/auth/logout', {
+		method: 'POST',
+	});
+}
