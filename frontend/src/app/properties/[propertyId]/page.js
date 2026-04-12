@@ -4,8 +4,10 @@
  * Page détail d'un logement de Kasa.
  */
 
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
+import { AUTH_COOKIE_NAME } from '@/lib/authConstants';
 import { extractPropertyIdFromRouteSegment } from '@/lib/slug';
 import HostCard from '@/components/property/HostCard/HostCard';
 import PropertyBackButton from '@/components/property/PropertyBackButton/PropertyBackButton';
@@ -30,6 +32,10 @@ export default async function PropertyDetailPage({ params }) {
 	if (backendPropertyId === '') {
 		notFound();
 	}
+
+	const cookieStore = await cookies();
+	const authToken = cookieStore.get(AUTH_COOKIE_NAME)?.value ?? '';
+	const isAuthenticated = authToken.trim() !== '';
 
 	let property = null;
 	let propertyErrorMessage = '';
@@ -83,6 +89,7 @@ export default async function PropertyDetailPage({ params }) {
 					rating={property.host.rating}
 					avatar={property.host.avatar}
 					avatarAlt={property.host.avatarAlt}
+					isAuthenticated={isAuthenticated}
 				/>
 			</div>
 
@@ -103,6 +110,7 @@ export default async function PropertyDetailPage({ params }) {
 					rating={property.host.rating}
 					avatar={property.host.avatar}
 					avatarAlt={property.host.avatarAlt}
+					isAuthenticated={isAuthenticated}
 				/>
 			</div>
 		</div>

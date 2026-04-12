@@ -2,16 +2,21 @@
  * @file src/components/property/HostContactActions/HostContactActions.js
  * @description
  * Actions de contact de l'hôte :
- * - desktop : ouvre la modale de messagerie
- * - mobile : redirige vers la page /messages
+ * - non connecté :
+ *   redirige vers /login avec retour sur la fiche et intention
+ *   d'ouverture de la messagerie
+ * - connecté :
+ *   - desktop : ouvre la modale de messagerie
+ *   - mobile : redirige vers la page /messages
  */
 
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import MessagesDesktopModal from '@/components/messages/MessagesDesktopModal/MessagesDesktopModal';
+import { buildLoginMessagesHref } from '@/lib/messagesNavigation';
 
 import styles from './HostContactActions.module.css';
 
@@ -31,13 +36,29 @@ function isDesktopViewport() {
 /**
  * Actions de contact de l'hôte.
  *
+ * @param {Object} props
+ * @param {boolean} [props.isAuthenticated=false]
  * @returns {JSX.Element}
  */
-export default function HostContactActions() {
+export default function HostContactActions({
+	isAuthenticated = false,
+}) {
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
 	const router = useRouter();
+
 	const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(false);
 
+	const loginMessagesHref = useMemo(() => {
+		return buildLoginMessagesHref(pathname, searchParams.toString());
+	}, [pathname, searchParams]);
+
 	function handleContactClick() {
+		if (!isAuthenticated) {
+			router.push(loginMessagesHref);
+			return;
+		}
+
 		if (isDesktopViewport()) {
 			setIsMessagesModalOpen(true);
 			return;

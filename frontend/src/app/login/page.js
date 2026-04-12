@@ -6,13 +6,37 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { loginUser } from '@/services/authService';
 
 import styles from './page.module.css';
+
+/**
+ * Retourne une destination interne sûre après authentification.
+ *
+ * @param {string|null} nextPath
+ * @returns {string}
+ */
+function getSafeNextPath(nextPath) {
+	if (typeof nextPath !== 'string') {
+		return '/';
+	}
+
+	const trimmedPath = nextPath.trim();
+
+	if (
+		trimmedPath === '' ||
+		!trimmedPath.startsWith('/') ||
+		trimmedPath.startsWith('//')
+	) {
+		return '/';
+	}
+
+	return trimmedPath;
+}
 
 /**
  * Page de connexion.
@@ -21,6 +45,11 @@ import styles from './page.module.css';
  */
 export default function LoginPage() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	const redirectPath = useMemo(() => {
+		return getSafeNextPath(searchParams.get('next'));
+	}, [searchParams]);
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -47,7 +76,7 @@ export default function LoginPage() {
 				password: normalizedPassword,
 			});
 
-			router.replace('/');
+			router.replace(redirectPath);
 			router.refresh();
 		} catch (error) {
 			setErrorMessage(
@@ -60,6 +89,11 @@ export default function LoginPage() {
 		}
 	}
 
+	const signInHref =
+		redirectPath !== '/'
+			? `/sign-in?next=${encodeURIComponent(redirectPath)}`
+			: '/sign-in';
+
 	return (
 		<section className={styles.section} aria-labelledby="login-title">
 			<div className={styles.panel}>
@@ -69,8 +103,8 @@ export default function LoginPage() {
 					</h1>
 
 					<p className={styles.description}>
-						Connectez-vous pour retrouver vos reservations, vos
-						annonces et tout ce qui rend vos sejours uniques.
+						Connectez-vous pour retrouver vos réservations, vos
+						annonces et tout ce qui rend vos séjours uniques.
 					</p>
 				</header>
 
@@ -126,10 +160,10 @@ export default function LoginPage() {
 
 						<div className={styles.links}>
 							<Link href="/" className={styles.textLink}>
-								Mot de passe oublie
+								Mot de passe oublié
 							</Link>
 
-							<Link href="/sign-in" className={styles.textLink}>
+							<Link href={signInHref} className={styles.textLink}>
 								Pas encore de compte ? Inscrivez-vous
 							</Link>
 						</div>

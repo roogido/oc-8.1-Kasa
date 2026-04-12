@@ -18,9 +18,16 @@ import styles from './HostCard.module.css';
  * @param {number} props.rating
  * @param {StaticImageData|string} props.avatar
  * @param {string} props.avatarAlt
+ * @param {boolean} [props.isAuthenticated=false]
  * @returns {JSX.Element}
  */
-export default function HostCard({ name, rating, avatar, avatarAlt }) {
+export default function HostCard({
+	name,
+	rating,
+	avatar,
+	avatarAlt,
+	isAuthenticated = false,
+}) {
 	return (
 		<aside className={styles.card}>
 			<h2 className={styles.title}>Votre hôte</h2>
@@ -46,7 +53,7 @@ export default function HostCard({ name, rating, avatar, avatarAlt }) {
 				</div>
 			</div>
 
-			<HostContactActions />
+			<HostContactActions isAuthenticated={isAuthenticated} />
 		</aside>
 	);
 }

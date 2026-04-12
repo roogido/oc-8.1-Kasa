@@ -6,9 +6,9 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
 	Heart,
 	LogIn,
@@ -22,6 +22,10 @@ import Logo from '@/components/ui/Logo/Logo';
 import MobileMenu from '@/components/layout/MobileMenu/MobileMenu';
 import MessagesDesktopModal from '@/components/messages/MessagesDesktopModal/MessagesDesktopModal';
 import { logoutUser } from '@/services/authService';
+import {
+	buildLoginMessagesHref,
+	removeOpenMessagesParam,
+} from '@/lib/messagesNavigation';
 
 import styles from './AppHeader.module.css';
 
@@ -45,11 +49,34 @@ function getNavLinkStateClass(href, currentPath) {
  */
 export default function AppHeader({ isAuthenticated = false }) {
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
 	const router = useRouter();
 
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(false);
+	const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(() => {
+		if (typeof window === 'undefined') {
+			return false;
+		}
+
+		return (
+			isAuthenticated &&
+			searchParams.get('openMessages') === '1' &&
+			window.innerWidth >= 768
+		);
+	});
+
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+	const searchParamsString = searchParams.toString();
+	const shouldOpenMessages = searchParams.get('openMessages') === '1';
+
+	const loginMessagesHref = useMemo(() => {
+		return buildLoginMessagesHref(pathname, searchParamsString);
+	}, [pathname, searchParamsString]);
+
+	const cleanedCurrentPath = useMemo(() => {
+		return removeOpenMessagesParam(pathname, searchParamsString);
+	}, [pathname, searchParamsString]);
 
 	useEffect(() => {
 		function handleEscape(event) {
@@ -82,6 +109,19 @@ export default function AppHeader({ isAuthenticated = false }) {
 			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
+
+	useEffect(() => {
+		if (!isAuthenticated || !shouldOpenMessages) {
+			return;
+		}
+
+		if (window.innerWidth >= 768) {
+			router.replace(cleanedCurrentPath, { scroll: false });
+			return;
+		}
+
+		router.replace('/messages');
+	}, [cleanedCurrentPath, isAuthenticated, router, shouldOpenMessages]);
 
 	async function handleLogout() {
 		if (isLoggingOut) {
@@ -178,7 +218,7 @@ export default function AppHeader({ isAuthenticated = false }) {
 										</button>
 									) : (
 										<Link
-											href="/login?next=/messages"
+											href={loginMessagesHref}
 											className={styles.iconButton}
 											aria-label="Se connecter pour accéder à la messagerie"
 										>
@@ -204,7 +244,10 @@ export default function AppHeader({ isAuthenticated = false }) {
 											onClick={handleLogout}
 											disabled={isLoggingOut}
 										>
-											<LogOut size={16} strokeWidth={1.75} />
+											<LogOut
+												size={16}
+												strokeWidth={1.75}
+											/>
 										</button>
 									) : (
 										<>
@@ -213,7 +256,10 @@ export default function AppHeader({ isAuthenticated = false }) {
 												className={styles.iconButton}
 												aria-label="Se connecter"
 											>
-												<LogIn size={16} strokeWidth={1.75} />
+												<LogIn
+													size={16}
+													strokeWidth={1.75}
+												/>
 											</Link>
 
 											<span

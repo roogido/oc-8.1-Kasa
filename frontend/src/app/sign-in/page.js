@@ -6,13 +6,37 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { registerUser } from '@/services/authService';
 
 import styles from './page.module.css';
+
+/**
+ * Retourne une destination interne sûre après authentification.
+ *
+ * @param {string|null} nextPath
+ * @returns {string}
+ */
+function getSafeNextPath(nextPath) {
+	if (typeof nextPath !== 'string') {
+		return '/';
+	}
+
+	const trimmedPath = nextPath.trim();
+
+	if (
+		trimmedPath === '' ||
+		!trimmedPath.startsWith('/') ||
+		trimmedPath.startsWith('//')
+	) {
+		return '/';
+	}
+
+	return trimmedPath;
+}
 
 /**
  * Page d'inscription.
@@ -21,6 +45,11 @@ import styles from './page.module.css';
  */
 export default function SignInPage() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	const redirectPath = useMemo(() => {
+		return getSafeNextPath(searchParams.get('next'));
+	}, [searchParams]);
 
 	const [lastName, setLastName] = useState('');
 	const [firstName, setFirstName] = useState('');
@@ -66,7 +95,7 @@ export default function SignInPage() {
 				password: normalizedPassword,
 			});
 
-			router.replace('/');
+			router.replace(redirectPath);
 			router.refresh();
 		} catch (error) {
 			setErrorMessage(
@@ -78,6 +107,11 @@ export default function SignInPage() {
 			setIsSubmitting(false);
 		}
 	}
+
+	const loginHref =
+		redirectPath !== '/'
+			? `/login?next=${encodeURIComponent(redirectPath)}`
+			: '/login';
 
 	return (
 		<section className={styles.section} aria-labelledby="sign-in-title">
@@ -95,7 +129,11 @@ export default function SignInPage() {
 					</p>
 				</header>
 
-				<form className={styles.form} onSubmit={handleSubmit} noValidate>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmit}
+					noValidate
+				>
 					<div className={styles.field}>
 						<label htmlFor="lastName" className={styles.label}>
 							Nom
@@ -108,7 +146,9 @@ export default function SignInPage() {
 							autoComplete="family-name"
 							className={styles.input}
 							value={lastName}
-							onChange={(event) => setLastName(event.target.value)}
+							onChange={(event) =>
+								setLastName(event.target.value)
+							}
 							aria-invalid={errorMessage !== ''}
 						/>
 					</div>
@@ -125,7 +165,9 @@ export default function SignInPage() {
 							autoComplete="given-name"
 							className={styles.input}
 							value={firstName}
-							onChange={(event) => setFirstName(event.target.value)}
+							onChange={(event) =>
+								setFirstName(event.target.value)
+							}
 							aria-invalid={errorMessage !== ''}
 						/>
 					</div>
@@ -159,7 +201,9 @@ export default function SignInPage() {
 							autoComplete="new-password"
 							className={styles.input}
 							value={password}
-							onChange={(event) => setPassword(event.target.value)}
+							onChange={(event) =>
+								setPassword(event.target.value)
+							}
 							aria-invalid={errorMessage !== ''}
 						/>
 					</div>
@@ -197,7 +241,7 @@ export default function SignInPage() {
 							{isSubmitting ? 'Inscription...' : "S'inscrire"}
 						</button>
 
-						<Link href="/login" className={styles.textLink}>
+						<Link href={loginHref} className={styles.textLink}>
 							Déjà membre ? Se connecter
 						</Link>
 					</div>
