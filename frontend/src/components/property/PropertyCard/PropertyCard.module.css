@@ -1,76 +1,80 @@
 .card {
-	width: 100%;
-	background-color: var(--color-surface);
-	border-radius: var(--radius-lg);
-	overflow: hidden;
+    position: relative;
+}
+
+.favoriteButton {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
 }
 
 .cardLink {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
 }
 
 .imageWrapper {
-	position: relative;
-	width: 100%;
-	aspect-ratio: 355 / 376;
-	overflow: hidden;
-	background-color: var(--color-surface-alt);
+    position: relative;
+    width: 100%;
+    aspect-ratio: 355 / 376;
+    overflow: hidden;
+    background-color: var(--color-surface-alt);
 }
 
 .image {
-	object-fit: cover;
+    object-fit: cover;
 }
 
 .content {
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-lg);
-	padding: var(--space-md) var(--space-lg) var(--space-lg);
-	background-color: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-md) var(--space-lg) var(--space-lg);
+    background-color: var(--color-surface);
 }
 
 .textContainer {
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-2xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
 }
 
 .title {
-	margin: 0;
-	font-size: var(--font-size-lg);
-	font-weight: var(--font-weight-medium);
-	line-height: var(--line-height-lg);
-	color: var(--color-text-strong);
+    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-lg);
+    color: var(--color-text-strong);
 }
 
 .location {
-	margin: 0;
-	font-size: var(--font-size-sm);
-	font-weight: var(--font-weight-regular);
-	line-height: var(--line-height-sm);
-	color: var(--color-text-muted);
+    margin: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-sm);
+    color: var(--color-text-muted);
 }
 
 .priceLine {
-	margin: 0;
-	font-size: var(--font-size-sm);
-	line-height: var(--line-height-sm);
-	color: var(--color-text-strong);
+    margin: 0;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-sm);
+    color: var(--color-text-strong);
 }
 
 .price {
-	font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
 }
 
 .priceUnit {
-	font-weight: var(--font-weight-regular);
+    font-weight: var(--font-weight-regular);
 }
 
 @media (max-width: 767px) {
-	.content {
-		padding: var(--space-md);
-	}
+    .content {
+        padding: var(--space-md);
+    }
 }

@@ -51,6 +51,14 @@ export default function PropertyCard({
 
 	return (
 		<article className={styles.card}>
+			<FavoriteToggleButton
+				isActive={isLocallyFavorite}
+				onClick={handleFavoriteClick}
+				addLabel="Ajouter ce logement aux favoris"
+				removeLabel="Retirer ce logement des favoris"
+				className={styles.favoriteButton}
+			/>
+
 			<Link href={href} className={styles.cardLink}>
 				<div className={styles.imageWrapper}>
 					<Image
@@ -61,13 +69,6 @@ export default function PropertyCard({
 						className={styles.image}
 						loading={isPriorityImage ? 'eager' : undefined}
 						fetchPriority={isPriorityImage ? 'high' : undefined}
-					/>
-
-					<FavoriteToggleButton
-						isActive={isLocallyFavorite}
-						onClick={handleFavoriteClick}
-						addLabel="Ajouter ce logement aux favoris"
-						removeLabel="Retirer ce logement des favoris"
 					/>
 				</div>
 
