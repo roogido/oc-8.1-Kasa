@@ -38,6 +38,8 @@
     --line-height-2xl: 1.426;
     --line-height-display: 1.426;
 
+    --font-weight-extra-light: 200;
+    --font-weight-light: 300;
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -95,7 +97,6 @@ body {
     min-width: 320px;
     background-color: var(--color-viewport);
     color: var(--color-text);
-    font-family: var(--font-family-base);
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-regular);
     line-height: var(--line-height-md);

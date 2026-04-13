@@ -9,10 +9,11 @@
 }
 
 .header {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
 }
 
 .title {
@@ -25,7 +26,7 @@
 
 .subtitle {
 	max-width: 742px;
-	margin: 0;
+	margin: 0 auto;
 	font-size: var(--font-size-sm);
 	font-weight: var(--font-weight-regular);
 	line-height: var(--line-height-sm);

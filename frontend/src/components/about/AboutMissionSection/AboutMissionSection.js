@@ -58,6 +58,7 @@ export default function AboutMissionSection({
 						src={missionImage.src}
 						alt={missionImage.alt}
 						fill
+                        priority
 						sizes="(max-width: 767px) 358px, 494px"
 						className={styles.image}
 					/>

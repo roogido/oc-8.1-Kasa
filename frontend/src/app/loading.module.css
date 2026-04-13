@@ -1,0 +1,79 @@
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4xl);
+}
+
+.heroSkeleton {
+	width: 100%;
+	min-height: 420px;
+	border-radius: var(--radius-xl);
+	background: linear-gradient(
+		90deg,
+		var(--color-surface-alt) 25%,
+		#fafafa 50%,
+		var(--color-surface-alt) 75%
+	);
+	background-size: 200% 100%;
+	animation: shimmer 1.4s infinite linear;
+}
+
+.section {
+	width: 100%;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--space-xl);
+}
+
+.cardSkeleton {
+	min-height: 552px;
+	border: var(--border-soft);
+	border-radius: var(--radius-lg);
+	background: linear-gradient(
+		90deg,
+		var(--color-surface-alt) 25%,
+		#fafafa 50%,
+		var(--color-surface-alt) 75%
+	);
+	background-size: 200% 100%;
+	animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: 200% 0;
+	}
+
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+@media (max-width: 1023px) {
+	.grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.content {
+		gap: var(--space-2xl);
+	}
+
+	.heroSkeleton {
+		min-height: 280px;
+		border-radius: var(--radius-lg);
+	}
+
+	.grid {
+		grid-template-columns: 1fr;
+		gap: var(--space-lg);
+	}
+
+	.cardSkeleton {
+		min-height: 520px;
+	}
+}

@@ -1,0 +1,50 @@
+.button {
+	position: absolute;
+	top: 16px;
+	right: 16px;
+	z-index: 2;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--radius-md);
+	background-color: var(--color-surface-alt);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+	transition:
+		background-color var(--transition-fast),
+		transform var(--transition-fast);
+}
+
+.icon {
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+	fill: var(--color-text-muted);
+	color: transparent;
+	stroke: transparent;
+	transition: stroke var(--transition-fast);
+}
+
+.button:hover {
+	background-color: var(--color-primary);
+}
+
+.button:hover .icon {
+	stroke: var(--color-surface);
+}
+
+.buttonActive {
+	background-color: var(--color-primary);
+}
+
+.buttonActive .icon {
+	stroke: var(--color-surface);
+}
+
+.button:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}

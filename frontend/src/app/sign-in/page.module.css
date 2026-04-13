@@ -134,7 +134,7 @@
 	background-color: var(--color-primary);
 	color: var(--color-surface);
 	font-size: var(--font-size-sm);
-	font-weight: var(--font-weight-medium);
+	font-weight: var(--font-weight-regular);
 	line-height: var(--line-height-sm);
 	cursor: pointer;
 }
@@ -157,6 +157,13 @@
 .textLink:hover,
 .textLink:focus-visible {
 	text-decoration: underline;
+}
+
+.errorMessage {
+	margin: 0;
+	color: var(--color-accent);
+	font-size: var(--font-size-sm);
+	line-height: var(--line-height-sm);
 }
 
 @media (max-width: 767px) {

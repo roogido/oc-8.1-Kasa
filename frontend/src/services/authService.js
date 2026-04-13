@@ -1,0 +1,59 @@
+/**
+ * @file src/services/authService.js
+ * @description
+ * Services d'authentification côté front via routes internes Next.js.
+ */
+
+import { internalApiRequest } from '@/lib/internalApiClient';
+
+/**
+ * Tente de connecter un utilisateur.
+ *
+ * @param {Object} params
+ * @param {string} params.email
+ * @param {string} params.password
+ * @returns {Promise<Object|null>}
+ */
+export async function loginUser({ email, password }) {
+	const data = await internalApiRequest('/api/auth/login', {
+		method: 'POST',
+		body: { email, password },
+	});
+
+	return data?.data?.user ?? null;
+}
+
+/**
+ * Tente d'inscrire un utilisateur.
+ *
+ * @param {Object} params
+ * @param {string} params.firstName
+ * @param {string} params.lastName
+ * @param {string} params.email
+ * @param {string} params.password
+ * @returns {Promise<Object|null>}
+ */
+export async function registerUser({
+	firstName,
+	lastName,
+	email,
+	password,
+}) {
+	const data = await internalApiRequest('/api/auth/register', {
+		method: 'POST',
+		body: { firstName, lastName, email, password },
+	});
+
+	return data?.data?.user ?? null;
+}
+
+/**
+ * Déconnecte l'utilisateur courant.
+ *
+ * @returns {Promise<void>}
+ */
+export async function logoutUser() {
+	await internalApiRequest('/api/auth/logout', {
+		method: 'POST',
+	});
+}

@@ -6,14 +6,26 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Heart, Menu, MessageSquare } from 'lucide-react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import {
+	Heart,
+	LogIn,
+	LogOut,
+	Menu,
+	MessageSquare,
+	UserPlus,
+} from 'lucide-react';
 
 import Logo from '@/components/ui/Logo/Logo';
 import MobileMenu from '@/components/layout/MobileMenu/MobileMenu';
 import MessagesDesktopModal from '@/components/messages/MessagesDesktopModal/MessagesDesktopModal';
+import { logoutUser } from '@/services/authService';
+import {
+	buildLoginMessagesHref,
+	removeOpenMessagesParam,
+} from '@/lib/messagesNavigation';
 
 import styles from './AppHeader.module.css';
 
@@ -31,12 +43,40 @@ function getNavLinkStateClass(href, currentPath) {
 /**
  * Header global Kasa.
  *
+ * @param {Object} props
+ * @param {boolean} [props.isAuthenticated=false]
  * @returns {JSX.Element}
  */
-export default function AppHeader() {
+export default function AppHeader({ isAuthenticated = false }) {
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const router = useRouter();
+
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(false);
+	const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(() => {
+		if (typeof window === 'undefined') {
+			return false;
+		}
+
+		return (
+			isAuthenticated &&
+			searchParams.get('openMessages') === '1' &&
+			window.innerWidth >= 768
+		);
+	});
+
+	const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+	const searchParamsString = searchParams.toString();
+	const shouldOpenMessages = searchParams.get('openMessages') === '1';
+
+	const loginMessagesHref = useMemo(() => {
+		return buildLoginMessagesHref(pathname, searchParamsString);
+	}, [pathname, searchParamsString]);
+
+	const cleanedCurrentPath = useMemo(() => {
+		return removeOpenMessagesParam(pathname, searchParamsString);
+	}, [pathname, searchParamsString]);
 
 	useEffect(() => {
 		function handleEscape(event) {
@@ -69,6 +109,37 @@ export default function AppHeader() {
 			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
+
+	useEffect(() => {
+		if (!isAuthenticated || !shouldOpenMessages) {
+			return;
+		}
+
+		if (window.innerWidth >= 768) {
+			router.replace(cleanedCurrentPath, { scroll: false });
+			return;
+		}
+
+		router.replace('/messages');
+	}, [cleanedCurrentPath, isAuthenticated, router, shouldOpenMessages]);
+
+	async function handleLogout() {
+		if (isLoggingOut) {
+			return;
+		}
+
+		setIsLoggingOut(true);
+
+		try {
+			await logoutUser();
+			setIsMobileMenuOpen(false);
+			setIsMessagesModalOpen(false);
+			router.push('/');
+			router.refresh();
+		} catch {
+			setIsLoggingOut(false);
+		}
+	}
 
 	return (
 		<>
@@ -112,35 +183,103 @@ export default function AppHeader() {
 							</Link>
 
 							<div
-								className={styles.iconGroup}
+								className={styles.userActions}
 								aria-label="Actions utilisateur"
 							>
-								<Link
-									href="/favorites"
-									className={styles.iconButton}
-									aria-label="Favoris"
-								>
-									<Heart size={16} strokeWidth={1.75} />
-								</Link>
+								<div className={styles.iconGroup}>
+									<Link
+										href="/favorites"
+										className={styles.iconButton}
+										aria-label="Favoris"
+									>
+										<Heart size={16} strokeWidth={1.75} />
+									</Link>
+
+									<span
+										className={styles.separator}
+										aria-hidden="true"
+									/>
+
+									{isAuthenticated ? (
+										<button
+											type="button"
+											className={styles.iconButton}
+											aria-label="Messagerie"
+											aria-expanded={isMessagesModalOpen}
+											aria-haspopup="dialog"
+											onClick={() =>
+												setIsMessagesModalOpen(true)
+											}
+										>
+											<MessageSquare
+												size={16}
+												strokeWidth={1.75}
+											/>
+										</button>
+									) : (
+										<Link
+											href={loginMessagesHref}
+											className={styles.iconButton}
+											aria-label="Se connecter pour accéder à la messagerie"
+										>
+											<MessageSquare
+												size={16}
+												strokeWidth={1.75}
+											/>
+										</Link>
+									)}
+								</div>
 
 								<span
 									className={styles.separator}
 									aria-hidden="true"
 								/>
 
-								<button
-									type="button"
-									className={styles.iconButton}
-									aria-label="Messagerie"
-									aria-expanded={isMessagesModalOpen}
-									aria-haspopup="dialog"
-									onClick={() => setIsMessagesModalOpen(true)}
-								>
-									<MessageSquare
-										size={16}
-										strokeWidth={1.75}
-									/>
-								</button>
+								<div className={styles.iconGroup}>
+									{isAuthenticated ? (
+										<button
+											type="button"
+											className={styles.iconButton}
+											aria-label="Se déconnecter"
+											onClick={handleLogout}
+											disabled={isLoggingOut}
+										>
+											<LogOut
+												size={16}
+												strokeWidth={1.75}
+											/>
+										</button>
+									) : (
+										<>
+											<Link
+												href="/login"
+												className={styles.iconButton}
+												aria-label="Se connecter"
+											>
+												<LogIn
+													size={16}
+													strokeWidth={1.75}
+												/>
+											</Link>
+
+											<span
+												className={styles.separator}
+												aria-hidden="true"
+											/>
+
+											<Link
+												href="/sign-in"
+												className={styles.iconButton}
+												aria-label="S'inscrire"
+											>
+												<UserPlus
+													size={16}
+													strokeWidth={1.75}
+												/>
+											</Link>
+										</>
+									)}
+								</div>
 							</div>
 						</div>
 
@@ -161,7 +300,10 @@ export default function AppHeader() {
 					<MobileMenu
 						currentPath={pathname}
 						isOpen={isMobileMenuOpen}
+						isAuthenticated={isAuthenticated}
+						isLoggingOut={isLoggingOut}
 						onClose={() => setIsMobileMenuOpen(false)}
+						onLogout={handleLogout}
 					/>
 				</div>
 			</header>

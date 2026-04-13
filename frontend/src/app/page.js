@@ -6,18 +6,31 @@
 
 import HomeHeroSection from '@/components/home/HomeHeroSection/HomeHeroSection';
 import HomeHowItWorksSection from '@/components/home/HomeHowItWorksSection/HomeHowItWorksSection';
-import PropertyGridSection from '@/components/home/PropertyGridSection/PropertyGridSection';
+import PropertyGridSection from '@/components/property/PropertyGridSection/PropertyGridSection';
 
 import {
-	featuredPropertiesSectionOne,
-	featuredPropertiesSectionTwo,
 	homeHeroContent,
 	homeHowItWorksContent,
-} from '@/data/home';
+} from '@/data/homeContent';
+import { getHomeProperties } from '@/services/propertyService';
 
 import styles from './page.module.css';
 
-export default function HomePage() {
+export default async function HomePage() {
+	let properties = [];
+	let propertiesErrorMessage = '';
+
+	try {
+		properties = await getHomeProperties();
+	} catch (error) {
+		propertiesErrorMessage =
+			error instanceof Error
+				? error.message
+				: 'Impossible de charger les logements.';
+	}
+
+	const hasProperties = properties.length > 0;
+
 	return (
 		<div className={styles.content}>
 			<HomeHeroSection
@@ -27,9 +40,43 @@ export default function HomePage() {
 				imageAlt={homeHeroContent.imageAlt}
 			/>
 
-			<PropertyGridSection properties={featuredPropertiesSectionOne} />
-
-			<PropertyGridSection properties={featuredPropertiesSectionTwo} />
+			{propertiesErrorMessage !== '' ? (
+				<section
+					className={styles.feedbackSection}
+					aria-labelledby="home-properties-error-title"
+				>
+					<div className={styles.feedbackCard}>
+						<h2
+							id="home-properties-error-title"
+							className={styles.feedbackTitle}
+						>
+							Impossible de charger les logements
+						</h2>
+						<p className={styles.feedbackText}>
+							{propertiesErrorMessage}
+						</p>
+					</div>
+				</section>
+			) : hasProperties ? (
+				<PropertyGridSection properties={properties} />
+			) : (
+				<section
+					className={styles.feedbackSection}
+					aria-labelledby="home-properties-empty-title"
+				>
+					<div className={styles.feedbackCard}>
+						<h2
+							id="home-properties-empty-title"
+							className={styles.feedbackTitle}
+						>
+							Aucun logement disponible
+						</h2>
+						<p className={styles.feedbackText}>
+							Aucun logement n&apos;est disponible pour le moment.
+						</p>
+					</div>
+				</section>
+			)}
 
 			<HomeHowItWorksSection
 				title={homeHowItWorksContent.title}

@@ -27,7 +27,7 @@ export default function PropertyChipList({
 
 	return (
 		<section className={styles.section}>
-			<h3 className={styles.title}>{title}</h3>
+			{title !== '' ? <h3 className={styles.title}>{title}</h3> : null}
 
 			<ul className={listClassName}>
 				{items.map((item) => (

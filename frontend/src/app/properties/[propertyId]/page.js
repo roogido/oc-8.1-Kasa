@@ -4,14 +4,17 @@
  * Page détail d'un logement de Kasa.
  */
 
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
+import { AUTH_COOKIE_NAME } from '@/lib/authConstants';
+import { extractPropertyIdFromRouteSegment } from '@/lib/slug';
 import HostCard from '@/components/property/HostCard/HostCard';
 import PropertyBackButton from '@/components/property/PropertyBackButton/PropertyBackButton';
 import PropertyGallery from '@/components/property/PropertyGallery/PropertyGallery';
 import PropertyInfoCard from '@/components/property/PropertyInfoCard/PropertyInfoCard';
 
-import { propertyDetailsById } from '@/data/propertyDetails';
+import { getPropertyDetail } from '@/services/propertyService';
 
 import styles from './page.module.css';
 
@@ -24,10 +27,52 @@ import styles from './page.module.css';
  */
 export default async function PropertyDetailPage({ params }) {
 	const { propertyId } = await params;
-	const property = propertyDetailsById[propertyId];
+	const backendPropertyId = extractPropertyIdFromRouteSegment(propertyId);
 
-	if (!property) {
+	if (backendPropertyId === '') {
 		notFound();
+	}
+
+	const cookieStore = await cookies();
+	const authToken = cookieStore.get(AUTH_COOKIE_NAME)?.value ?? '';
+	const isAuthenticated = authToken.trim() !== '';
+
+	let property = null;
+	let propertyErrorMessage = '';
+
+	try {
+		property = await getPropertyDetail(backendPropertyId);
+	} catch (error) {
+		propertyErrorMessage =
+			error instanceof Error
+				? error.message
+				: 'Impossible de charger le logement.';
+	}
+
+	if (property === null && propertyErrorMessage === '') {
+		notFound();
+	}
+
+	if (property === null) {
+		return (
+			<div className={styles.content}>
+				<div className={styles.backRow}>
+					<PropertyBackButton href="/" />
+				</div>
+
+				<section
+					className={styles.feedbackSection}
+					aria-labelledby="property-error-title"
+				>
+					<div className={styles.feedbackCard}>
+						<h1 id="property-error-title" className={styles.feedbackTitle}>
+							Impossible de charger ce logement
+						</h1>
+						<p className={styles.feedbackText}>{propertyErrorMessage}</p>
+					</div>
+				</section>
+			</div>
+		);
 	}
 
 	return (
@@ -37,21 +82,20 @@ export default async function PropertyDetailPage({ params }) {
 			</div>
 
 			<div className={styles.topRow}>
-				<PropertyGallery
-					featuredImage={property.gallery.featuredImage}
-					thumbnails={property.gallery.thumbnails}
-				/>
+				<PropertyGallery images={property.gallery.images} />
 
 				<HostCard
 					name={property.host.name}
 					rating={property.host.rating}
 					avatar={property.host.avatar}
 					avatarAlt={property.host.avatarAlt}
+					isAuthenticated={isAuthenticated}
 				/>
 			</div>
 
 			<div className={styles.infoRow}>
 				<PropertyInfoCard
+					propertyId={property.id}
 					title={property.title}
 					location={property.location}
 					description={property.description}
@@ -66,6 +110,7 @@ export default async function PropertyDetailPage({ params }) {
 					rating={property.host.rating}
 					avatar={property.host.avatar}
 					avatarAlt={property.host.avatarAlt}
+					isAuthenticated={isAuthenticated}
 				/>
 			</div>
 		</div>

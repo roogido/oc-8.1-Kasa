@@ -6,6 +6,8 @@
 
 import Image from 'next/image';
 
+import HostContactActions from '@/components/property/HostContactActions/HostContactActions';
+
 import styles from './HostCard.module.css';
 
 /**
@@ -16,9 +18,16 @@ import styles from './HostCard.module.css';
  * @param {number} props.rating
  * @param {StaticImageData|string} props.avatar
  * @param {string} props.avatarAlt
+ * @param {boolean} [props.isAuthenticated=false]
  * @returns {JSX.Element}
  */
-export default function HostCard({ name, rating, avatar, avatarAlt }) {
+export default function HostCard({
+	name,
+	rating,
+	avatar,
+	avatarAlt,
+	isAuthenticated = false,
+}) {
 	return (
 		<aside className={styles.card}>
 			<h2 className={styles.title}>Votre hôte</h2>
@@ -44,15 +53,7 @@ export default function HostCard({ name, rating, avatar, avatarAlt }) {
 				</div>
 			</div>
 
-			<div className={styles.actions}>
-				<button type="button" className={styles.button}>
-					{"Contacter l'hôte"}
-				</button>
-
-				<button type="button" className={styles.button}>
-					Envoyer un message
-				</button>
-			</div>
+			<HostContactActions isAuthenticated={isAuthenticated} />
 		</aside>
 	);
 }

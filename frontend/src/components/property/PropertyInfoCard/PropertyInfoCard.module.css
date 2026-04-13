@@ -7,19 +7,22 @@
 	border-radius: var(--radius-lg);
 	display: flex;
 	flex-direction: column;
-	gap: 40px;
+	gap: 32px;
 }
 
-.identitySection {
+.headingRow {
 	display: flex;
-	flex-direction: column;
-	gap: 32px;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
 }
 
 .headingBlock {
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	gap: 16px;
+	min-width: 0;
 }
 
 .title {
@@ -55,6 +58,12 @@
 	color: var(--color-text-muted);
 }
 
+.collapseGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
 .description {
 	margin: 0;
 	font-size: var(--font-size-sm);
@@ -66,5 +75,9 @@
 @media (max-width: 767px) {
 	.card {
 		max-width: none;
+	}
+
+	.headingRow {
+		gap: 12px;
 	}
 }
