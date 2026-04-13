@@ -1,19 +1,38 @@
 /**
  * @file src/services/propertyService.test.js
  * @description
- * Tests du service de proprietes avec MSW.
+ * Tests du service métier des propriétés avec MSW.
+ *
+ * Ce fichier vérifie principalement :
+ *      - la récupération de la liste Home via getHomeProperties()
+ *      - le mapping des données backend vers le contrat UI attendu
+ *      - le tri des cartes Home par prix croissant
+ *      - la gestion des réponses vides
+ *      - la gestion des erreurs API
+ *      - la récupération du détail d'un logement via getPropertyDetail()
+ *      - le mapping des données détail : galerie, hôte, équipements, catégories
+ *      - le comportement attendu sur 404 et sur erreur backend
+ *
+ * Exécution de ce fichier uniquement :
+ *      - npx vitest run src/services/propertyService.test.js
+ *
+ * Exécution de tous les tests :
+ *      - npm run test
  */
 
 import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 
 import { server } from '@/tests/msw/server';
-import { getHomeProperties } from '@/services/propertyService';
+import {
+	getHomeProperties,
+	getPropertyDetail,
+} from '@/services/propertyService';
 
 const API_BASE_URL = 'http://localhost:3000';
 
 describe('propertyService.getHomeProperties', () => {
-	it('retourne les proprietes mappees et triees par prix croissant', async () => {
+	it('retourne les propriétés mappées et triées par prix croissant', async () => {
 		server.use(
 			http.get(`${API_BASE_URL}/api/properties`, () => {
 				return HttpResponse.json([
@@ -29,7 +48,7 @@ describe('propertyService.getHomeProperties', () => {
 						ratings_count: 12,
 						host: {
 							id: 11,
-							name: 'Hote B',
+							name: 'Hôte B',
 							picture: 'https://example.com/host-b.jpg',
 						},
 					},
@@ -45,7 +64,7 @@ describe('propertyService.getHomeProperties', () => {
 						ratings_count: 8,
 						host: {
 							id: 10,
-							name: 'Hote A',
+							name: 'Hôte A',
 							picture: 'https://example.com/host-a.jpg',
 						},
 					},
@@ -86,7 +105,7 @@ describe('propertyService.getHomeProperties', () => {
 		expect(properties).toEqual([]);
 	});
 
-	it("leve une erreur si l'API repond en erreur", async () => {
+	it("lève une erreur si l'API répond en erreur", async () => {
 		server.use(
 			http.get(`${API_BASE_URL}/api/properties`, () => {
 				return HttpResponse.json(
@@ -99,5 +118,101 @@ describe('propertyService.getHomeProperties', () => {
 		await expect(getHomeProperties()).rejects.toThrow(
 			'Backend indisponible.',
 		);
+	});
+});
+
+describe('propertyService.getPropertyDetail', () => {
+	it("retourne le détail d'un logement mappé au format UI attendu", async () => {
+		server.use(
+			http.get(`${API_BASE_URL}/api/properties/42`, () => {
+				return HttpResponse.json({
+					id: 42,
+					slug: 'super-logement',
+					title: 'Super logement',
+					description: 'Un logement tres agreable.',
+					cover: 'https://example.com/cover.jpg',
+					location: 'Marseille',
+					price_per_night: 160,
+					rating_avg: 4.4,
+					ratings_count: 18,
+					host: {
+						id: 7,
+						name: 'Nathalie Jean',
+						picture: 'https://example.com/host.jpg',
+					},
+					pictures: [
+						'https://example.com/picture-1.jpg',
+						'https://example.com/picture-2.jpg',
+					],
+					equipments: ['Wi-Fi', 'Cuisine', 'Climatisation'],
+					tags: ['Vue mer', 'Famille'],
+				});
+			}),
+		);
+
+		const property = await getPropertyDetail('42');
+
+		expect(property).not.toBeNull();
+		expect(property).toMatchObject({
+			id: '42',
+			title: 'Super logement',
+			location: 'Marseille',
+			description: 'Un logement tres agreable.',
+			equipments: ['Wi-Fi', 'Cuisine', 'Climatisation'],
+			categories: ['Vue mer', 'Famille'],
+			host: {
+				name: 'Nathalie Jean',
+				rating: 4,
+				avatar: 'https://example.com/host.jpg',
+				avatarAlt: "Photo de l'hôte Nathalie Jean",
+			},
+		});
+
+		expect(property.gallery.images).toHaveLength(3);
+		expect(property.gallery.images[0]).toMatchObject({
+			id: 'image-1',
+			src: 'https://example.com/cover.jpg',
+			alt: 'Image principale du logement Super logement',
+		});
+		expect(property.gallery.images[1]).toMatchObject({
+			id: 'image-2',
+			src: 'https://example.com/picture-1.jpg',
+		});
+		expect(property.gallery.images[2]).toMatchObject({
+			id: 'image-3',
+			src: 'https://example.com/picture-2.jpg',
+		});
+	});
+
+	it('retourne null si le backend répond 404', async () => {
+		server.use(
+			http.get(`${API_BASE_URL}/api/properties/404`, () => {
+				return HttpResponse.json(
+					{ message: 'Logement introuvable.' },
+					{ status: 404 },
+				);
+			}),
+		);
+
+		await expect(getPropertyDetail('404')).resolves.toBeNull();
+	});
+
+	it('lève une erreur si le backend répond une erreur autre que 404', async () => {
+		server.use(
+			http.get(`${API_BASE_URL}/api/properties/500`, () => {
+				return HttpResponse.json(
+					{ message: 'Erreur serveur.' },
+					{ status: 500 },
+				);
+			}),
+		);
+
+		await expect(getPropertyDetail('500')).rejects.toThrow(
+			'Erreur serveur.',
+		);
+	});
+
+	it('retourne null si propertyId est vide ou invalide', async () => {
+		await expect(getPropertyDetail('')).resolves.toBeNull();
 	});
 });
