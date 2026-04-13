@@ -7,9 +7,12 @@
 import { NextResponse } from 'next/server';
 
 import { apiRequest, ApiClientError } from '@/lib/apiClient';
-
-const AUTH_COOKIE_NAME = 'kasa_auth_token';
-const ONE_WEEK_IN_SECONDS = 60 * 60 * 24 * 7;
+import {
+	AUTH_COOKIE_MAX_AGE_SECONDS,
+	AUTH_COOKIE_NAME,
+	AUTH_COOKIE_PATH,
+	AUTH_COOKIE_SAME_SITE,
+} from '@/lib/authConstants';
 
 /**
  * Valide et normalise le payload de connexion.
@@ -41,7 +44,7 @@ export async function POST(request) {
 			return NextResponse.json(
 				{
 					success: false,
-					message: 'Adresse email et mot de passe requis.',
+					message: 'Adresse e-mail et mot de passe requis.',
 				},
 				{ status: 400 },
 			);
@@ -63,7 +66,7 @@ export async function POST(request) {
 			return NextResponse.json(
 				{
 					success: false,
-					message: "Reponse d'authentification invalide.",
+					message: "Réponse d'authentification invalide.",
 				},
 				{ status: 502 },
 			);
@@ -81,10 +84,10 @@ export async function POST(request) {
 			name: AUTH_COOKIE_NAME,
 			value: token,
 			httpOnly: true,
-			sameSite: 'lax',
+			sameSite: AUTH_COOKIE_SAME_SITE,
 			secure: process.env.NODE_ENV === 'production',
-			path: '/',
-			maxAge: ONE_WEEK_IN_SECONDS,
+			path: AUTH_COOKIE_PATH,
+			maxAge: AUTH_COOKIE_MAX_AGE_SECONDS,
 		});
 
 		return response;

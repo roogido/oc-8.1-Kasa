@@ -6,7 +6,11 @@
 
 import { NextResponse } from 'next/server';
 
-import { AUTH_COOKIE_NAME } from '@/lib/authConstants';
+import {
+	AUTH_COOKIE_NAME,
+	AUTH_COOKIE_PATH,
+	AUTH_COOKIE_SAME_SITE,
+} from '@/lib/authConstants';
 
 /**
  * Route POST /api/auth/logout
@@ -25,9 +29,9 @@ export async function POST() {
 		name: AUTH_COOKIE_NAME,
 		value: '',
 		httpOnly: true,
-		sameSite: 'lax',
+		sameSite: AUTH_COOKIE_SAME_SITE,
 		secure: process.env.NODE_ENV === 'production',
-		path: '/',
+		path: AUTH_COOKIE_PATH,
 		maxAge: 0,
 	});
 
