@@ -18,6 +18,9 @@
  *
  * Exécution de tous les tests :
  *      - npm run test
+ *
+ * Exécution des tests en mode watch :
+ *      - npm run test:watch
  */
 
 import { describe, expect, it } from 'vitest';
@@ -35,6 +38,8 @@ describe('propertyService.getHomeProperties', () => {
 	it('retourne les propriétés mappées et triées par prix croissant', async () => {
 		server.use(
 			http.get(`${API_BASE_URL}/api/properties`, () => {
+				// On simule ici une réponse backend contenant
+				// deux logements dans un ordre non trié par prix.
 				return HttpResponse.json([
 					{
 						id: 2,
@@ -74,7 +79,11 @@ describe('propertyService.getHomeProperties', () => {
 
 		const properties = await getHomeProperties();
 
+		// On vérifie d'abord que deux cartes sont bien renvoyées.
 		expect(properties).toHaveLength(2);
+
+		// Puis on vérifie que le mapping vers le format UI est correct
+		// et que le tri par prix croissant a bien été appliqué.
 		expect(properties[0]).toMatchObject({
 			propertyId: '1',
 			title: 'Logement A',
@@ -96,6 +105,8 @@ describe('propertyService.getHomeProperties', () => {
 	it("retourne un tableau vide si l'API renvoie une liste vide", async () => {
 		server.use(
 			http.get(`${API_BASE_URL}/api/properties`, () => {
+				// Ce scénario vérifie le comportement du service
+				// si aucun logement n'est renvoyé par l'API.
 				return HttpResponse.json([]);
 			}),
 		);
@@ -108,6 +119,8 @@ describe('propertyService.getHomeProperties', () => {
 	it("lève une erreur si l'API répond en erreur", async () => {
 		server.use(
 			http.get(`${API_BASE_URL}/api/properties`, () => {
+				// On simule ici une indisponibilité backend
+				// pour vérifier la bonne remontée de l'erreur.
 				return HttpResponse.json(
 					{ message: 'Backend indisponible.' },
 					{ status: 503 },
@@ -125,11 +138,13 @@ describe('propertyService.getPropertyDetail', () => {
 	it("retourne le détail d'un logement mappé au format UI attendu", async () => {
 		server.use(
 			http.get(`${API_BASE_URL}/api/properties/42`, () => {
+				// On simule ici un logement complet tel qu'il pourrait
+				// être renvoyé par le backend sur la page détail.
 				return HttpResponse.json({
 					id: 42,
 					slug: 'super-logement',
 					title: 'Super logement',
-					description: 'Un logement tres agreable.',
+					description: 'Un logement très agréable.',
 					cover: 'https://example.com/cover.jpg',
 					location: 'Marseille',
 					price_per_night: 160,
@@ -152,12 +167,15 @@ describe('propertyService.getPropertyDetail', () => {
 
 		const property = await getPropertyDetail('42');
 
+		// Le service doit retourner un objet exploitable par l'UI.
 		expect(property).not.toBeNull();
+
+		// On vérifie le mapping principal des champs métier.
 		expect(property).toMatchObject({
 			id: '42',
 			title: 'Super logement',
 			location: 'Marseille',
-			description: 'Un logement tres agreable.',
+			description: 'Un logement très agréable.',
 			equipments: ['Wi-Fi', 'Cuisine', 'Climatisation'],
 			categories: ['Vue mer', 'Famille'],
 			host: {
@@ -168,6 +186,8 @@ describe('propertyService.getPropertyDetail', () => {
 			},
 		});
 
+		// On vérifie aussi la galerie, qui doit inclure
+		// la cover puis les autres images.
 		expect(property.gallery.images).toHaveLength(3);
 		expect(property.gallery.images[0]).toMatchObject({
 			id: 'image-1',
@@ -187,6 +207,8 @@ describe('propertyService.getPropertyDetail', () => {
 	it('retourne null si le backend répond 404', async () => {
 		server.use(
 			http.get(`${API_BASE_URL}/api/properties/404`, () => {
+				// Un 404 ne doit pas remonter comme une erreur technique :
+				// on attend simplement null côté service.
 				return HttpResponse.json(
 					{ message: 'Logement introuvable.' },
 					{ status: 404 },
@@ -200,6 +222,8 @@ describe('propertyService.getPropertyDetail', () => {
 	it('lève une erreur si le backend répond une erreur autre que 404', async () => {
 		server.use(
 			http.get(`${API_BASE_URL}/api/properties/500`, () => {
+				// Ce cas vérifie qu'une vraie erreur backend
+				// reste bien propagée par le service.
 				return HttpResponse.json(
 					{ message: 'Erreur serveur.' },
 					{ status: 500 },
@@ -213,6 +237,8 @@ describe('propertyService.getPropertyDetail', () => {
 	});
 
 	it('retourne null si propertyId est vide ou invalide', async () => {
+		// Sans identifiant exploitable, le service ne doit pas
+		// tenter de requête inutile et retourne simplement null.
 		await expect(getPropertyDetail('')).resolves.toBeNull();
 	});
 });
