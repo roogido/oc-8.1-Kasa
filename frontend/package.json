@@ -25,6 +25,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
     "jsdom": "^26.1.0",
+    "msw": "^2.13.2",
     "vitest": "^4.0.7"
   }
 }
