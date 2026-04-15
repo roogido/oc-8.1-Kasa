@@ -52,6 +52,15 @@
 	line-height: var(--line-height-sm);
 	color: var(--color-surface);
 	cursor: pointer;
+	transition:
+		background-color var(--transition-fast),
+		opacity var(--transition-fast);
+}
+
+.submitButton:disabled {
+	background-color: var(--color-border-muted);
+	color: var(--color-text-muted);
+	cursor: not-allowed;
 }
 
 @media (max-width: 767px) {

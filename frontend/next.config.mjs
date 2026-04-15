@@ -9,6 +9,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	images: {
+		dangerouslyAllowLocalIP: true, // EN PRODUCTION, A RETIRER
 		remotePatterns: [
 			{
 				protocol: 'https',

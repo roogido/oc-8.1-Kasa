@@ -5,7 +5,13 @@
  */
 
 import Link from 'next/link';
-import { LogIn, LogOut, UserPlus, X } from 'lucide-react';
+import {
+	CircleUserRound,
+	LogIn,
+	LogOut,
+	UserPlus,
+	X,
+} from 'lucide-react';
 
 import Logo from '@/components/ui/Logo/Logo';
 import Button from '@/components/ui/Button/Button';
@@ -31,6 +37,8 @@ function getNavLinkStateClass(href, currentPath) {
  * @param {boolean} props.isOpen
  * @param {boolean} [props.isAuthenticated=false]
  * @param {boolean} [props.isLoggingOut=false]
+ * @param {Object|null} [props.currentUser=null]
+ * @param {boolean} [props.canManageProperties=false]
  * @param {Function} props.onClose
  * @param {Function} props.onLogout
  * @returns {JSX.Element|null}
@@ -40,6 +48,8 @@ export default function MobileMenu({
 	isOpen,
 	isAuthenticated = false,
 	isLoggingOut = false,
+	currentUser = null,
+	canManageProperties = false,
 	onClose,
 	onLogout,
 }) {
@@ -119,6 +129,18 @@ export default function MobileMenu({
 							Favoris
 						</Link>
 					</li>
+
+					{isAuthenticated ? (
+						<li>
+							<Link
+								href="/profile"
+								className={styles.navLink}
+								onClick={onClose}
+							>
+								Profil
+							</Link>
+						</li>
+					) : null}
 				</ul>
 			</nav>
 
@@ -158,11 +180,27 @@ export default function MobileMenu({
 				)}
 			</div>
 
-			<div className={styles.ctaWrapper}>
-				<Button href="/add-property" variant="primary" size="md">
-					Ajouter un logement
-				</Button>
-			</div>
+			{isAuthenticated ? (
+				<div className={styles.authSection}>
+					<div className={styles.authLink}>
+						<CircleUserRound size={16} strokeWidth={1.75} />
+						<span>
+							{typeof currentUser?.name === 'string' &&
+							currentUser.name.trim() !== ''
+								? currentUser.name.trim()
+								: 'Utilisateur connecté'}
+						</span>
+					</div>
+				</div>
+			) : null}
+
+			{canManageProperties ? (
+				<div className={styles.ctaWrapper}>
+					<Button href="/add-property" variant="primary" size="md">
+						Ajouter un logement
+					</Button>
+				</div>
+			) : null}
 		</div>
 	);
 }

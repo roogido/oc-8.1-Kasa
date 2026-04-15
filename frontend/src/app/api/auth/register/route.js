@@ -12,13 +12,38 @@ import {
 	AUTH_COOKIE_NAME,
 	AUTH_COOKIE_PATH,
 	AUTH_COOKIE_SAME_SITE,
+	AUTH_USER_ID_COOKIE_NAME,
 } from '@/lib/authConstants';
+
+/**
+ * Retourne un role d'inscription autorise.
+ *
+ * @param {unknown} role
+ * @returns {'client'|'owner'|''}
+ */
+function normalizeRegistrationRole(role) {
+	if (typeof role !== 'string') {
+		return 'client';
+	}
+
+	const normalizedRole = role.trim().toLowerCase();
+
+	if (normalizedRole === 'client' || normalizedRole === 'owner') {
+		return normalizedRole;
+	}
+
+	if (normalizedRole === '') {
+		return 'client';
+	}
+
+	return '';
+}
 
 /**
  * Valide et normalise le payload d'inscription.
  *
  * @param {Object|null} body
- * @returns {{ name: string, email: string, password: string }}
+ * @returns {{ name: string, email: string, password: string, role: string }}
  */
 function normalizeRegisterPayload(body) {
 	const firstName =
@@ -29,10 +54,11 @@ function normalizeRegisterPayload(body) {
 		typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
 	const password =
 		typeof body?.password === 'string' ? body.password : '';
+	const role = normalizeRegistrationRole(body?.role);
 
 	const name = [firstName, lastName].filter(Boolean).join(' ').trim();
 
-	return { name, email, password };
+	return { name, email, password, role };
 }
 
 /**
@@ -44,7 +70,7 @@ function normalizeRegisterPayload(body) {
 export async function POST(request) {
 	try {
 		const body = await request.json().catch(() => null);
-		const { name, email, password } = normalizeRegisterPayload(body);
+		const { name, email, password, role } = normalizeRegisterPayload(body);
 
 		if (name === '' || email === '' || password.trim() === '') {
 			return NextResponse.json(
@@ -56,9 +82,20 @@ export async function POST(request) {
 			);
 		}
 
+		if (role === '') {
+			return NextResponse.json(
+				{
+					success: false,
+					message:
+						"Le role d'inscription doit etre 'client' ou 'owner'.",
+				},
+				{ status: 400 },
+			);
+		}
+
 		const data = await apiRequest('/auth/register', {
 			method: 'POST',
-			body: { name, email, password },
+			body: { name, email, password, role },
 			cache: 'no-store',
 		});
 
@@ -67,12 +104,13 @@ export async function POST(request) {
 				? data.token.trim()
 				: '';
 		const user = data?.user ?? null;
+		const userId = String(user?.id ?? '').trim();
 
-		if (token === '' || !user || typeof user !== 'object') {
+		if (token === '' || !user || typeof user !== 'object' || userId === '') {
 			return NextResponse.json(
 				{
 					success: false,
-					message: "Réponse d'inscription invalide.",
+					message: "Reponse d'inscription invalide.",
 				},
 				{ status: 502 },
 			);
@@ -96,6 +134,16 @@ export async function POST(request) {
 			maxAge: AUTH_COOKIE_MAX_AGE_SECONDS,
 		});
 
+		response.cookies.set({
+			name: AUTH_USER_ID_COOKIE_NAME,
+			value: userId,
+			httpOnly: true,
+			sameSite: AUTH_COOKIE_SAME_SITE,
+			secure: process.env.NODE_ENV === 'production',
+			path: AUTH_COOKIE_PATH,
+			maxAge: AUTH_COOKIE_MAX_AGE_SECONDS,
+		});
+
 		return response;
 	} catch (error) {
 		if (error instanceof ApiClientError) {
@@ -111,7 +159,7 @@ export async function POST(request) {
 		return NextResponse.json(
 			{
 				success: false,
-				message: 'Impossible de créer le compte.',
+				message: 'Impossible de creer le compte.',
 			},
 			{ status: 500 },
 		);

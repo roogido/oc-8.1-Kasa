@@ -5,7 +5,9 @@
  */
 
 import { buildPropertyRouteSegment } from '@/lib/slug';
+import { normalizeBackendImageUrl } from '@/lib/imageUrl';
 import { ApiClientError, apiRequest } from '@/lib/apiClient';
+
 
 /**
  * Retourne une image sûre pour la card.
@@ -15,7 +17,7 @@ import { ApiClientError, apiRequest } from '@/lib/apiClient';
  */
 function getPropertyCardImage(property) {
 	if (typeof property?.cover === 'string' && property.cover.trim() !== '') {
-		return property.cover.trim();
+		return normalizeBackendImageUrl(property.cover);
 	}
 
 	if (
@@ -23,7 +25,7 @@ function getPropertyCardImage(property) {
 		typeof property.pictures[0] === 'string' &&
 		property.pictures[0].trim() !== ''
 	) {
-		return property.pictures[0].trim();
+		return normalizeBackendImageUrl(property.pictures[0]);
 	}
 
 	return '/placeholder-property.png';
@@ -105,15 +107,17 @@ export async function getHomeProperties() {
  */
 function mapPropertyGallery(property) {
 	const pictures = Array.isArray(property?.pictures)
-		? property.pictures.filter(
-				(picture) =>
-					typeof picture === 'string' && picture.trim() !== '',
-			)
+		? property.pictures
+				.filter(
+					(picture) =>
+						typeof picture === 'string' && picture.trim() !== '',
+				)
+				.map((picture) => normalizeBackendImageUrl(picture))
 		: [];
 
 	const cover =
 		typeof property?.cover === 'string' && property.cover.trim() !== ''
-			? property.cover.trim()
+			? normalizeBackendImageUrl(property.cover)
 			: null;
 
 	const imageSources = cover ? [cover, ...pictures] : [...pictures];
@@ -156,7 +160,7 @@ function mapPropertyHost(property) {
 	const avatar =
 		typeof property?.host?.picture === 'string' &&
 		property.host.picture.trim() !== ''
-			? property.host.picture.trim()
+			? normalizeBackendImageUrl(property.host.picture)
 			: '/placeholder-property.png';
 
 	const rating = Number.isFinite(property?.rating_avg)

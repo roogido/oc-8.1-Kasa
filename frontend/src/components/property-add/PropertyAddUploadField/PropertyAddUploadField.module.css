@@ -32,6 +32,12 @@
 	outline: none;
 }
 
+.control:disabled {
+	background-color: var(--color-surface-alt);
+	color: var(--color-text-muted);
+	cursor: not-allowed;
+}
+
 .addIcon {
 	width: 18px;
 	height: 18px;
@@ -53,6 +59,12 @@
 	padding: 0;
 }
 
+.addButton:disabled {
+	background-color: var(--color-border-muted);
+	color: var(--color-text-muted);
+	cursor: not-allowed;
+}
+
 .linkButton {
 	width: fit-content;
 	padding: 0;
@@ -63,4 +75,29 @@
 	line-height: var(--line-height-sm);
 	color: var(--color-primary);
 	cursor: pointer;
+}
+
+.linkButton:disabled {
+	color: var(--color-text-muted);
+	cursor: not-allowed;
+}
+
+.helperText {
+	margin: 0;
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-xs);
+	color: var(--color-text-muted);
+}
+
+.srOnlyInput {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file src/components/property-add/PropertyAddField/PropertyAddField.js
  * @description
  * Champ réutilisable avec label pour la page "Ajout propriété".
@@ -16,6 +16,9 @@ import styles from './PropertyAddField.module.css';
  * @param {string} [props.as='input']
  * @param {number} [props.rows=5]
  * @param {string} [props.type='text']
+ * @param {string} [props.value='']
+ * @param {(value: string) => void} [props.onChange]
+ * @param {boolean} [props.readOnly=false]
  * @returns {JSX.Element}
  */
 export default function PropertyAddField({
@@ -25,6 +28,9 @@ export default function PropertyAddField({
 	as = 'input',
 	rows = 5,
 	type = 'text',
+	value = '',
+	onChange,
+	readOnly = false,
 }) {
 	const isTextarea = as === 'textarea';
 
@@ -41,6 +47,9 @@ export default function PropertyAddField({
 					rows={rows}
 					placeholder={placeholder}
 					className={`${styles.control} ${styles.textarea}`}
+					value={value}
+					onChange={(event) => onChange?.(event.target.value)}
+					readOnly={readOnly}
 				/>
 			) : (
 				<input
@@ -49,6 +58,9 @@ export default function PropertyAddField({
 					type={type}
 					placeholder={placeholder}
 					className={styles.control}
+					value={value}
+					onChange={(event) => onChange?.(event.target.value)}
+					readOnly={readOnly}
 				/>
 			)}
 		</div>

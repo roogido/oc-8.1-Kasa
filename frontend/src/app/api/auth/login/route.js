@@ -12,6 +12,7 @@ import {
 	AUTH_COOKIE_NAME,
 	AUTH_COOKIE_PATH,
 	AUTH_COOKIE_SAME_SITE,
+	AUTH_USER_ID_COOKIE_NAME,
 } from '@/lib/authConstants';
 
 /**
@@ -61,8 +62,9 @@ export async function POST(request) {
 				? data.token.trim()
 				: '';
 		const user = data?.user ?? null;
+		const userId = String(user?.id ?? '').trim();
 
-		if (token === '' || !user || typeof user !== 'object') {
+		if (token === '' || !user || typeof user !== 'object' || userId === '') {
 			return NextResponse.json(
 				{
 					success: false,
@@ -83,6 +85,16 @@ export async function POST(request) {
 		response.cookies.set({
 			name: AUTH_COOKIE_NAME,
 			value: token,
+			httpOnly: true,
+			sameSite: AUTH_COOKIE_SAME_SITE,
+			secure: process.env.NODE_ENV === 'production',
+			path: AUTH_COOKIE_PATH,
+			maxAge: AUTH_COOKIE_MAX_AGE_SECONDS,
+		});
+
+		response.cookies.set({
+			name: AUTH_USER_ID_COOKIE_NAME,
+			value: userId,
 			httpOnly: true,
 			sameSite: AUTH_COOKIE_SAME_SITE,
 			secure: process.env.NODE_ENV === 'production',

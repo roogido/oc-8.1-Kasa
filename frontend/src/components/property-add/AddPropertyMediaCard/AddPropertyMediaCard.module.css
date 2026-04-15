@@ -9,6 +9,77 @@
 	gap: 16px;
 }
 
+.previewBlock {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: -4px;
+}
+
+.singlePreviewRow {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.previewThumb {
+	position: relative;
+	flex: 0 0 auto;
+	width: 56px;
+	height: 56px;
+	border-radius: var(--radius-md);
+	overflow: hidden;
+	background-color: var(--color-surface-alt);
+}
+
+.previewImage {
+	object-fit: cover;
+}
+
+.previewMeta {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.previewTitle {
+	margin: 0;
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-xs);
+	color: var(--color-text);
+}
+
+.previewAction {
+	width: fit-content;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-xs);
+	color: var(--color-primary);
+	cursor: pointer;
+}
+
+.previewAction:hover,
+.previewAction:focus-visible {
+	text-decoration: underline;
+}
+
+.galleryPreviewList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.galleryPreviewItem {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+}
+
 @media (max-width: 767px) {
 	.card {
 		min-height: auto;

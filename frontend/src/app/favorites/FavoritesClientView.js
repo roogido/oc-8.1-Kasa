@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { buildPropertyRouteSegment } from '@/lib/slug';
 import FavoritesGrid from '@/components/favorites/FavoritesGrid/FavoritesGrid';
 import FavoritesIntro from '@/components/favorites/FavoritesIntro/FavoritesIntro';
+import { normalizeBackendImageUrl } from '@/lib/imageUrl';
 import { useFavorites } from '@/hooks/useFavorites';
 import { internalApiRequest } from '@/lib/internalApiClient';
 
@@ -23,14 +24,14 @@ const favoritesIntroContent = {
 };
 
 /**
- * Retourne une image sûre pour la page Favoris.
+ * Retourne une image pour la page Favoris.
  *
  * @param {Object} property
  * @returns {string}
  */
 function getFavoriteImage(property) {
 	if (typeof property?.cover === 'string' && property.cover.trim() !== '') {
-		return property.cover.trim();
+		return normalizeBackendImageUrl(property.cover);
 	}
 
 	if (
@@ -38,7 +39,7 @@ function getFavoriteImage(property) {
 		typeof property.pictures[0] === 'string' &&
 		property.pictures[0].trim() !== ''
 	) {
-		return property.pictures[0].trim();
+		return normalizeBackendImageUrl(property.pictures[0]);
 	}
 
 	return '/placeholder-property.png';

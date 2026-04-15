@@ -10,6 +10,7 @@ import {
 	AUTH_COOKIE_NAME,
 	AUTH_COOKIE_PATH,
 	AUTH_COOKIE_SAME_SITE,
+	AUTH_USER_ID_COOKIE_NAME,
 } from '@/lib/authConstants';
 
 /**
@@ -27,6 +28,16 @@ export async function POST() {
 
 	response.cookies.set({
 		name: AUTH_COOKIE_NAME,
+		value: '',
+		httpOnly: true,
+		sameSite: AUTH_COOKIE_SAME_SITE,
+		secure: process.env.NODE_ENV === 'production',
+		path: AUTH_COOKIE_PATH,
+		maxAge: 0,
+	});
+
+	response.cookies.set({
+		name: AUTH_USER_ID_COOKIE_NAME,
 		value: '',
 		httpOnly: true,
 		sameSite: AUTH_COOKIE_SAME_SITE,

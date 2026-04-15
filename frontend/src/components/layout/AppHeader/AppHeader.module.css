@@ -93,6 +93,13 @@
 	text-decoration: none;
 }
 
+.profileAvatar {
+	width: 16px;
+	height: 16px;
+	border-radius: 999px;
+	object-fit: cover;
+}
+
 .userActions {
 	display: flex;
 	align-items: center;

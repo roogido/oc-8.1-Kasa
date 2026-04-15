@@ -8,8 +8,10 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
+	CircleUserRound,
 	Heart,
 	LogIn,
 	LogOut,
@@ -26,6 +28,7 @@ import {
 	buildLoginMessagesHref,
 	removeOpenMessagesParam,
 } from '@/lib/messagesNavigation';
+import { normalizeBackendImageUrl } from '@/lib/imageUrl';
 
 import styles from './AppHeader.module.css';
 
@@ -45,9 +48,13 @@ function getNavLinkStateClass(href, currentPath) {
  *
  * @param {Object} props
  * @param {boolean} [props.isAuthenticated=false]
+ * @param {Object|null} [props.currentUser=null]
  * @returns {JSX.Element}
  */
-export default function AppHeader({ isAuthenticated = false }) {
+export default function AppHeader({
+	isAuthenticated = false,
+	currentUser = null,
+}) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const router = useRouter();
@@ -69,6 +76,23 @@ export default function AppHeader({ isAuthenticated = false }) {
 
 	const searchParamsString = searchParams.toString();
 	const shouldOpenMessages = searchParams.get('openMessages') === '1';
+
+	const currentUserRole =
+		typeof currentUser?.role === 'string' ? currentUser.role.trim() : '';
+
+	const canManageProperties =
+		currentUserRole === 'owner' || currentUserRole === 'admin';
+
+	const currentUserName =
+		typeof currentUser?.name === 'string' && currentUser.name.trim() !== ''
+			? currentUser.name.trim()
+			: 'Mon profil';
+
+	const currentUserPicture =
+		typeof currentUser?.picture === 'string' &&
+		currentUser.picture.trim() !== ''
+			? normalizeBackendImageUrl(currentUser.picture, '')
+			: '';
 
 	const loginMessagesHref = useMemo(() => {
 		return buildLoginMessagesHref(pathname, searchParamsString);
@@ -175,12 +199,14 @@ export default function AppHeader({ isAuthenticated = false }) {
 						</div>
 
 						<div className={styles.rightGroup}>
-							<Link
-								href="/add-property"
-								className={styles.addPropertyLink}
-							>
-								+Ajouter un logement
-							</Link>
+							{canManageProperties ? (
+								<Link
+									href="/add-property"
+									className={styles.addPropertyLink}
+								>
+									+Ajouter un logement
+								</Link>
+							) : null}
 
 							<div
 								className={styles.userActions}
@@ -237,18 +263,47 @@ export default function AppHeader({ isAuthenticated = false }) {
 
 								<div className={styles.iconGroup}>
 									{isAuthenticated ? (
-										<button
-											type="button"
-											className={styles.iconButton}
-											aria-label="Se déconnecter"
-											onClick={handleLogout}
-											disabled={isLoggingOut}
-										>
-											<LogOut
-												size={16}
-												strokeWidth={1.75}
+										<>
+											<Link
+												href="/profile"
+												className={styles.iconButton}
+												aria-label={`Profil de ${currentUserName}`}
+												title={currentUserName}
+											>
+												{currentUserPicture !== '' ? (
+													<Image
+														src={currentUserPicture}
+														alt={`Photo de profil de ${currentUserName}`}
+														width={16}
+														height={16}
+														className={styles.profileAvatar}
+													/>
+												) : (
+													<CircleUserRound
+														size={16}
+														strokeWidth={1.75}
+													/>
+												)}
+											</Link>
+
+											<span
+												className={styles.separator}
+												aria-hidden="true"
 											/>
-										</button>
+
+											<button
+												type="button"
+												className={styles.iconButton}
+												aria-label="Se déconnecter"
+												onClick={handleLogout}
+												disabled={isLoggingOut}
+											>
+												<LogOut
+													size={16}
+													strokeWidth={1.75}
+												/>
+											</button>
+										</>
 									) : (
 										<>
 											<Link
@@ -302,6 +357,8 @@ export default function AppHeader({ isAuthenticated = false }) {
 						isOpen={isMobileMenuOpen}
 						isAuthenticated={isAuthenticated}
 						isLoggingOut={isLoggingOut}
+						currentUser={currentUser}
+						canManageProperties={canManageProperties}
 						onClose={() => setIsMobileMenuOpen(false)}
 						onLogout={handleLogout}
 					/>

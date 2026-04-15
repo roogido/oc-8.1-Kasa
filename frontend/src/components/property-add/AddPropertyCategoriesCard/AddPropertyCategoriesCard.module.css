@@ -30,12 +30,36 @@
 
 .tag {
 	padding: 8px 16px;
+	border: 1px solid transparent;
 	border-radius: 5px;
 	background-color: var(--color-surface-alt);
 	font-size: 12px;
 	font-weight: var(--font-weight-regular);
 	line-height: 1.426;
 	color: var(--color-text-muted);
+	cursor: pointer;
+	transition:
+		background-color var(--transition-fast),
+		border-color var(--transition-fast),
+		color var(--transition-fast),
+		font-weight var(--transition-fast);
+}
+
+.tag:hover {
+	background-color: var(--color-border-soft);
+	color: var(--color-text);
+}
+
+.tag:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+.tag[data-selected='true'] {
+	background-color: var(--color-primary);
+	border-color: var(--color-primary);
+	color: var(--color-surface);
+	font-weight: var(--font-weight-semibold);
 }
 
 .customField {

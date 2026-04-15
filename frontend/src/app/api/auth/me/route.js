@@ -8,8 +8,10 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 import { apiRequest, ApiClientError } from '@/lib/apiClient';
-
-const AUTH_COOKIE_NAME = 'kasa_auth_token';
+import {
+	AUTH_COOKIE_NAME,
+	AUTH_USER_ID_COOKIE_NAME,
+} from '@/lib/authConstants';
 
 /**
  * Route GET /api/auth/me
@@ -20,8 +22,9 @@ export async function GET() {
 	try {
 		const cookieStore = await cookies();
 		const token = cookieStore.get(AUTH_COOKIE_NAME)?.value ?? '';
+		const userId = cookieStore.get(AUTH_USER_ID_COOKIE_NAME)?.value ?? '';
 
-		if (token.trim() === '') {
+		if (token.trim() === '' || userId.trim() === '') {
 			return NextResponse.json(
 				{
 					success: false,
@@ -31,13 +34,14 @@ export async function GET() {
 			);
 		}
 
-		const data = await apiRequest('/auth/login', {
-			method: 'GET',
-			token,
-			cache: 'no-store',
-		});
-
-		const user = data?.user ?? data?.data?.user ?? null;
+		const user = await apiRequest(
+			`/api/users/${encodeURIComponent(userId.trim())}`,
+			{
+				method: 'GET',
+				token,
+				cache: 'no-store',
+			},
+		);
 
 		if (!user || typeof user !== 'object') {
 			return NextResponse.json(
