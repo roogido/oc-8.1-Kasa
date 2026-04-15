@@ -35,3 +35,11 @@
 	padding: 10px;
 	resize: vertical;
 }
+
+.helperText {
+	margin: 0;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-sm);
+	color: var(--color-text-muted);
+}

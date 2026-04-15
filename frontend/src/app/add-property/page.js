@@ -1,37 +1,27 @@
-/**
+﻿/**
  * @file src/app/add-property/page.js
  * @description
- * Page "Ajout propriété" du projet Kasa.
+ * Page serveur "Ajout propriété" du projet Kasa.
  */
 
-import AddPropertyCategoriesCard from '@/components/property-add/AddPropertyCategoriesCard/AddPropertyCategoriesCard';
-import AddPropertyEquipmentsCard from '@/components/property-add/AddPropertyEquipmentsCard/AddPropertyEquipmentsCard';
-import AddPropertyFormCard from '@/components/property-add/AddPropertyFormCard/AddPropertyFormCard';
-import AddPropertyHostCard from '@/components/property-add/AddPropertyHostCard/AddPropertyHostCard';
-import AddPropertyMediaCard from '@/components/property-add/AddPropertyMediaCard/AddPropertyMediaCard';
-import AddPropertyTopBar from '@/components/property-add/AddPropertyTopBar/AddPropertyTopBar';
+import { redirect } from 'next/navigation';
 
-import styles from './page.module.css';
+import AddPropertyClientPage from './AddPropertyClientPage';
+import {
+	canManageProperties,
+	getServerCurrentUser,
+} from '@/lib/authServer';
 
-export default function AddPropertyPage() {
-	return (
-		<div className={styles.page}>
-			<div className={styles.container}>
-				<AddPropertyTopBar />
+export default async function AddPropertyPage() {
+	const currentUser = await getServerCurrentUser();
 
-				<div className={styles.row}>
-					<AddPropertyFormCard />
-					<div className={styles.stack}>
-						<AddPropertyMediaCard />
-						<AddPropertyHostCard />
-					</div>
-				</div>
+	if (currentUser === null) {
+		redirect('/login?next=%2Fadd-property');
+	}
 
-				<div className={styles.row}>
-					<AddPropertyEquipmentsCard />
-					<AddPropertyCategoriesCard />
-				</div>
-			</div>
-		</div>
-	);
+	if (!canManageProperties(currentUser)) {
+		redirect('/');
+	}
+
+	return <AddPropertyClientPage currentUser={currentUser} />;
 }

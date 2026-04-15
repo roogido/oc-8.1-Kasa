@@ -1,7 +1,7 @@
-/**
+﻿/**
  * @file src/data/addProperty.js
  * @description
- * Données mockées utiles à la page "Ajout propriété".
+ * DonnÃ©es mockÃ©es utiles Ã  la page "Ajout propriÃ©tÃ©".
  */
 
 export const addPropertyEquipmentsLeft = [
@@ -10,13 +10,13 @@ export const addPropertyEquipmentsLeft = [
 	'Frigo',
 	'WIFI',
 	'Parking',
-	'Sèche Cheveux',
+	'Sèche-cheveux',
 	'Machine à laver',
 	'Cuisine équipée',
 	'Télévision',
-	'Chambre Séparée',
+	'Chambre séparée',
 	'Climatisation',
-	'Frigo Américain',
+	'Frigo américain',
 ];
 
 export const addPropertyEquipmentsRight = [

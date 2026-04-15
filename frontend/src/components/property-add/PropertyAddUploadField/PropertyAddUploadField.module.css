@@ -1,66 +1,78 @@
 .field {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .label {
-	margin: 0;
-	font-size: var(--font-size-sm);
-	font-weight: var(--font-weight-medium);
-	line-height: var(--line-height-sm);
-	color: var(--color-text);
+    margin: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-sm);
+    color: var(--color-text);
 }
 
 .row {
-	display: flex;
-	align-items: center;
-	gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .control {
-	flex: 1 1 auto;
-	height: 40px;
-	padding: 0 10px;
-	border: 1px solid var(--color-border-soft);
-	border-radius: var(--radius-sm);
-	background-color: var(--color-surface);
-	font-size: 12px;
-	font-weight: var(--font-weight-regular);
-	line-height: 1.426;
-	color: var(--color-text);
-	outline: none;
+    flex: 1 1 auto;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    font-size: 12px;
+    font-weight: var(--font-weight-regular);
+    line-height: 1.426;
+    color: var(--color-text);
+    outline: none;
 }
 
 .addIcon {
-	width: 18px;
-	height: 18px;
-	stroke-width: 2.25;
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.25;
 }
 
 .addButton {
-	flex: 0 0 auto;
-	width: 37px;
-	height: 37px;
-	border: 0;
-	border-radius: 5px;
-	background-color: var(--color-primary);
-	color: var(--color-surface);
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	padding: 0;
+    flex: 0 0 auto;
+    width: 37px;
+    height: 37px;
+    border: 0;
+    border-radius: 5px;
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
 }
 
 .linkButton {
-	width: fit-content;
-	padding: 0;
-	border: 0;
-	background: transparent;
-	font-size: var(--font-size-sm);
-	font-weight: var(--font-weight-regular);
-	line-height: var(--line-height-sm);
-	color: var(--color-primary);
-	cursor: pointer;
+    width: fit-content;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-sm);
+    color: var(--color-primary);
+    cursor: pointer;
+}
+
+.srOnlyInput {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

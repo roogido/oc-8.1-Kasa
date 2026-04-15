@@ -39,6 +39,16 @@ function getSafeNextPath(nextPath) {
 }
 
 /**
+ * Vérifie que le rôle choisi est autorisé.
+ *
+ * @param {string} role
+ * @returns {string}
+ */
+function normalizeRole(role) {
+	return role === 'owner' ? 'owner' : 'client';
+}
+
+/**
  * Page d'inscription.
  *
  * @returns {JSX.Element}
@@ -55,6 +65,7 @@ export default function SignInPage() {
 	const [firstName, setFirstName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [role, setRole] = useState('client');
 	const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,6 +77,7 @@ export default function SignInPage() {
 		const normalizedFirstName = firstName.trim();
 		const normalizedEmail = email.trim().toLowerCase();
 		const normalizedPassword = password;
+		const normalizedRole = normalizeRole(role);
 
 		if (
 			normalizedLastName === '' ||
@@ -79,7 +91,7 @@ export default function SignInPage() {
 
 		if (!hasAcceptedTerms) {
 			setErrorMessage(
-				'Vous devez accepter les conditions générales d’utilisation.',
+				"Vous devez accepter les conditions générales d'utilisation.",
 			);
 			return;
 		}
@@ -93,6 +105,7 @@ export default function SignInPage() {
 				lastName: normalizedLastName,
 				email: normalizedEmail,
 				password: normalizedPassword,
+				role: normalizedRole,
 			});
 
 			router.replace(redirectPath);
@@ -174,7 +187,7 @@ export default function SignInPage() {
 
 					<div className={styles.field}>
 						<label htmlFor="email" className={styles.label}>
-							Adresse email
+							Adresse e-mail
 						</label>
 
 						<input
@@ -207,6 +220,62 @@ export default function SignInPage() {
 							aria-invalid={errorMessage !== ''}
 						/>
 					</div>
+
+					<fieldset className={styles.roleFieldset}>
+						<legend className={styles.roleLegend}>
+							Quel type de compte souhaitez-vous créer ?
+						</legend>
+
+						<div className={styles.roleCard}>
+							<div className={styles.roleOptions}>
+								<label className={styles.roleOption}>
+									<input
+										type="radio"
+										name="role"
+										value="client"
+										checked={role === 'client'}
+										onChange={(event) =>
+											setRole(event.target.value)
+										}
+										className={styles.roleRadio}
+									/>
+
+									<div className={styles.roleOptionContent}>
+										<span className={styles.roleOptionTitle}>
+											Vous êtes locataire / client
+										</span>
+										<span className={styles.roleOptionText}>
+											Vous cherchez un logement et
+											souhaitez réserver des séjours.
+										</span>
+									</div>
+								</label>
+
+								<label className={styles.roleOption}>
+									<input
+										type="radio"
+										name="role"
+										value="owner"
+										checked={role === 'owner'}
+										onChange={(event) =>
+											setRole(event.target.value)
+										}
+										className={styles.roleRadio}
+									/>
+
+									<div className={styles.roleOptionContent}>
+										<span className={styles.roleOptionTitle}>
+											Vous êtes propriétaire
+										</span>
+										<span className={styles.roleOptionText}>
+											Vous souhaitez publier et gérer des
+											logements.
+										</span>
+									</div>
+								</label>
+							</div>
+						</div>
+					</fieldset>
 
 					<div className={styles.checkboxRow}>
 						<input

@@ -4,14 +4,13 @@
  * Layout racine de l'application Kasa.
  */
 
-import { cookies } from 'next/headers';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
 import Providers from './Providers';
 import AppHeader from '@/components/layout/AppHeader/AppHeader';
 import AppFooter from '@/components/layout/AppFooter/AppFooter';
-import { AUTH_COOKIE_NAME } from '@/lib/authConstants';
+import { getServerCurrentUser } from '@/lib/authServer';
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -25,9 +24,8 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-	const cookieStore = await cookies();
-	const authToken = cookieStore.get(AUTH_COOKIE_NAME)?.value ?? '';
-	const isAuthenticated = authToken.trim() !== '';
+	const currentUser = await getServerCurrentUser();
+	const isAuthenticated = currentUser !== null;
 
 	return (
 		<html lang="fr" data-scroll-behavior="smooth">
@@ -37,6 +35,7 @@ export default async function RootLayout({ children }) {
 						<AppHeader
 							key={isAuthenticated ? 'auth' : 'guest'}
 							isAuthenticated={isAuthenticated}
+							currentUser={currentUser}
 						/>
 						<main className="site-main">{children}</main>
 						<AppFooter />

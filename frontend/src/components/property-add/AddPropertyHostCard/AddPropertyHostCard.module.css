@@ -9,6 +9,62 @@
 	gap: 16px;
 }
 
+.profilePreview {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.avatar {
+	width: 56px;
+	height: 56px;
+	border-radius: 999px;
+	object-fit: cover;
+}
+
+.profileTextBlock {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.profileLabel {
+	margin: 0;
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-xs);
+	color: var(--color-text-muted);
+}
+
+.profileValue {
+	margin: 0;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-sm);
+	color: var(--color-text);
+}
+
+.helperText {
+	margin: 0;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-sm);
+	color: var(--color-text-muted);
+}
+
+.profileLink {
+	width: fit-content;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-sm);
+	color: var(--color-primary);
+	text-decoration: none;
+}
+
+.profileLink:hover {
+	text-decoration: underline;
+}
+
 @media (max-width: 767px) {
 	.card {
 		min-height: auto;

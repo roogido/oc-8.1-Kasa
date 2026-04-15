@@ -1,10 +1,20 @@
 /**
  * @file src/services/authService.js
  * @description
- * Services d'authentification côté front via routes internes Next.js.
+ * Services d'authentification cote front via routes internes Next.js.
  */
 
 import { internalApiRequest } from '@/lib/internalApiClient';
+
+/**
+ * Verifie que le role d'inscription est autorise.
+ *
+ * @param {string} role
+ * @returns {'client'|'owner'}
+ */
+function normalizeRegistrationRole(role) {
+	return role === 'owner' ? 'owner' : 'client';
+}
 
 /**
  * Tente de connecter un utilisateur.
@@ -31,6 +41,7 @@ export async function loginUser({ email, password }) {
  * @param {string} params.lastName
  * @param {string} params.email
  * @param {string} params.password
+ * @param {string} [params.role='client']
  * @returns {Promise<Object|null>}
  */
 export async function registerUser({
@@ -38,17 +49,37 @@ export async function registerUser({
 	lastName,
 	email,
 	password,
+	role = 'client',
 }) {
 	const data = await internalApiRequest('/api/auth/register', {
 		method: 'POST',
-		body: { firstName, lastName, email, password },
+		body: {
+			firstName,
+			lastName,
+			email,
+			password,
+			role: normalizeRegistrationRole(role),
+		},
 	});
 
 	return data?.data?.user ?? null;
 }
 
 /**
- * Déconnecte l'utilisateur courant.
+ * Retourne l'utilisateur courant.
+ *
+ * @returns {Promise<Object|null>}
+ */
+export async function getCurrentUser() {
+	const data = await internalApiRequest('/api/auth/me', {
+		method: 'GET',
+	});
+
+	return data?.data?.user ?? null;
+}
+
+/**
+ * Deconnecte l'utilisateur courant.
  *
  * @returns {Promise<void>}
  */

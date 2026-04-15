@@ -1,7 +1,5 @@
-.page {
+﻿.page {
 	width: 100%;
-	padding-top: 40px;
-	padding-bottom: 40px;
 	background-color: var(--color-bg-page);
 }
 
@@ -9,9 +7,29 @@
 	width: 100%;
 	max-width: 1168px;
 	margin-inline: auto;
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+
+.form {
 	display: flex;
 	flex-direction: column;
 	gap: 40px;
+}
+
+.errorMessage,
+.successMessage {
+	margin: 0;
+	font-size: var(--font-size-sm);
+	line-height: var(--line-height-sm);
+}
+
+.errorMessage {
+	color: var(--color-accent);
+}
+
+.successMessage {
+	color: var(--color-primary);
 }
 
 .row {
@@ -28,14 +46,15 @@
 }
 
 @media (max-width: 767px) {
-	.page {
-		padding-top: 16px;
-		padding-bottom: 16px;
-	}
-
 	.container {
 		max-width: 390px;
-		padding-inline: 16px;
+		padding-top: 16px;
+		padding-right: 16px;
+		padding-bottom: 16px;
+		padding-left: 16px;
+	}
+
+	.form {
 		gap: 16px;
 	}
 
