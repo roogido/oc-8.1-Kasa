@@ -7,7 +7,7 @@
 import {
 	addPropertyEquipmentsLeft,
 	addPropertyEquipmentsRight,
-} from '@/data/addProperty';
+} from '@/data/addPropertyOptions';
 import PropertyAddSectionCard from '@/components/property-add/PropertyAddSectionCard/PropertyAddSectionCard';
 
 import styles from './AddPropertyEquipmentsCard.module.css';

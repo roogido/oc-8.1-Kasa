@@ -13,9 +13,13 @@ import styles from './AddPropertyTopBar.module.css';
  *
  * @param {Object} props
  * @param {boolean} [props.isSubmitting=false]
+ * @param {boolean} [props.isDisabled=false]
  * @returns {JSX.Element}
  */
-export default function AddPropertyTopBar({ isSubmitting = false }) {
+export default function AddPropertyTopBar({
+	isSubmitting = false,
+	isDisabled = false,
+}) {
 	return (
 		<div className={styles.wrapper}>
 			<Link href="/" className={styles.backButton}>
@@ -31,7 +35,7 @@ export default function AddPropertyTopBar({ isSubmitting = false }) {
 				<button
 					type="submit"
 					className={styles.submitButton}
-					disabled={isSubmitting}
+					disabled={isSubmitting || isDisabled}
 					aria-busy={isSubmitting}
 				>
 					{isSubmitting ? 'Ajout...' : 'Ajouter'}

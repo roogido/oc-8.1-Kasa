@@ -21,6 +21,8 @@ import styles from './PropertyAddUploadField.module.css';
  * @param {string} [props.value='']
  * @param {(file: File) => Promise<void> | void} [props.onFileSelect]
  * @param {boolean} [props.isUploading=false]
+ * @param {boolean} [props.disabled=false]
+ * @param {string} [props.helperText='']
  * @returns {JSX.Element}
  */
 export default function PropertyAddUploadField({
@@ -30,6 +32,8 @@ export default function PropertyAddUploadField({
 	value = '',
 	onFileSelect,
 	isUploading = false,
+	disabled = false,
+	helperText = '',
 }) {
 	const fileInputRef = useRef(null);
 
@@ -39,6 +43,10 @@ export default function PropertyAddUploadField({
 	 * @returns {void}
 	 */
 	function openFilePicker() {
+		if (disabled || isUploading) {
+			return;
+		}
+
 		fileInputRef.current?.click();
 	}
 
@@ -74,6 +82,7 @@ export default function PropertyAddUploadField({
 					aria-label={label}
 					value={value}
 					readOnly
+					disabled={disabled}
 				/>
 
 				<button
@@ -81,7 +90,7 @@ export default function PropertyAddUploadField({
 					className={styles.addButton}
 					aria-label={`Ajouter pour ${label}`}
 					onClick={openFilePicker}
-					disabled={isUploading}
+					disabled={isUploading || disabled}
 				>
 					<Plus className={styles.addIcon} aria-hidden="true" />
 				</button>
@@ -94,14 +103,19 @@ export default function PropertyAddUploadField({
 				className={styles.srOnlyInput}
 				onChange={handleFileChange}
 				tabIndex={-1}
+				disabled={disabled}
 			/>
+
+			{helperText !== '' ? (
+				<p className={styles.helperText}>{helperText}</p>
+			) : null}
 
 			{addText !== '' ? (
 				<button
 					type="button"
 					className={styles.linkButton}
 					onClick={openFilePicker}
-					disabled={isUploading}
+					disabled={isUploading || disabled}
 				>
 					{isUploading ? 'Téléchargement...' : addText}
 				</button>

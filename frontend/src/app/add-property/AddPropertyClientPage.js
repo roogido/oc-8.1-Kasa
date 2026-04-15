@@ -1,12 +1,12 @@
 /**
  * @file src/app/add-property/AddPropertyClientPage.js
  * @description
- * Vue client de la page "Ajout propriete".
+ * Vue client de la page "Ajout propriété".
  */
 
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import AddPropertyCategoriesCard from '@/components/property-add/AddPropertyCategoriesCard/AddPropertyCategoriesCard';
 import AddPropertyEquipmentsCard from '@/components/property-add/AddPropertyEquipmentsCard/AddPropertyEquipmentsCard';
@@ -16,39 +16,52 @@ import AddPropertyMediaCard from '@/components/property-add/AddPropertyMediaCard
 import AddPropertyTopBar from '@/components/property-add/AddPropertyTopBar/AddPropertyTopBar';
 
 import { createProperty } from '@/services/propertyCreationService';
-import { uploadImage } from '@/services/uploadService';
+import {
+	deleteUploadedImages,
+	uploadImage,
+} from '@/services/uploadService';
 
 import styles from './page.module.css';
 
 /**
- * Etat initial du formulaire.
+ * Retourne un état initial neuf du formulaire.
+ *
+ * @returns {Object}
  */
-const INITIAL_FORM_STATE = {
-	title: '',
-	description: '',
-	postcode: '',
-	location: '',
-	cover: '',
-	pictures: [],
-	equipments: [],
-	tags: [],
-	customCategory: '',
-};
+function createInitialFormState() {
+	return {
+		title: '',
+		description: '',
+		postcode: '',
+		location: '',
+		pricePerNight: '80',
+		cover: '',
+		pictures: [],
+		equipments: [],
+		tags: [],
+		customCategory: '',
+	};
+}
 
 /**
- * Vue client de la page "Ajout propriete".
+ * Vue client de la page "Ajout propriété".
  *
  * @param {Object} props
  * @param {Object} props.currentUser
  * @returns {JSX.Element}
  */
 export default function AddPropertyClientPage({ currentUser }) {
-	const [formData, setFormData] = useState(INITIAL_FORM_STATE);
+	const [formData, setFormData] = useState(() => createInitialFormState());
 	const [submitErrorMessage, setSubmitErrorMessage] = useState('');
 	const [submitSuccessMessage, setSubmitSuccessMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isUploadingCover, setIsUploadingCover] = useState(false);
 	const [isUploadingGallery, setIsUploadingGallery] = useState(false);
+
+	const draftMediaRef = useRef({
+		cover: '',
+		pictures: [],
+	});
 
 	const isBusy =
 		isSubmitting ||
@@ -59,7 +72,7 @@ export default function AddPropertyClientPage({ currentUser }) {
 	const currentUserName =
 		typeof currentUser?.name === 'string' && currentUser.name.trim() !== ''
 			? currentUser.name.trim()
-			: 'Hote';
+			: 'Hôte';
 
 	const currentUserRole =
 		typeof currentUser?.role === 'string' ? currentUser.role.trim() : '';
@@ -70,16 +83,48 @@ export default function AddPropertyClientPage({ currentUser }) {
 			? currentUser.picture.trim()
 			: '';
 
+	const hasTitle = formData.title.trim() !== '';
+	const canSubmit = hasTitle && !isBusy;
+	const isMediaDisabled = !hasTitle || isBusy;
+
 	const galleryDisplayValue = useMemo(() => {
 		if (formData.pictures.length === 0) {
 			return '';
 		}
 
-		return `${formData.pictures.length} image(s) telechargee(s)`;
+		return `${formData.pictures.length} image(s) téléchargée(s)`;
 	}, [formData.pictures]);
 
+	useEffect(() => {
+		draftMediaRef.current = {
+			cover: formData.cover,
+			pictures: formData.pictures,
+		};
+	}, [formData.cover, formData.pictures]);
+
+	useEffect(() => {
+		return () => {
+			const draftCover = draftMediaRef.current.cover;
+			const draftPictures = draftMediaRef.current.pictures;
+
+			const urlsToDelete = [
+				...(draftCover !== '' ? [draftCover] : []),
+				...draftPictures,
+			];
+
+			if (urlsToDelete.length === 0) {
+				return;
+			}
+
+			void deleteUploadedImages({
+				urls: urlsToDelete,
+				keepalive: true,
+			}).catch(() => {});
+		};
+	}, []);
+
 	/**
-	 * Met a jour un champ simple du formulaire.
+	 * Met à jour un champ simple du formulaire.
 	 *
 	 * @param {string} fieldName
 	 * @param {string} value
@@ -96,7 +141,7 @@ export default function AddPropertyClientPage({ currentUser }) {
 	}
 
 	/**
-	 * Bascule un equipement.
+	 * Bascule un équipement.
 	 *
 	 * @param {string} equipment
 	 * @returns {void}
@@ -118,7 +163,7 @@ export default function AddPropertyClientPage({ currentUser }) {
 	}
 
 	/**
-	 * Bascule une categorie.
+	 * Bascule une catégorie.
 	 *
 	 * @param {string} tag
 	 * @returns {void}
@@ -140,7 +185,7 @@ export default function AddPropertyClientPage({ currentUser }) {
 	}
 
 	/**
-	 * Ajoute une categorie personnalisee.
+	 * Ajoute une catégorie personnalisée.
 	 *
 	 * @returns {void}
 	 */
@@ -177,6 +222,15 @@ export default function AddPropertyClientPage({ currentUser }) {
 	 * @returns {Promise<void>}
 	 */
 	async function handleCoverUpload(file) {
+		if (!hasTitle) {
+			setSubmitErrorMessage(
+				"Renseignez d'abord le titre de la propriété avant d'ajouter des images.",
+			);
+			return;
+		}
+
+		const previousCover = formData.cover;
+
 		setSubmitErrorMessage('');
 		setSubmitSuccessMessage('');
 		setIsUploadingCover(true);
@@ -196,6 +250,16 @@ export default function AddPropertyClientPage({ currentUser }) {
 				throw new Error("L'URL de couverture est invalide.");
 			}
 
+			if (previousCover !== '' && previousCover !== nextCover) {
+				try {
+					await deleteUploadedImages({
+						urls: [previousCover],
+					});
+				} catch {
+					// Nettoyage best-effort : ne bloque pas le remplacement.
+				}
+			}
+
 			setFormData((previousState) => ({
 				...previousState,
 				cover: nextCover,
@@ -212,12 +276,48 @@ export default function AddPropertyClientPage({ currentUser }) {
 	}
 
 	/**
+	 * Supprime l'image de couverture du brouillon.
+	 *
+	 * @returns {Promise<void>}
+	 */
+	async function handleRemoveCover() {
+		const coverToDelete = formData.cover.trim();
+
+		if (coverToDelete === '') {
+			return;
+		}
+
+		setSubmitErrorMessage('');
+		setSubmitSuccessMessage('');
+
+		try {
+			await deleteUploadedImages({
+				urls: [coverToDelete],
+			});
+		} catch {
+			// Nettoyage best-effort : on retire quand même du brouillon.
+		}
+
+		setFormData((previousState) => ({
+			...previousState,
+			cover: '',
+		}));
+	}
+
+	/**
 	 * Upload une image de galerie.
 	 *
 	 * @param {File} file
 	 * @returns {Promise<void>}
 	 */
 	async function handleGalleryUpload(file) {
+		if (!hasTitle) {
+			setSubmitErrorMessage(
+				"Renseignez d'abord le titre de la propriété avant d'ajouter des images.",
+			);
+			return;
+		}
+
 		setSubmitErrorMessage('');
 		setSubmitSuccessMessage('');
 		setIsUploadingGallery(true);
@@ -253,6 +353,39 @@ export default function AddPropertyClientPage({ currentUser }) {
 	}
 
 	/**
+	 * Retire une image de galerie du brouillon.
+	 *
+	 * @param {string} pictureUrl
+	 * @returns {Promise<void>}
+	 */
+	async function handleRemoveGalleryImage(pictureUrl) {
+		const normalizedUrl =
+			typeof pictureUrl === 'string' ? pictureUrl.trim() : '';
+
+		if (normalizedUrl === '') {
+			return;
+		}
+
+		setSubmitErrorMessage('');
+		setSubmitSuccessMessage('');
+
+		try {
+			await deleteUploadedImages({
+				urls: [normalizedUrl],
+			});
+		} catch {
+			// Nettoyage best-effort : on retire quand même du brouillon.
+		}
+
+		setFormData((previousState) => ({
+			...previousState,
+			pictures: previousState.pictures.filter(
+				(item) => item !== normalizedUrl,
+			),
+		}));
+	}
+
+	/**
 	 * Soumet le formulaire.
 	 *
 	 * @param {React.FormEvent<HTMLFormElement>} event
@@ -274,22 +407,31 @@ export default function AddPropertyClientPage({ currentUser }) {
 		const normalizedTitle = formData.title.trim();
 		const normalizedDescription = formData.description.trim();
 		const normalizedLocation = formData.location.trim();
+		const normalizedPrice = Number(formData.pricePerNight);
 
 		if (currentUserId === '') {
 			setSubmitErrorMessage(
-				"Impossible d'identifier l'hote connecte.",
+				"Impossible d'identifier l'hôte connecté.",
 			);
 			return;
 		}
 
 		if (normalizedTitle === '') {
-			setSubmitErrorMessage('Le titre de la propriete est requis.');
+			setSubmitErrorMessage('Le titre de la propriété est requis.');
+			return;
+		}
+
+		if (!Number.isFinite(normalizedPrice) || normalizedPrice <= 0) {
+			setSubmitErrorMessage(
+				'Le prix par nuit doit être supérieur à 0.',
+			);
 			return;
 		}
 
 		const payload = {
 			title: normalizedTitle,
 			host_id: currentUserId,
+			price_per_night: normalizedPrice,
 		};
 
 		if (normalizedDescription !== '') {
@@ -321,13 +463,13 @@ export default function AddPropertyClientPage({ currentUser }) {
 		try {
 			await createProperty(payload);
 
-			setSubmitSuccessMessage('La propriete a ete creee avec succes.');
-			setFormData(INITIAL_FORM_STATE);
+			setSubmitSuccessMessage('La propriété a été créée avec succès.');
+			setFormData(createInitialFormState());
 		} catch (error) {
 			setSubmitErrorMessage(
 				error instanceof Error
 					? error.message
-					: 'Impossible de creer la propriete.',
+					: 'Impossible de créer la propriété.',
 			);
 		} finally {
 			setIsSubmitting(false);
@@ -337,8 +479,15 @@ export default function AddPropertyClientPage({ currentUser }) {
 	return (
 		<div className={styles.page}>
 			<div className={styles.container}>
-				<form id="add-property-form" onSubmit={handleSubmit} className={styles.form}>
-					<AddPropertyTopBar isSubmitting={isBusy} />
+				<form
+					id="add-property-form"
+					onSubmit={handleSubmit}
+					className={styles.form}
+				>
+					<AddPropertyTopBar
+						isSubmitting={isBusy}
+						isDisabled={!canSubmit}
+					/>
 
 					{submitErrorMessage !== '' ? (
 						<p role="alert" className={styles.errorMessage}>
@@ -359,6 +508,7 @@ export default function AddPropertyClientPage({ currentUser }) {
 								description: formData.description,
 								postcode: formData.postcode,
 								location: formData.location,
+								pricePerNight: formData.pricePerNight,
 							}}
 							onFieldChange={handleFieldChange}
 						/>
@@ -366,11 +516,16 @@ export default function AddPropertyClientPage({ currentUser }) {
 						<div className={styles.stack}>
 							<AddPropertyMediaCard
 								coverValue={formData.cover}
+								coverPreviewUrl={formData.cover}
 								galleryValue={galleryDisplayValue}
+								galleryImages={formData.pictures}
 								onCoverUpload={handleCoverUpload}
 								onGalleryUpload={handleGalleryUpload}
+								onRemoveCover={handleRemoveCover}
+								onRemoveGalleryImage={handleRemoveGalleryImage}
 								isUploadingCover={isUploadingCover}
 								isUploadingGallery={isUploadingGallery}
+								isDisabled={isMediaDisabled}
 							/>
 
 							<AddPropertyHostCard

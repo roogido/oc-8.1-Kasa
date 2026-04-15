@@ -29,7 +29,8 @@
 }
 
 .successMessage {
-	color: var(--color-primary);
+	color: #2e7d32;
+	text-align: center;
 }
 
 .row {

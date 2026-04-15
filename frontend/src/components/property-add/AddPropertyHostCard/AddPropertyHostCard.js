@@ -1,7 +1,7 @@
 ﻿/**
  * @file src/components/property-add/AddPropertyHostCard/AddPropertyHostCard.js
  * @description
- * Carte hote pour la page "Ajout propriete".
+ * Carte hôte pour la page "Ajout propriété".
  */
 
 import Link from 'next/link';
@@ -14,7 +14,7 @@ import { normalizeBackendImageUrl } from '@/lib/imageUrl';
 import styles from './AddPropertyHostCard.module.css';
 
 /**
- * Carte de l'hote.
+ * Carte de l'hôte.
  *
  * @param {Object} props
  * @param {string} props.hostName
@@ -29,8 +29,8 @@ export default function AddPropertyHostCard({
 }) {
 	const helperMessage =
 		role === 'admin'
-			? "Cette propriete sera rattachee a votre compte admin. L'attribution a un autre hote sera geree plus tard via une selection controlee."
-			: "Cette propriete sera rattachee a votre compte proprietaire.";
+			? "Cette propriété sera rattachée à votre compte admin. L'attribution à un autre hôte sera gérée plus tard via une sélection contrôlée."
+			: "Cette propriété sera rattachée à votre compte propriétaire.";
 
 	const normalizedHostPicture =
 		typeof hostPicture === 'string' && hostPicture.trim() !== ''
@@ -42,7 +42,7 @@ export default function AddPropertyHostCard({
 			<div className={styles.inner}>
 				<PropertyAddField
 					id="host-name"
-					label="Nom de l'hote"
+					label="Nom de l’hôte"
 					value={hostName}
 					readOnly
 				/>
@@ -73,3 +73,4 @@ export default function AddPropertyHostCard({
 		</PropertyAddSectionCard>
 	);
 }
+

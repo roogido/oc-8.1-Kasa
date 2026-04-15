@@ -1,11 +1,11 @@
 ﻿/**
- * @file src/data/addProperty.js
+ * @file src/data/addPropertyOptions.js
  * @description
- * DonnÃ©es mockÃ©es utiles Ã  la page "Ajout propriÃ©tÃ©".
+ * Données de référence utiles à la page "Ajout propriété".
  */
 
 export const addPropertyEquipmentsLeft = [
-	'Micro-Ondes',
+	'Micro-ondes',
 	'Douche italienne',
 	'Frigo',
 	'WIFI',
@@ -31,7 +31,7 @@ export const addPropertyEquipmentsRight = [
 	'Baie vitrée',
 	'Hotte',
 	'Baignoire',
-	'Vue Parc',
+	'Vue parc',
 ];
 
 export const addPropertyCategoriesDesktop = [

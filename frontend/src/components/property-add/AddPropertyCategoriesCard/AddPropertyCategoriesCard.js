@@ -9,7 +9,7 @@ import { Plus } from 'lucide-react';
 import {
 	addPropertyCategoriesDesktop,
 	addPropertyCategoriesMobile,
-} from '@/data/addProperty';
+} from '@/data/addPropertyOptions';
 import PropertyAddSectionCard from '@/components/property-add/PropertyAddSectionCard/PropertyAddSectionCard';
 
 import styles from './AddPropertyCategoriesCard.module.css';
@@ -36,8 +36,9 @@ export default function AddPropertyCategoriesCard({
 		new Set([
 			...addPropertyCategoriesDesktop,
 			...addPropertyCategoriesMobile,
+			...selectedTags,
 		]),
-	);
+	).filter((tag) => typeof tag === 'string' && tag.trim() !== '');
 
 	return (
 		<PropertyAddSectionCard className={styles.card}>

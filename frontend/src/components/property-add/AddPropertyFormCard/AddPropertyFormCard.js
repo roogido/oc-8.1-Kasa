@@ -39,6 +39,15 @@ export default function AddPropertyFormCard({ values, onFieldChange }) {
 				/>
 
 				<PropertyAddField
+					id="property-price-per-night"
+					label="Prix par nuit (€)"
+					type="number"
+					placeholder="80"
+					value={values.pricePerNight}
+					onChange={(value) => onFieldChange('pricePerNight', value)}
+				/>
+
+				<PropertyAddField
 					id="property-postcode"
 					label="Code postal"
 					value={values.postcode}
