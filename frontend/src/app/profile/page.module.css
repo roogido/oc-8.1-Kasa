@@ -215,7 +215,7 @@
 
 .successMessage {
 	margin: 0;
-	color: var(--color-primary);
+	color: #2e7d32;
 	font-size: var(--font-size-sm);
 	line-height: var(--line-height-sm);
 	text-align: center;

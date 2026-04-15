@@ -13,8 +13,16 @@ import { FavoritesProvider } from '@/context/FavoritesContext';
  *
  * @param {Object} props
  * @param {React.ReactNode} props.children
+ * @param {string} [props.favoritesScope='guest']
  * @returns {JSX.Element}
  */
-export default function Providers({ children }) {
-	return <FavoritesProvider>{children}</FavoritesProvider>;
+export default function Providers({
+	children,
+	favoritesScope = 'guest',
+}) {
+	return (
+		<FavoritesProvider storageScope={favoritesScope}>
+			{children}
+		</FavoritesProvider>
+	);
 }
