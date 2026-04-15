@@ -4,7 +4,7 @@
  * Gestion locale et persistante des favoris via localStorage.
  */
 
-const FAVORITES_STORAGE_KEY = 'kasa:favorites';
+const FAVORITES_STORAGE_KEY_PREFIX = 'kasa:favorites';
 const FAVORITES_UPDATED_EVENT = 'kasa:favorites-updated';
 
 /**
@@ -15,6 +15,34 @@ const FAVORITES_UPDATED_EVENT = 'kasa:favorites-updated';
  */
 function normalizePropertyId(propertyId) {
 	return String(propertyId ?? '').trim();
+}
+
+/**
+ * Normalise une portée de stockage.
+ *
+ * @param {string|null|undefined} storageScope
+ * @returns {string}
+ */
+function normalizeStorageScope(storageScope) {
+	if (typeof storageScope !== 'string') {
+		return 'guest';
+	}
+
+	const normalizedScope = storageScope.trim();
+
+	return normalizedScope !== '' ? normalizedScope : 'guest';
+}
+
+/**
+ * Retourne la clé localStorage de favoris pour une portée donnée.
+ *
+ * @param {string} [storageScope='guest']
+ * @returns {string}
+ */
+export function getFavoritesStorageKey(storageScope = 'guest') {
+	return `${FAVORITES_STORAGE_KEY_PREFIX}:${normalizeStorageScope(
+		storageScope,
+	)}`;
 }
 
 /**
@@ -41,28 +69,38 @@ function canUseLocalStorage() {
 /**
  * Émet un événement local lorsque les favoris changent.
  *
+ * @param {string} [storageScope='guest']
  * @returns {void}
  */
-function emitFavoritesUpdated() {
+function emitFavoritesUpdated(storageScope = 'guest') {
 	if (typeof window === 'undefined') {
 		return;
 	}
 
-	window.dispatchEvent(new Event(FAVORITES_UPDATED_EVENT));
+	window.dispatchEvent(
+		new CustomEvent(FAVORITES_UPDATED_EVENT, {
+			detail: {
+				storageScope: normalizeStorageScope(storageScope),
+			},
+		}),
+	);
 }
 
 /**
  * Lit la valeur brute stockée.
  *
+ * @param {string} [storageScope='guest']
  * @returns {unknown}
  */
-function readRawFavorites() {
+function readRawFavorites(storageScope = 'guest') {
 	if (!canUseLocalStorage()) {
 		return [];
 	}
 
 	try {
-		const rawValue = window.localStorage.getItem(FAVORITES_STORAGE_KEY);
+		const rawValue = window.localStorage.getItem(
+			getFavoritesStorageKey(storageScope),
+		);
 
 		if (!rawValue) {
 			return [];
@@ -77,10 +115,11 @@ function readRawFavorites() {
 /**
  * Retourne une liste d'identifiants favoris propre et dédupliquée.
  *
+ * @param {string} [storageScope='guest']
  * @returns {string[]}
  */
-export function getFavoriteIds() {
-	const rawFavorites = readRawFavorites();
+export function getFavoriteIds(storageScope = 'guest') {
+	const rawFavorites = readRawFavorites(storageScope);
 
 	if (!Array.isArray(rawFavorites)) {
 		return [];
@@ -99,55 +138,61 @@ export function getFavoriteIds() {
  * Persiste une liste d'identifiants favoris.
  *
  * @param {string[]} favoriteIds
+ * @param {string} [storageScope='guest']
  * @returns {void}
  */
-function saveFavoriteIds(favoriteIds) {
+function saveFavoriteIds(favoriteIds, storageScope = 'guest') {
 	if (!canUseLocalStorage()) {
 		return;
 	}
 
 	window.localStorage.setItem(
-		FAVORITES_STORAGE_KEY,
+		getFavoritesStorageKey(storageScope),
 		JSON.stringify(favoriteIds),
 	);
 
-	emitFavoritesUpdated();
+	emitFavoritesUpdated(storageScope);
 }
 
 /**
  * Retourne true si un logement est favori.
  *
  * @param {string|number|null|undefined} propertyId
+ * @param {string} [storageScope='guest']
  * @returns {boolean}
  */
-export function isFavorite(propertyId) {
+export function isFavorite(propertyId, storageScope = 'guest') {
 	const normalizedPropertyId = normalizePropertyId(propertyId);
 
 	if (normalizedPropertyId === '') {
 		return false;
 	}
 
-	return getFavoriteIds().includes(normalizedPropertyId);
+	return getFavoriteIds(storageScope).includes(normalizedPropertyId);
 }
 
 /**
  * Ajoute un logement aux favoris.
  *
  * @param {string|number|null|undefined} propertyId
+ * @param {string} [storageScope='guest']
  * @returns {string[]}
  */
-export function addFavorite(propertyId) {
+export function addFavorite(propertyId, storageScope = 'guest') {
 	const normalizedPropertyId = normalizePropertyId(propertyId);
 
 	if (normalizedPropertyId === '') {
-		return getFavoriteIds();
+		return getFavoriteIds(storageScope);
 	}
 
 	const nextFavoriteIds = [
-		...new Set([...getFavoriteIds(), normalizedPropertyId]),
+		...new Set([
+			...getFavoriteIds(storageScope),
+			normalizedPropertyId,
+		]),
 	];
 
-	saveFavoriteIds(nextFavoriteIds);
+	saveFavoriteIds(nextFavoriteIds, storageScope);
 	return nextFavoriteIds;
 }
 
@@ -155,20 +200,21 @@ export function addFavorite(propertyId) {
  * Retire un logement des favoris.
  *
  * @param {string|number|null|undefined} propertyId
+ * @param {string} [storageScope='guest']
  * @returns {string[]}
  */
-export function removeFavorite(propertyId) {
+export function removeFavorite(propertyId, storageScope = 'guest') {
 	const normalizedPropertyId = normalizePropertyId(propertyId);
 
 	if (normalizedPropertyId === '') {
-		return getFavoriteIds();
+		return getFavoriteIds(storageScope);
 	}
 
-	const nextFavoriteIds = getFavoriteIds().filter(
+	const nextFavoriteIds = getFavoriteIds(storageScope).filter(
 		(favoriteId) => favoriteId !== normalizedPropertyId,
 	);
 
-	saveFavoriteIds(nextFavoriteIds);
+	saveFavoriteIds(nextFavoriteIds, storageScope);
 	return nextFavoriteIds;
 }
 
@@ -176,27 +222,28 @@ export function removeFavorite(propertyId) {
  * Bascule l'état favori d'un logement.
  *
  * @param {string|number|null|undefined} propertyId
+ * @param {string} [storageScope='guest']
  * @returns {{ favoriteIds: string[], isFavorite: boolean }}
  */
-export function toggleFavorite(propertyId) {
+export function toggleFavorite(propertyId, storageScope = 'guest') {
 	const normalizedPropertyId = normalizePropertyId(propertyId);
 
 	if (normalizedPropertyId === '') {
 		return {
-			favoriteIds: getFavoriteIds(),
+			favoriteIds: getFavoriteIds(storageScope),
 			isFavorite: false,
 		};
 	}
 
-	if (isFavorite(normalizedPropertyId)) {
+	if (isFavorite(normalizedPropertyId, storageScope)) {
 		return {
-			favoriteIds: removeFavorite(normalizedPropertyId),
+			favoriteIds: removeFavorite(normalizedPropertyId, storageScope),
 			isFavorite: false,
 		};
 	}
 
 	return {
-		favoriteIds: addFavorite(normalizedPropertyId),
+		favoriteIds: addFavorite(normalizedPropertyId, storageScope),
 		isFavorite: true,
 	};
 }

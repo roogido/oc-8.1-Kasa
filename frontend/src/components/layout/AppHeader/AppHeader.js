@@ -23,6 +23,7 @@ import {
 import Logo from '@/components/ui/Logo/Logo';
 import MobileMenu from '@/components/layout/MobileMenu/MobileMenu';
 import MessagesDesktopModal from '@/components/messages/MessagesDesktopModal/MessagesDesktopModal';
+import { useFavorites } from '@/hooks/useFavorites';
 import { logoutUser } from '@/services/authService';
 import {
 	buildLoginMessagesHref,
@@ -58,6 +59,7 @@ export default function AppHeader({
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const router = useRouter();
+	const { favoriteCount } = useFavorites();
 
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(() => {
@@ -93,6 +95,9 @@ export default function AppHeader({
 		currentUser.picture.trim() !== ''
 			? normalizeBackendImageUrl(currentUser.picture, '')
 			: '';
+
+	const favoriteCountLabel =
+		favoriteCount > 99 ? '99+' : String(favoriteCount);
 
 	const loginMessagesHref = useMemo(() => {
 		return buildLoginMessagesHref(pathname, searchParamsString);
@@ -215,10 +220,23 @@ export default function AppHeader({
 								<div className={styles.iconGroup}>
 									<Link
 										href="/favorites"
-										className={styles.iconButton}
-										aria-label="Favoris"
+										className={`${styles.iconButton} ${styles.favoriteIconButton}`.trim()}
+										aria-label={
+											favoriteCount > 0
+												? `Favoris (${favoriteCount})`
+												: 'Favoris'
+										}
 									>
 										<Heart size={16} strokeWidth={1.75} />
+
+										{favoriteCount > 0 ? (
+											<span
+												className={styles.favoritesBadge}
+												aria-hidden="true"
+											>
+												{favoriteCountLabel}
+											</span>
+										) : null}
 									</Link>
 
 									<span

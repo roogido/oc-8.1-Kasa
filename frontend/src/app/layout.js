@@ -27,10 +27,15 @@ export default async function RootLayout({ children }) {
 	const currentUser = await getServerCurrentUser();
 	const isAuthenticated = currentUser !== null;
 
+	const favoritesScope =
+		currentUser?.id !== undefined && currentUser?.id !== null
+			? `user:${String(currentUser.id).trim()}`
+			: 'guest';
+
 	return (
 		<html lang="fr" data-scroll-behavior="smooth">
 			<body className={inter.className}>
-				<Providers>
+				<Providers key={favoritesScope} favoritesScope={favoritesScope}>
 					<div className="site-shell">
 						<AppHeader
 							key={isAuthenticated ? 'auth' : 'guest'}
