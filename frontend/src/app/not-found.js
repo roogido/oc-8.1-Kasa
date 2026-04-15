@@ -37,8 +37,8 @@ export default function NotFound() {
 							Accueil
 						</Link>
 
-						<Link href="/" className={styles.actionButton}>
-							Logements
+						<Link href="/about" className={styles.actionButton}>
+							À propos
 						</Link>
 					</div>
 				</div>
