@@ -12,6 +12,15 @@ import {
 	getServerCurrentUser,
 } from '@/lib/authServer';
 
+export const metadata = {
+    title: 'Ajouter une propriété',
+    description: 'Créez et publiez une nouvelle propriété sur Kasa.',
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
+
 export default async function AddPropertyPage() {
 	const currentUser = await getServerCurrentUser();
 
