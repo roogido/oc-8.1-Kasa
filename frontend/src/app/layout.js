@@ -11,6 +11,7 @@ import Providers from './Providers';
 import AppHeader from '@/components/layout/AppHeader/AppHeader';
 import AppFooter from '@/components/layout/AppFooter/AppFooter';
 import { getServerCurrentUser } from '@/lib/authServer';
+import { getSiteUrl } from '@/lib/env.js';
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -18,9 +19,30 @@ const inter = Inter({
 	display: 'swap',
 });
 
+const siteUrl = getSiteUrl();
+
 export const metadata = {
-	title: 'Kasa',
-	description: 'Plateforme de réservation immobilière',
+	metadataBase: new URL(siteUrl),
+	title: {
+		default: 'Kasa',
+		template: '%s | Kasa',
+	},
+	description:
+		'Kasa, plateforme de réservation immobilière pour découvrir des logements chaleureux et réserver des séjours uniques.',
+	openGraph: {
+		type: 'website',
+		locale: 'fr_FR',
+		siteName: 'Kasa',
+		title: 'Kasa',
+		description:
+			'Kasa, plateforme de réservation immobilière pour découvrir des logements chaleureux et réserver des séjours uniques.',
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'Kasa',
+		description:
+			'Kasa, plateforme de réservation immobilière pour découvrir des logements chaleureux et réserver des séjours uniques.',
+	},
 };
 
 export default async function RootLayout({ children }) {

@@ -9,6 +9,15 @@ import { redirect } from 'next/navigation';
 import ProfileClientPage from './ProfileClientPage';
 import { getServerCurrentUser } from '@/lib/authServer';
 
+export const metadata = {
+    title: 'Mon profil',
+    description: 'Gérez vos informations personnelles et votre photo de profil.',
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
+
 export default async function ProfilePage() {
 	const currentUser = await getServerCurrentUser();
 
