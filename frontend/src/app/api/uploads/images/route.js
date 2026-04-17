@@ -61,10 +61,14 @@ export async function DELETE(request) {
 				{
 					success: false,
 					message:
-						typeof data?.message === 'string' &&
-						data.message.trim() !== ''
-							? data.message
-							: "Impossible de supprimer l'image.",
+						(typeof data?.message === 'string' &&
+							data.message.trim() !== '' &&
+							data.message) ||
+						(typeof data?.error === 'string' &&
+							data.error.trim() !== '' &&
+							data.error) ||
+						"Impossible de supprimer l'image.",
+					debug: data ?? null,
 				},
 				{ status: response.status },
 			);
