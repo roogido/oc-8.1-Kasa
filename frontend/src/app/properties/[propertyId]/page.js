@@ -245,11 +245,17 @@ export default async function PropertyDetailPage({ params }) {
 	const propertyStructuredData = {
 		'@context': 'https://schema.org',
 		'@type': 'VacationRental',
+		identifier: property.id,
 		name: property.title,
 		description: property.description,
 		url: propertyUrl,
 		image: structuredImages.map((image) => image.url),
 		amenityFeature: structuredAmenities,
+		containsPlace: {
+			'@type': 'Accommodation',
+			name: property.title,
+			description: property.description,
+		},
 	};
 
 	return (
