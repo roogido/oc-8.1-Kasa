@@ -8,27 +8,27 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-        dangerouslyAllowLocalIP: true, // EN PRODUCTION, À RETIRER
-        remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: 's3-eu-west-1.amazonaws.com',
-                pathname: '/course.oc-static.com/**',
-            },
-            {
-                protocol: 'http',
-                hostname: 'localhost',
-                port: '3000',
-                pathname: '/uploads/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'api-kasa.ashva.fr',
-                pathname: '/uploads/**',
-            },
-        ],
-    },
+	images: {
+		// dangerouslyAllowLocalIP: true, // EN PRODUCTION, À RETIRER
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 's3-eu-west-1.amazonaws.com',
+				pathname: '/course.oc-static.com/**',
+			},
+			{
+				protocol: 'http',
+				hostname: 'localhost',
+				port: '3000',
+				pathname: '/uploads/**',
+			},
+			{
+				protocol: 'https',
+				hostname: 'api-kasa.ashva.fr',
+				pathname: '/uploads/**',
+			},
+		],
+	},
 };
 
 export default nextConfig;

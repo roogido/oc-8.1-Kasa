@@ -6,6 +6,7 @@
 
 'use client';
 
+import { Eye, EyeOff } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -53,6 +54,7 @@ export default function LoginPage() {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -135,18 +137,46 @@ export default function LoginPage() {
 							Mot de passe
 						</label>
 
-						<input
-							id="password"
-							name="password"
-							type="password"
-							autoComplete="current-password"
-							className={styles.input}
-							value={password}
-							onChange={(event) =>
-								setPassword(event.target.value)
-							}
-							aria-invalid={errorMessage !== ''}
-						/>
+						<div className={styles.passwordField}>
+							<input
+								id="password"
+								name="password"
+								type={isPasswordVisible ? 'text' : 'password'}
+								autoComplete="current-password"
+								className={`${styles.input} ${styles.passwordInput}`}
+								value={password}
+								onChange={(event) =>
+									setPassword(event.target.value)
+								}
+								aria-invalid={errorMessage !== ''}
+							/>
+
+							<button
+								type="button"
+								className={styles.passwordToggleButton}
+								aria-label={
+									isPasswordVisible
+										? 'Masquer le mot de passe'
+										: 'Afficher le mot de passe'
+								}
+								aria-pressed={isPasswordVisible}
+								onClick={() =>
+									setIsPasswordVisible((previousState) => !previousState)
+								}
+							>
+								{isPasswordVisible ? (
+									<EyeOff
+										className={styles.passwordToggleIcon}
+										aria-hidden="true"
+									/>
+								) : (
+									<Eye
+										className={styles.passwordToggleIcon}
+										aria-hidden="true"
+									/>
+								)}
+							</button>
+						</div>
 					</div>
 
 					{errorMessage !== '' ? (

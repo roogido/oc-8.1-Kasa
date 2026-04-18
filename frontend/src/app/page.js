@@ -20,7 +20,7 @@ const homeHeroImageUrl =
 		: null;
 
 export const metadata = {
-	title: 'Location de logements',
+	title: 'Location de logements | Kasa',
 	description:
 		'Découvrez les logements Kasa, consultez les hébergements disponibles et préparez votre prochain séjour.',
 	alternates: {

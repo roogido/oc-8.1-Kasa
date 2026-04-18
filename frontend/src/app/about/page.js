@@ -19,8 +19,7 @@ const aboutHeroImageUrl =
 
 export const metadata = {
 	title: 'À propos de Kasa',
-	description:
-		'Découvrez la mission, la vision et les engagements de Kasa.',
+	description: 'Découvrez la mission, la vision et les engagements de Kasa.',
 	alternates: {
 		canonical: '/about',
 	},
@@ -65,6 +64,7 @@ export default function AboutPage() {
 			'@type': 'Organization',
 			name: 'Kasa',
 			url: buildAbsoluteSiteUrl('/'),
+			logo: buildAbsoluteSiteUrl('/logo-kasa.png'),
 		},
 		...(aboutHeroImageUrl
 			? {
@@ -88,8 +88,12 @@ export default function AboutPage() {
 			<div className={styles.content}>
 				<AboutIntroSection
 					title={aboutPageContent.title}
-					introParagraphsDesktop={aboutPageContent.introParagraphsDesktop}
-					introParagraphsMobile={aboutPageContent.introParagraphsMobile}
+					introParagraphsDesktop={
+						aboutPageContent.introParagraphsDesktop
+					}
+					introParagraphsMobile={
+						aboutPageContent.introParagraphsMobile
+					}
 					heroImage={aboutPageContent.heroImage}
 				/>
 

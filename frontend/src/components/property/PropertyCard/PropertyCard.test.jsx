@@ -24,6 +24,7 @@ import userEvent from '@testing-library/user-event';
 
 import PropertyCard from './PropertyCard';
 import { FavoritesProvider } from '@/context/FavoritesContext';
+import { getFavoritesStorageKey } from '@/services/favoriteStorageService';
 
 vi.mock('next/link', () => ({
 	default: ({ children, href, ...props }) => (
@@ -41,6 +42,15 @@ vi.mock('next/image', () => ({
 		return <img alt={alt} {...props} />;
 	},
 }));
+
+/**
+ * Portée de stockage utilisée dans ces tests.
+ *
+ * Les favoris sont désormais scindés par portée utilisateur,
+ * donc les tests doivent cibler explicitement la portée invitée.
+ */
+const FAVORITES_TEST_SCOPE = 'guest';
+const FAVORITES_STORAGE_KEY = getFavoritesStorageKey(FAVORITES_TEST_SCOPE);
 
 /**
  * Propriétés par défaut d'une carte logement de test.
@@ -67,7 +77,7 @@ const baseProps = {
  */
 function renderPropertyCard(props = {}) {
 	return render(
-		<FavoritesProvider>
+		<FavoritesProvider storageScope={FAVORITES_TEST_SCOPE}>
 			<PropertyCard {...baseProps} {...props} />
 		</FavoritesProvider>,
 	);
@@ -94,7 +104,10 @@ describe('PropertyCard', () => {
 
 	it('lit l’état favori initial depuis localStorage', () => {
 		// On simule un logement déjà enregistré dans les favoris.
-		window.localStorage.setItem('kasa:favorites', JSON.stringify(['10']));
+		window.localStorage.setItem(
+			FAVORITES_STORAGE_KEY,
+			JSON.stringify(['10']),
+		);
 
 		renderPropertyCard();
 
@@ -121,7 +134,7 @@ describe('PropertyCard', () => {
 		expect(button).toHaveAttribute('aria-pressed', 'true');
 		expect(button).toHaveAccessibleName('Retirer ce logement des favoris');
 		expect(
-			JSON.parse(window.localStorage.getItem('kasa:favorites')),
+			JSON.parse(window.localStorage.getItem(FAVORITES_STORAGE_KEY)),
 		).toEqual(['10']);
 	});
 
@@ -129,7 +142,10 @@ describe('PropertyCard', () => {
 		const user = userEvent.setup();
 
 		// On part cette fois d'un favori déjà existant.
-		window.localStorage.setItem('kasa:favorites', JSON.stringify(['10']));
+		window.localStorage.setItem(
+			FAVORITES_STORAGE_KEY,
+			JSON.stringify(['10']),
+		);
 
 		renderPropertyCard();
 
@@ -143,7 +159,7 @@ describe('PropertyCard', () => {
 		expect(button).toHaveAttribute('aria-pressed', 'false');
 		expect(button).toHaveAccessibleName('Ajouter ce logement aux favoris');
 		expect(
-			JSON.parse(window.localStorage.getItem('kasa:favorites')),
+			JSON.parse(window.localStorage.getItem(FAVORITES_STORAGE_KEY)),
 		).toEqual([]);
 	});
 });
