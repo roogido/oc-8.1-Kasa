@@ -11,7 +11,7 @@ export const homeHeroContent = {
 	subtitle:
 		'Avec Kasa, vivez des séjours uniques dans des hébergements chaleureux, sélectionnés avec soin par nos hôtes.',
 	image: homeHeroDesktop,
-	imageAlt: '',
+	imageAlt: "Maison contemporaine presentee sur la page d'accueil de Kasa",
 };
 
 export const homeHowItWorksContent = {
