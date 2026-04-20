@@ -4,29 +4,39 @@
 
 Kasa est une plateforme de location courte durée entre particuliers.
 
-Le projet est composé de deux applications distinctes :
-- un frontend en Next.js / React ;
-- un backend API séparé, utilisé pour la gestion des logements, de l'authentification, des profils, des uploads et des autres données métier.
+Le projet est structuré autour de deux applications distinctes :
 
-Le frontend permet notamment :
-- d'afficher une liste de logements sur la page d'accueil ;
-- de consulter le détail d'une propriété ;
-- de gérer des favoris côté frontend avec persistance locale ;
-- de créer un compte, se connecter et gérer son profil ;
-- d'ajouter une propriété selon le rôle utilisateur ;
-- d'exposer un sitemap, un robots.txt et des métadonnées SEO adaptées.
+- un **frontend** développé avec **Next.js** et **React** ;
+- un **backend API** développé séparément pour la gestion des logements, de l'authentification, des profils, des uploads, des favoris, des avis et de la messagerie.
 
-## Pré-requis pour l'installation
+Ce projet est réalisé dans le cadre de la formation **Développeur d'Application Full-Stack - OpenClassrooms**.
+
+## Fonctionnalités principales
+
+Le frontend permet notamment de :
+
+- afficher la liste des logements sur la page d'accueil ;
+- consulter le détail d'une propriété ;
+- ajouter ou retirer un logement des favoris ;
+- créer un compte, se connecter et se déconnecter ;
+- gérer son profil utilisateur ;
+- ajouter une propriété selon le rôle utilisateur ;
+- accéder à une messagerie liée aux logements ;
+- exposer un `sitemap.xml`, un `robots.txt` et des métadonnées SEO adaptées.
+
+## Pré-requis
 
 Avant de commencer, vérifier que les éléments suivants sont installés sur la machine :
-- Node.js ;
-- npm ;
-- Git.
+
+- **Node.js** ;
+- **npm** ;
+- **Git**.
 
 Prévoir également :
-- le dépôt complet du projet avec les dossiers `frontend` et `backend` ;
-- les variables d'environnement nécessaires au frontend ;
-- les variables d'environnement nécessaires au backend, selon la configuration de l'API.
+
+- le dépôt complet du projet ;
+- les variables d'environnement du frontend ;
+- les variables d'environnement du backend selon la configuration utilisée.
 
 ## Installation
 
@@ -40,12 +50,39 @@ cd ../frontend
 npm install
 ```
 
-Créer ensuite le fichier d'environnement du frontend :
+## Configuration du frontend
+
+Créer ensuite le fichier `frontend/.env.local`.
+
+### Exemple : frontend local + API locale
 
 ```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
 NEXT_PUBLIC_SITE_URL=http://localhost:3001
+API_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
 ```
+
+### Exemple : frontend local + API distante
+
+```env
+NEXT_PUBLIC_SITE_URL=http://localhost:3001
+API_BASE_URL=https://api.kasa.ashva.fr
+NEXT_PUBLIC_API_BASE_URL=https://api.kasa.ashva.fr
+```
+
+### Exemple : production
+
+```env
+NEXT_PUBLIC_SITE_URL=https://kasa.ashva.fr
+API_BASE_URL=https://api.kasa.ashva.fr
+NEXT_PUBLIC_API_BASE_URL=https://api.kasa.ashva.fr
+```
+
+### Rôle des variables
+
+- `NEXT_PUBLIC_SITE_URL` correspond à l'URL publique du frontend ;
+- `API_BASE_URL` correspond à l'URL de l'API utilisée côté serveur Next.js ;
+- `NEXT_PUBLIC_API_BASE_URL` correspond à l'URL publique de l'API utilisée côté navigateur.
 
 Un fichier d'exemple peut être versionné dans le projet :
 
@@ -53,16 +90,11 @@ Un fichier d'exemple peut être versionné dans le projet :
 frontend/.env.local.example
 ```
 
-Remarque importante :
-- `NEXT_PUBLIC_API_BASE_URL` correspond à l'URL de l'API backend ;
-- `NEXT_PUBLIC_SITE_URL` correspond à l'URL publique du frontend ;
-- la configuration exacte du backend dépend de ses propres variables d'environnement.
-
 ## Lancement du projet
 
 ### 1. Lancer le backend
 
-Depuis le dossier `backend`, lancer l'API avec le script prévu dans le projet.
+Depuis le dossier `backend` :
 
 ```bash
 cd backend
@@ -71,54 +103,135 @@ npm start
 
 ### 2. Lancer le frontend
 
-Depuis le dossier `frontend`, lancer Next.js :
+Depuis le dossier `frontend` :
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-Dans la configuration locale actuellement utilisée :
-- l'API backend répond sur `http://localhost:3000` ;
-- le frontend répond sur `http://localhost:3001`.
+## Accès à l'application
 
-## Structure simplifiée du projet
+En environnement local standard :
+
+- **Frontend** : `http://localhost:3001`
+- **Backend API** : `http://localhost:3000`
+- **Documentation API (Swagger UI)** : `http://localhost:3000/docs.html`
+- **Spécification OpenAPI** : `http://localhost:3000/openapi.json`
+
+Pour plus de détails sur le backend, son schéma, ses routes API et sa configuration, consulter également :
 
 ```text
-Kasa/
-├── backend/
-└── frontend/
+backend/README.md
 ```
 
-Côté frontend, l'application utilise l'App Router de Next.js avec notamment :
-- une page d'accueil ;
-- une page À propos ;
-- une page détail propriété ;
-- une page favoris ;
-- des pages de connexion, inscription et profil ;
+## Architecture du projet
+
+```text
+Kasa
+|-- backend                         -> API REST Node.js / Express / SQLite
+|-- docs                            -> Notes, brouillons et exports de travail
+|-- public                          -> Ressources statiques publiques
+`-- src
+    |-- app                         -> Pages, layouts et routes API internes Next.js
+    |-- assets                      -> Images et ressources intégrées au code source
+    |-- components                  -> Composants UI et métier réutilisables
+    |-- context                     -> Contextes React partagés
+    |-- data                        -> Données statiques locales
+    |-- hooks                       -> Hooks React personnalisés
+    |-- lib                         -> Utilitaires techniques et helpers
+    |-- services                    -> Services d'accès API et logique cliente
+    `-- tests                       -> Infrastructure de tests frontend
+```
+
+Le frontend repose sur l'**App Router** de Next.js et s'appuie notamment sur :
+
+- des pages publiques : accueil, à propos, détail logement ;
+- des pages utilisateur : connexion, inscription, profil, favoris ;
 - une page d'ajout de propriété ;
-- un sitemap et un robots.txt générés côté application.
+- une messagerie ;
+- des routes API internes Next.js pour certains flux sensibles.
+
+## Tests
+
+Le projet inclut des tests unitaires côté frontend, notamment sur des blocs fonctionnels importants de l'application.
+
+Exemples :
+
+- galerie de photos ;
+- gestion des favoris ;
+- services frontend ;
+- composants liés aux interactions principales.
+
+L'infrastructure de tests s'appuie notamment sur :
+
+- **Vitest** ;
+- **MSW** pour le mock réseau dans les tests frontend.
+
+Selon la configuration du projet, les tests peuvent être lancés depuis le dossier `frontend` avec une commande du type :
+
+```bash
+npm run test
+```
+
+Si le script diffère, vérifier le `package.json` du frontend.
 
 ## SEO et données structurées
 
 Le frontend inclut :
+
 - des métadonnées Next.js par page ;
 - un `sitemap.xml` ;
 - un `robots.txt` ;
 - des données structurées `schema.org` en JSON-LD sur les pages pertinentes.
 
-Les pages privées ou utilitaires comme la connexion, l'inscription, le profil, les favoris ou l'ajout de propriété sont marquées en `noindex`.
+Les pages privées ou utilitaires comme la connexion, l'inscription, le profil, les favoris, la messagerie ou l'ajout de propriété sont marquées en `noindex`.
 
 ## Notes utiles
 
 - Le frontend et le backend sont découplés.
-- Certaines routes frontend passent par des routes internes Next.js pour les flux sensibles, notamment l'authentification.
-- En production, il est recommandé d'utiliser une URL publique dédiée pour le frontend et une URL distincte pour l'API backend.
+- Certaines routes frontend passent par des routes API internes Next.js pour les flux sensibles, notamment l'authentification, le profil, la messagerie et certains échanges avec le backend.
+- La documentation interactive de l'API est disponible via Swagger UI.
+- Le backend gère les logements, les utilisateurs, les favoris, les uploads, les avis et la messagerie.
 
 ## Exemple de déploiement cible
 
 Exemple d'architecture cohérente :
-- frontend : `https://kasa.ashva.fr`
-- API backend : `https://api.kasa.ashva.fr`
 
-Dans ce cas, les variables d'environnement frontend devront être adaptées en conséquence.
+- **Frontend** : `https://kasa.ashva.fr`
+- **API backend** : `https://api.kasa.ashva.fr`
+
+Dans ce cas, les variables d'environnement du frontend doivent être adaptées en conséquence.
+
+## Stack technique
+
+### Frontend
+
+- **Next.js** (App Router)
+- **React**
+- **React DOM**
+- **CSS Modules**
+- **next/image**
+- **lucide-react**
+- **Vitest**
+- **MSW**
+
+### Backend
+
+- **Node.js**
+- **Express**
+- **SQLite**
+- **JWT**
+- **OpenAPI**
+- **Swagger UI**
+
+### Outillage
+
+- **Git**
+- **GitHub**
+- **Vercel** pour le frontend
+- **VPS Debian** pour l'API distante selon l'environnement
+
+## Auteur
+
+Salem Hadjali

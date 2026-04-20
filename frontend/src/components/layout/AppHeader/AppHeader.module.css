@@ -131,7 +131,31 @@
 	position: relative;
 }
 
+.messageIconButton {
+	position: relative;
+}
+
 .favoritesBadge {
+	position: absolute;
+	top: -9px;
+	right: -10px;
+	min-width: 16px;
+	height: 16px;
+	padding: 0 4px;
+	border-radius: 999px;
+	background-color: var(--color-primary);
+	color: var(--color-surface);
+	font-size: 10px;
+	font-weight: var(--font-weight-medium);
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 6px rgba(153, 51, 26, 0.22);
+	pointer-events: none;
+}
+
+.messagesBadge {
 	position: absolute;
 	top: -9px;
 	right: -10px;

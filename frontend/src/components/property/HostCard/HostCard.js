@@ -11,13 +11,14 @@ import HostContactActions from '@/components/property/HostContactActions/HostCon
 import styles from './HostCard.module.css';
 
 /**
- * Carte hôte.
+ * Carte hote.
  *
  * @param {Object} props
  * @param {string} props.name
  * @param {number} props.rating
  * @param {StaticImageData|string} props.avatar
  * @param {string} props.avatarAlt
+ * @param {string} [props.propertyId='']
  * @param {boolean} [props.isAuthenticated=false]
  * @returns {JSX.Element}
  */
@@ -26,6 +27,7 @@ export default function HostCard({
 	rating,
 	avatar,
 	avatarAlt,
+	propertyId = '',
 	isAuthenticated = false,
 }) {
 	return (
@@ -47,13 +49,16 @@ export default function HostCard({
 
 				<div className={styles.ratingBadge}>
 					<span className={styles.ratingStar} aria-hidden="true">
-						★
+						*
 					</span>
 					<span className={styles.ratingValue}>{rating}</span>
 				</div>
 			</div>
 
-			<HostContactActions isAuthenticated={isAuthenticated} />
+			<HostContactActions
+				isAuthenticated={isAuthenticated}
+				propertyId={propertyId}
+			/>
 		</aside>
 	);
 }

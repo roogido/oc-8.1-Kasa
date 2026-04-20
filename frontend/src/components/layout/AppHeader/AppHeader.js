@@ -25,6 +25,7 @@ import MobileMenu from '@/components/layout/MobileMenu/MobileMenu';
 import MessagesDesktopModal from '@/components/messages/MessagesDesktopModal/MessagesDesktopModal';
 import { useFavorites } from '@/hooks/useFavorites';
 import { logoutUser } from '@/services/authService';
+import { listConversations } from '@/services/messageService';
 import {
 	buildLoginMessagesHref,
 	removeOpenMessagesParam,
@@ -73,8 +74,8 @@ export default function AppHeader({
 			window.innerWidth >= 768
 		);
 	});
-
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
+	const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
 	const searchParamsString = searchParams.toString();
 	const shouldOpenMessages = searchParams.get('openMessages') === '1';
@@ -98,6 +99,9 @@ export default function AppHeader({
 
 	const favoriteCountLabel =
 		favoriteCount > 99 ? '99+' : String(favoriteCount);
+
+	const unreadMessageCountLabel =
+		unreadMessageCount > 99 ? '99+' : String(unreadMessageCount);
 
 	const loginMessagesHref = useMemo(() => {
 		return buildLoginMessagesHref(pathname, searchParamsString);
@@ -151,6 +155,43 @@ export default function AppHeader({
 
 		router.replace('/messages');
 	}, [cleanedCurrentPath, isAuthenticated, router, shouldOpenMessages]);
+
+	useEffect(() => {
+		let isCancelled = false;
+
+		async function loadUnreadMessageCount() {
+			if (!isAuthenticated) {
+				setUnreadMessageCount(0);
+				return;
+			}
+
+			try {
+				const { conversations } = await listConversations();
+
+				if (isCancelled) {
+					return;
+				}
+
+				const nextUnreadMessageCount = Array.isArray(conversations)
+					? conversations.reduce((total, conversation) => {
+							return total + Number(conversation?.unread_count || 0);
+						}, 0)
+					: 0;
+
+				setUnreadMessageCount(nextUnreadMessageCount);
+			} catch {
+				if (!isCancelled) {
+					setUnreadMessageCount(0);
+				}
+			}
+		}
+
+		void loadUnreadMessageCount();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, [isAuthenticated, pathname, isMessagesModalOpen]);
 
 	async function handleLogout() {
 		if (isLoggingOut) {
@@ -247,8 +288,12 @@ export default function AppHeader({
 									{isAuthenticated ? (
 										<button
 											type="button"
-											className={styles.iconButton}
-											aria-label="Messagerie"
+											className={`${styles.iconButton} ${styles.messageIconButton}`.trim()}
+											aria-label={
+												unreadMessageCount > 0
+													? `Messagerie (${unreadMessageCount} message${unreadMessageCount > 1 ? 's' : ''} non lu${unreadMessageCount > 1 ? 's' : ''})`
+													: 'Messagerie'
+											}
 											aria-expanded={isMessagesModalOpen}
 											aria-haspopup="dialog"
 											onClick={() =>
@@ -259,11 +304,20 @@ export default function AppHeader({
 												size={16}
 												strokeWidth={1.75}
 											/>
+
+											{unreadMessageCount > 0 ? (
+												<span
+													className={styles.messagesBadge}
+													aria-hidden="true"
+												>
+													{unreadMessageCountLabel}
+												</span>
+											) : null}
 										</button>
 									) : (
 										<Link
 											href={loginMessagesHref}
-											className={styles.iconButton}
+											className={`${styles.iconButton} ${styles.messageIconButton}`.trim()}
 											aria-label="Se connecter pour accéder à la messagerie"
 										>
 											<MessageSquare

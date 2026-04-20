@@ -168,6 +168,16 @@
 	object-fit: cover;
 }
 
+.avatarNotice {
+	margin: 0;
+	max-width: 150px;
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-xs);
+	text-align: right;
+}
+
 .emptyAvatarText {
 	margin: 0;
 	color: var(--color-text-muted);
@@ -204,6 +214,11 @@
 .submitButton:hover,
 .submitButton:focus-visible {
 	background-color: var(--color-primary-dark);
+}
+
+.submitButton:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
 }
 
 .errorMessage {
@@ -260,6 +275,11 @@
 	.avatarHeader {
 		flex-direction: column;
 		align-items: stretch;
+	}
+
+	.avatarNotice {
+		max-width: none;
+		text-align: left;
 	}
 
 	.uploadButton {
