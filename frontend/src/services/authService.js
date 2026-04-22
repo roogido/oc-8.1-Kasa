@@ -88,3 +88,21 @@ export async function logoutUser() {
 		method: 'POST',
 	});
 }
+
+export async function requestPasswordReset({ email }) {
+	const data = await internalApiRequest('/api/auth/request-reset', {
+		method: 'POST',
+		body: { email },
+	});
+
+	return data?.data?.message ?? '';
+}
+
+export async function resetPasswordWithToken({ token, password }) {
+	const data = await internalApiRequest('/api/auth/reset-password', {
+		method: 'POST',
+		body: { token, password },
+	});
+
+	return data?.data?.message ?? '';
+}

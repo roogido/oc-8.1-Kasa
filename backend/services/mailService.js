@@ -10,6 +10,8 @@ const { mailConfig, validateMailConfig } = require('../config/mail');
 
 let transporter = null;
 
+const DEFAULT_FRONTEND_BASE_URL = 'http://localhost:3001';
+
 const OBVIOUSLY_FAKE_EMAIL_DOMAINS = new Set([
 	'example.com',
 	'example.net',
@@ -65,6 +67,54 @@ function isObviouslyFakeEmailAddress(email) {
 	}
 
 	return false;
+}
+
+/**
+ * Normalise une URL en supprimant les slashs finaux.
+ *
+ * @param {string} url
+ * @returns {string}
+ */
+function normalizeBaseUrl(url) {
+	return String(url).replace(/\/+$/, '');
+}
+
+/**
+ * Retourne l'URL publique du frontend pour construire les liens
+ * de réinitialisation.
+ *
+ * @returns {string}
+ */
+function getFrontendBaseUrl() {
+	const configuredUrl = String(process.env.FRONTEND_BASE_URL || '').trim();
+
+	if (configuredUrl !== '') {
+		return normalizeBaseUrl(configuredUrl);
+	}
+
+	if (process.env.NODE_ENV !== 'production') {
+		return DEFAULT_FRONTEND_BASE_URL;
+	}
+
+	throw new Error('FRONTEND_BASE_URL est manquante.');
+}
+
+/**
+ * Construit l'URL de réinitialisation de mot de passe.
+ *
+ * @param {string} token
+ * @returns {string}
+ */
+function buildResetPasswordUrl(token) {
+	const normalizedToken = String(token || '').trim();
+
+	if (normalizedToken === '') {
+		throw new Error('Le token de réinitialisation est manquant.');
+	}
+
+	const frontendBaseUrl = getFrontendBaseUrl();
+
+	return `${frontendBaseUrl}/reset-password?token=${encodeURIComponent(normalizedToken)}`;
 }
 
 function buildTransporter() {
@@ -169,6 +219,43 @@ async function sendRegistrationConfirmationEmail({ to, userName }) {
 	});
 }
 
+async function sendPasswordResetEmail({ to, userName, token }) {
+	const safeUserName = userName ? String(userName).trim() : 'utilisateur';
+	const resetUrl = buildResetPasswordUrl(token);
+
+	const subject = 'Réinitialisation de ton mot de passe Kasa';
+
+	const text = [
+		`Bonjour ${safeUserName},`,
+		'',
+		'Une demande de réinitialisation de mot de passe a été reçue pour ton compte Kasa.',
+		'',
+		'Pour définir un nouveau mot de passe, utilise ce lien :',
+		resetUrl,
+		'',
+		"Si tu n'es pas à l'origine de cette demande, tu peux ignorer cet e-mail.",
+		'',
+		'À bientôt,',
+		"L'équipe Kasa",
+	].join('\n');
+
+	const html = [
+		`<p>Bonjour ${escapeHtml(safeUserName)},</p>`,
+		`<p>Une demande de réinitialisation de mot de passe a été reçue pour ton compte <strong>Kasa</strong>.</p>`,
+		`<p>Pour définir un nouveau mot de passe, utilise ce lien :</p>`,
+		`<p><a href="${escapeHtml(resetUrl)}">${escapeHtml(resetUrl)}</a></p>`,
+		`<p>Si tu n'es pas à l'origine de cette demande, tu peux ignorer cet e-mail.</p>`,
+		`<p>À bientôt,<br>L'équipe Kasa</p>`,
+	].join('');
+
+	return sendMail({
+		to,
+		subject,
+		text,
+		html,
+	});
+}
+
 function escapeHtml(value) {
 	return String(value)
 		.replaceAll('&', '&amp;')
@@ -179,8 +266,11 @@ function escapeHtml(value) {
 }
 
 module.exports = {
+	buildResetPasswordUrl,
+	getFrontendBaseUrl,
 	isObviouslyFakeEmailAddress,
 	verifyMailTransport,
 	sendMail,
 	sendRegistrationConfirmationEmail,
+	sendPasswordResetEmail,
 };

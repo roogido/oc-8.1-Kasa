@@ -5,6 +5,7 @@ const { getMissingMailConfigKeys, isMailEnabled } = require('../config/mail');
 const {
 	isObviouslyFakeEmailAddress,
 	sendRegistrationConfirmationEmail,
+	sendPasswordResetEmail,
 } = require('./mailService');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-prod';
@@ -99,6 +100,59 @@ async function trySendRegistrationConfirmationEmail(user) {
 			"Echec de l'envoi de l'e-mail de confirmation d'inscription :",
 			error,
 		);
+	}
+}
+
+/**
+ * Tente d'envoyer l'e-mail de réinitialisation de mot de passe
+ * avec une réponse compatible avec le principe d'anti-énumération.
+ *
+ * Cas gérés :
+ * - configuration e-mail absente ou incomplète -> erreur 503 ;
+ * - adresse e-mail de test évidente -> aucun envoi, warning serveur ;
+ * - erreur réelle d'envoi -> log erreur, mais réponse générique conservée.
+ *
+ * @param {Object|null} user
+ * @param {string} email
+ * @param {string} token
+ * @returns {Promise<void>}
+ */
+async function trySendPasswordResetEmail(user, email, token) {
+	if (!isMailEnabled()) {
+		const missing = getMissingMailConfigKeys();
+		const err = new Error(
+			`password reset email service unavailable: missing ${missing.join(', ')}`,
+		);
+		err.status = 503;
+		throw err;
+	}
+
+	if (!user || !user.email) {
+		return;
+	}
+
+	if (isObviouslyFakeEmailAddress(email)) {
+		console.warn(
+			`Adresse e-mail de test detectée pour la demande de réinitialisation : ${email}. Aucun e-mail transactionnel n'a été envoyé.`,
+		);
+		return;
+	}
+
+	try {
+		await sendPasswordResetEmail({
+			to: user.email,
+			userName: user.name,
+			token,
+		});
+	} catch (error) {
+		console.error(
+			"Echec de l'envoi de l'e-mail de réinitialisation du mot de passe :",
+			error,
+		);
+
+		const err = new Error('password reset email send failed');
+		err.status = 503;
+		throw err;
 	}
 }
 
@@ -226,7 +280,7 @@ async function requestPasswordReset(db, { email }) {
 	}
 
 	const user = await db.getAsync(
-		'SELECT id, email FROM users WHERE email = ?',
+		'SELECT id, name, email FROM users WHERE email = ?',
 		[normalizedEmail],
 	);
 
@@ -238,6 +292,8 @@ async function requestPasswordReset(db, { email }) {
 			'UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?',
 			[token, expires, user.id],
 		);
+
+		await trySendPasswordResetEmail(user, normalizedEmail, token);
 	}
 
 	const resp = {
@@ -299,4 +355,5 @@ module.exports = {
 	verifyPassword,
 	signToken,
 	trySendRegistrationConfirmationEmail,
+	trySendPasswordResetEmail,
 };

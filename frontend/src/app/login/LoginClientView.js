@@ -161,7 +161,9 @@ export default function LoginPage() {
 								}
 								aria-pressed={isPasswordVisible}
 								onClick={() =>
-									setIsPasswordVisible((previousState) => !previousState)
+									setIsPasswordVisible(
+										(previousState) => !previousState,
+									)
 								}
 							>
 								{isPasswordVisible ? (
@@ -195,7 +197,10 @@ export default function LoginPage() {
 						</button>
 
 						<div className={styles.links}>
-							<Link href="/" className={styles.textLink}>
+							<Link
+								href="/forgot-password"
+								className={styles.textLink}
+							>
 								Mot de passe oublié
 							</Link>
 
