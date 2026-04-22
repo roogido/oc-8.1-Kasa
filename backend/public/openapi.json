@@ -42,7 +42,8 @@
 									},
 									"password": {
 										"type": "string",
-										"minLength": 6
+										"minLength": 8,
+										"description": "Le mot de passe doit contenir au moins 8 caracteres, avec au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractere special."
 									},
 									"picture": {
 										"type": "string",
@@ -62,16 +63,16 @@
 									"value": {
 										"name": "Alice",
 										"email": "alice@example.com",
-										"password": "secret123",
+										"password": "Kasa#2026",
 										"role": "client"
 									}
 								},
 								"registerOwner": {
-									"summary": "Inscription en tant que owner",
+									"summary": "Inscription en tant que proprietaire",
 									"value": {
 										"name": "Bob",
 										"email": "bob@example.com",
-										"password": "secret123",
+										"password": "Host#2026",
 										"role": "owner"
 									}
 								}
@@ -219,7 +220,8 @@
 									"token": { "type": "string" },
 									"password": {
 										"type": "string",
-										"minLength": 6
+										"minLength": 8,
+										"description": "Le mot de passe doit contenir au moins 8 caracteres, avec au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractere special."
 									}
 								}
 							}
