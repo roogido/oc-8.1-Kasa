@@ -1,17 +1,17 @@
 /**
- * @file src/app/reset-password/ResetPasswordClientView.js
+ * Fichier : src/app/profile/change-password/ChangePasswordClientView.js
  * @description
- * Vue cliente de la page de réinitialisation du mot de passe.
+ * Vue cliente de la page de changement du mot de passe.
  */
 
 'use client';
 
 import { Eye, EyeOff } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-import { resetPasswordWithToken } from '@/services/authService';
+import { changePassword } from '@/services/authService';
 import {
 	PASSWORD_MIN_LENGTH,
 	PASSWORD_REQUIREMENTS_TEXT,
@@ -20,21 +20,19 @@ import {
 
 import styles from '@/app/auth-form.module.css';
 
-export default function ResetPasswordClientView() {
+export default function ChangePasswordClientView() {
 	const router = useRouter();
-	const searchParams = useSearchParams();
 
-	const token = useMemo(() => {
-		const rawToken = searchParams.get('token');
-
-		return typeof rawToken === 'string' ? rawToken.trim() : '';
-	}, [searchParams]);
-
-	const [password, setPassword] = useState('');
+	const [currentPassword, setCurrentPassword] = useState('');
+	const [newPassword, setNewPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
-	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+	const [isCurrentPasswordVisible, setIsCurrentPasswordVisible] =
+		useState(false);
+	const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
 	const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
 		useState(false);
+
 	const [errorMessage, setErrorMessage] = useState('');
 	const [successMessage, setSuccessMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,8 +47,13 @@ export default function ResetPasswordClientView() {
 		}
 	}
 
-	function handlePasswordChange(event) {
-		setPassword(event.target.value);
+	function handleCurrentPasswordChange(event) {
+		setCurrentPassword(event.target.value);
+		resetMessages();
+	}
+
+	function handleNewPasswordChange(event) {
+		setNewPassword(event.target.value);
 		resetMessages();
 	}
 
@@ -62,35 +65,23 @@ export default function ResetPasswordClientView() {
 	async function handleSubmit(event) {
 		event.preventDefault();
 
-		if (token === '') {
-			setErrorMessage(
-				'Le lien de réinitialisation est invalide ou incomplet.',
-			);
-			return;
-		}
-
-		const normalizedPassword = password;
-		const normalizedConfirmPassword = confirmPassword;
-
 		if (
-			normalizedPassword.trim() === '' ||
-			normalizedConfirmPassword.trim() === ''
+			currentPassword.trim() === '' ||
+			newPassword.trim() === '' ||
+			confirmPassword.trim() === ''
 		) {
+			setErrorMessage('Tous les champs sont requis.');
+			return;
+		}
+
+		if (newPassword !== confirmPassword) {
 			setErrorMessage(
-				'Le nouveau mot de passe et sa confirmation sont requis.',
+				'Le nouveau mot de passe et sa confirmation ne correspondent pas.',
 			);
 			return;
 		}
 
-		if (normalizedPassword !== normalizedConfirmPassword) {
-			setErrorMessage(
-				'Le mot de passe et sa confirmation ne correspondent pas.',
-			);
-			return;
-		}
-
-		const passwordValidationError =
-			getPasswordValidationError(normalizedPassword);
+		const passwordValidationError = getPasswordValidationError(newPassword);
 
 		if (passwordValidationError !== '') {
 			setErrorMessage(passwordValidationError);
@@ -102,28 +93,29 @@ export default function ResetPasswordClientView() {
 		setSuccessMessage('');
 
 		try {
-			const message = await resetPasswordWithToken({
-				token,
-				password: normalizedPassword,
+			const message = await changePassword({
+				currentPassword,
+				newPassword,
 			});
 
 			setSuccessMessage(
 				message !== ''
 					? message
-					: 'Votre mot de passe a bien été réinitialisé.',
+					: 'Votre mot de passe a bien été modifié.',
 			);
 
-			setPassword('');
+			setCurrentPassword('');
+			setNewPassword('');
 			setConfirmPassword('');
 
 			window.setTimeout(() => {
-				router.replace('/login');
+				router.replace('/profile');
 			}, 1500);
 		} catch (error) {
 			setErrorMessage(
 				error instanceof Error
 					? error.message
-					: 'Impossible de réinitialiser le mot de passe.',
+					: 'Impossible de modifier le mot de passe.',
 			);
 		} finally {
 			setIsSubmitting(false);
@@ -133,17 +125,18 @@ export default function ResetPasswordClientView() {
 	return (
 		<section
 			className={styles.section}
-			aria-labelledby="reset-password-title"
+			aria-labelledby="change-password-title"
 		>
 			<div className={styles.panel}>
 				<header className={styles.intro}>
-					<h1 id="reset-password-title" className={styles.title}>
-						Réinitialiser le mot de passe
+					<h1 id="change-password-title" className={styles.title}>
+						Changer le mot de passe
 					</h1>
 
 					<p className={styles.description}>
-						Définissez un nouveau mot de passe pour accéder de
-						nouveau à votre compte Kasa.
+						Modifiez votre mot de passe en renseignant d&apos;abord
+						votre mot de passe actuel, puis un nouveau mot de passe
+						sécurisé.
 					</p>
 				</header>
 
@@ -153,40 +146,96 @@ export default function ResetPasswordClientView() {
 					noValidate
 				>
 					<div className={styles.field}>
-						<label htmlFor="password" className={styles.label}>
-							Nouveau mot de passe
+						<label
+							htmlFor="currentPassword"
+							className={styles.label}
+						>
+							Mot de passe actuel
 						</label>
 
 						<div className={styles.passwordField}>
 							<input
-								id="password"
-								name="password"
-								type={isPasswordVisible ? 'text' : 'password'}
-								autoComplete="new-password"
+								id="currentPassword"
+								name="currentPassword"
+								type={
+									isCurrentPasswordVisible
+										? 'text'
+										: 'password'
+								}
+								autoComplete="current-password"
 								className={`${styles.input} ${styles.passwordInput}`}
-								value={password}
-								onChange={handlePasswordChange}
-								minLength={PASSWORD_MIN_LENGTH}
+								value={currentPassword}
+								onChange={handleCurrentPasswordChange}
 								aria-invalid={errorMessage !== ''}
-								aria-describedby="reset-password-requirements"
 							/>
 
 							<button
 								type="button"
 								className={styles.passwordToggleButton}
 								aria-label={
-									isPasswordVisible
-										? 'Masquer le mot de passe'
-										: 'Afficher le mot de passe'
+									isCurrentPasswordVisible
+										? 'Masquer le mot de passe actuel'
+										: 'Afficher le mot de passe actuel'
 								}
-								aria-pressed={isPasswordVisible}
+								aria-pressed={isCurrentPasswordVisible}
 								onClick={() =>
-									setIsPasswordVisible(
+									setIsCurrentPasswordVisible(
 										(previousState) => !previousState,
 									)
 								}
 							>
-								{isPasswordVisible ? (
+								{isCurrentPasswordVisible ? (
+									<EyeOff
+										className={styles.passwordToggleIcon}
+										aria-hidden="true"
+									/>
+								) : (
+									<Eye
+										className={styles.passwordToggleIcon}
+										aria-hidden="true"
+									/>
+								)}
+							</button>
+						</div>
+					</div>
+
+					<div className={styles.field}>
+						<label htmlFor="newPassword" className={styles.label}>
+							Nouveau mot de passe
+						</label>
+
+						<div className={styles.passwordField}>
+							<input
+								id="newPassword"
+								name="newPassword"
+								type={
+									isNewPasswordVisible ? 'text' : 'password'
+								}
+								autoComplete="new-password"
+								className={`${styles.input} ${styles.passwordInput}`}
+								value={newPassword}
+								onChange={handleNewPasswordChange}
+								minLength={PASSWORD_MIN_LENGTH}
+								aria-invalid={errorMessage !== ''}
+								aria-describedby="change-password-requirements"
+							/>
+
+							<button
+								type="button"
+								className={styles.passwordToggleButton}
+								aria-label={
+									isNewPasswordVisible
+										? 'Masquer le nouveau mot de passe'
+										: 'Afficher le nouveau mot de passe'
+								}
+								aria-pressed={isNewPasswordVisible}
+								onClick={() =>
+									setIsNewPasswordVisible(
+										(previousState) => !previousState,
+									)
+								}
+							>
+								{isNewPasswordVisible ? (
 									<EyeOff
 										className={styles.passwordToggleIcon}
 										aria-hidden="true"
@@ -201,7 +250,7 @@ export default function ResetPasswordClientView() {
 						</div>
 
 						<p
-							id="reset-password-requirements"
+							id="change-password-requirements"
 							className={styles.passwordHint}
 						>
 							<strong>{PASSWORD_REQUIREMENTS_TEXT}</strong>
@@ -213,7 +262,7 @@ export default function ResetPasswordClientView() {
 							htmlFor="confirmPassword"
 							className={styles.label}
 						>
-							Confirmer le mot de passe
+							Confirmer le nouveau mot de passe
 						</label>
 
 						<div className={styles.passwordField}>
@@ -237,8 +286,8 @@ export default function ResetPasswordClientView() {
 								className={styles.passwordToggleButton}
 								aria-label={
 									isConfirmPasswordVisible
-										? 'Masquer la confirmation du mot de passe'
-										: 'Afficher la confirmation du mot de passe'
+										? 'Masquer la confirmation du nouveau mot de passe'
+										: 'Afficher la confirmation du nouveau mot de passe'
 								}
 								aria-pressed={isConfirmPasswordVisible}
 								onClick={() =>
@@ -281,13 +330,13 @@ export default function ResetPasswordClientView() {
 							disabled={isSubmitting}
 						>
 							{isSubmitting
-								? 'Réinitialisation...'
-								: 'Définir le nouveau mot de passe'}
+								? 'Mise à jour...'
+								: 'Mettre à jour le mot de passe'}
 						</button>
 
 						<div className={styles.links}>
-							<Link href="/login" className={styles.textLink}>
-								Retour à la connexion
+							<Link href="/profile" className={styles.textLink}>
+								Retour au profil
 							</Link>
 						</div>
 					</div>

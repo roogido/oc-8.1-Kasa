@@ -1,12 +1,7 @@
 /**
- * Fichier : src/lib/passwordValidation.js
- * Nouveau fichier
- */
-
-/**
- * @file src/lib/passwordValidation.js
+ * @file  src/lib/passwordValidation.js
  * @description
- * Regles partagees de validation du mot de passe cote frontend.
+ * Règles partagées de validation du mot de passe côté frontend.
  */
 
 export const PASSWORD_MIN_LENGTH = 8;
@@ -16,7 +11,7 @@ export const DIGIT_PATTERN = /\d/;
 export const SPECIAL_CHARACTER_PATTERN = /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/;
 
 export const PASSWORD_REQUIREMENTS_TEXT =
-	'Le mot de passe doit contenir au moins 8 caracteres, avec au moins une minuscule, une majuscule, un chiffre et un caractere special.';
+	'Le mot de passe doit contenir au moins 8 caractères, avec au moins une minuscule, une majuscule, un chiffre et un caractère spécial.';
 
 /**
  * Retourne un message d'erreur clair si le mot de passe
@@ -29,7 +24,7 @@ export function getPasswordValidationError(password) {
 	const normalizedPassword = String(password || '');
 
 	if (normalizedPassword.length < PASSWORD_MIN_LENGTH) {
-		return `Le mot de passe doit contenir au moins ${PASSWORD_MIN_LENGTH} caracteres.`;
+		return `Le mot de passe doit contenir au moins ${PASSWORD_MIN_LENGTH} caractères.`;
 	}
 
 	if (!LOWERCASE_PATTERN.test(normalizedPassword)) {
@@ -45,7 +40,7 @@ export function getPasswordValidationError(password) {
 	}
 
 	if (!SPECIAL_CHARACTER_PATTERN.test(normalizedPassword)) {
-		return 'Le mot de passe doit contenir au moins un caractere special, par exemple : ! @ # $ % & * ?';
+		return 'Le mot de passe doit contenir au moins un caractère spécial, par exemple : ! @ # $ % & * ?';
 	}
 
 	return '';

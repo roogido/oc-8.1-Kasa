@@ -10,7 +10,7 @@ require('dotenv').config();
 const {
     verifyMailTransport,
     sendRegistrationConfirmationEmail,
-} = require('../services/mailService');
+} = require('../../services/mailService');
 
 async function main() {
     const targetEmail = process.env.MAIL_TEST_TO;

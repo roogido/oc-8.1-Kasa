@@ -11,6 +11,15 @@ const { initialize } = require('./db');
 
 const app = express();
 
+/*
+ * En production, l'API est prévue derrière un reverse proxy Apache.
+ * Cette configuration permet à Express et à express-rate-limit
+ * d'interpréter correctement l'IP cliente transmise par le proxy.
+ */
+if (process.env.NODE_ENV === 'production') {
+	app.set('trust proxy', 1);
+}
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -18,12 +27,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Initialize database and expose via app.locals
-initialize().then((db) => {
-  app.locals.db = db;
-  console.log('Database initialized');
-}).catch((err) => {
-  console.error('Database initialization failed:', err);
-});
+initialize()
+	.then((db) => {
+		app.locals.db = db;
+		console.log('Database initialized');
+	})
+	.catch((err) => {
+		console.error('Database initialization failed:', err);
+	});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

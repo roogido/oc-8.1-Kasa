@@ -1,14 +1,14 @@
 /**
- * @file src/app/forgot-password/page.js
+ * @file  src/app/forgot-password/page.js
  * @description
- *
+ * Page de demande de réinitialisation du mot de passe.
  */
 
 import ForgotPasswordClientView from './ForgotPasswordClientView';
 
 export const metadata = {
-	title: 'Mot de passe oublie',
-	description: 'Demandez un lien de reinitialisation de mot de passe.',
+	title: 'Mot de passe oublié',
+	description: 'Demandez un lien de réinitialisation de mot de passe.',
 	robots: {
 		index: false,
 		follow: false,

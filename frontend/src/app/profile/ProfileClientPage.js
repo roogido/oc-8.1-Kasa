@@ -6,6 +6,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -405,6 +406,13 @@ export default function ProfileClientPage({ currentUser }) {
 						>
 							{isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
 						</button>
+
+						<Link
+							href="/profile/change-password"
+							className={styles.secondaryLink}
+						>
+							Changer mon mot de passe
+						</Link>
 					</div>
 				</form>
 			</div>

@@ -1,7 +1,7 @@
 /**
- * @file src/app/api/auth/reset-password/route.js
+ * @file  src/app/api/auth/reset-password/route.js
  * @description
- *
+ * Route interne Next.js pour réinitialiser le mot de passe avec un jeton.
  */
 
 import { NextResponse } from 'next/server';
@@ -9,20 +9,22 @@ import { NextResponse } from 'next/server';
 import { apiRequest, ApiClientError } from '@/lib/apiClient';
 
 /**
- * Valide et normalise le payload de reinitialisation.
+ * Valide et normalise le payload de réinitialisation.
  *
  * @param {Object|null} body
  * @returns {{ token: string, password: string }}
  */
 function normalizeResetPasswordPayload(body) {
-	const token = typeof body?.token === 'string' ? body.token.trim() : '';
-	const password = typeof body?.password === 'string' ? body.password : '';
+	const token =
+		typeof body?.token === 'string' ? body.token.trim() : '';
+	const password =
+		typeof body?.password === 'string' ? body.password : '';
 
 	return { token, password };
 }
 
 /**
- * Retourne un message francise a partir d'une erreur backend.
+ * Retourne un message francisé à partir d'une erreur backend.
  *
  * @param {string} message
  * @returns {string}
@@ -33,10 +35,10 @@ function getResetPasswordErrorMessage(message) {
 			return 'Le jeton et le nouveau mot de passe sont requis.';
 
 		case 'invalid or expired token':
-			return 'Le lien de reinitialisation est invalide ou expire.';
+			return 'Le lien de réinitialisation est invalide ou expiré.';
 
 		case 'password must be at least 8 characters':
-			return 'Le mot de passe doit contenir au moins 8 caracteres.';
+			return 'Le mot de passe doit contenir au moins 8 caractères.';
 
 		case 'password must contain at least one lowercase letter':
 			return 'Le mot de passe doit contenir au moins une lettre minuscule.';
@@ -48,7 +50,7 @@ function getResetPasswordErrorMessage(message) {
 			return 'Le mot de passe doit contenir au moins un chiffre.';
 
 		case 'password must contain at least one special character':
-			return 'Le mot de passe doit contenir au moins un caractere special.';
+			return 'Le mot de passe doit contenir au moins un caractère spécial.';
 
 		default:
 			return message;
@@ -70,7 +72,8 @@ export async function POST(request) {
 			return NextResponse.json(
 				{
 					success: false,
-					message: 'Le jeton et le nouveau mot de passe sont requis.',
+					message:
+						'Le jeton et le nouveau mot de passe sont requis.',
 				},
 				{ status: 400 },
 			);
@@ -86,7 +89,8 @@ export async function POST(request) {
 			{
 				success: true,
 				data: {
-					message: 'Votre mot de passe a bien ete reinitialise.',
+					message:
+						'Votre mot de passe a bien été réinitialisé.',
 				},
 			},
 			{ status: 200 },
@@ -105,7 +109,8 @@ export async function POST(request) {
 		return NextResponse.json(
 			{
 				success: false,
-				message: 'Impossible de reinitialiser le mot de passe.',
+				message:
+					'Impossible de réinitialiser le mot de passe.',
 			},
 			{ status: 500 },
 		);

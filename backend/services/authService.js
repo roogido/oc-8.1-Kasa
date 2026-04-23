@@ -346,11 +346,78 @@ async function resetPassword(db, { token, password }) {
 	return { ok: true };
 }
 
+/**
+ * Permet à un utilisateur connecté de changer son mot de passe.
+ *
+ * @param {Object} db
+ * @param {number|string} userId
+ * @param {Object} payload
+ * @param {string} payload.currentPassword
+ * @param {string} payload.newPassword
+ * @returns {Promise<{ ok: true }>}
+ */
+async function changePassword(db, userId, { currentPassword, newPassword }) {
+	if (!userId) {
+		const err = new Error('authentication required');
+		err.status = 401;
+		throw err;
+	}
+
+	if (!currentPassword || !newPassword) {
+		const err = new Error('current password and new password are required');
+		err.status = 400;
+		throw err;
+	}
+
+	const user = await db.getAsync(
+		'SELECT id, password_hash FROM users WHERE id = ?',
+		[userId],
+	);
+
+	if (!user || !user.password_hash) {
+		const err = new Error('user not found');
+		err.status = 404;
+		throw err;
+	}
+
+	if (!verifyPassword(String(currentPassword), user.password_hash)) {
+		const err = new Error('invalid current password');
+		err.status = 401;
+		throw err;
+	}
+
+	if (verifyPassword(String(newPassword), user.password_hash)) {
+		const err = new Error(
+			'new password must be different from current password',
+		);
+		err.status = 400;
+		throw err;
+	}
+
+	const passwordValidationError = getPasswordValidationError(newPassword);
+
+	if (passwordValidationError !== '') {
+		const err = new Error(passwordValidationError);
+		err.status = 400;
+		throw err;
+	}
+
+	const password_hash = hashPassword(String(newPassword));
+
+	await db.runAsync('UPDATE users SET password_hash = ? WHERE id = ?', [
+		password_hash,
+		user.id,
+	]);
+
+	return { ok: true };
+}
+
 module.exports = {
 	register,
 	login,
 	requestPasswordReset,
 	resetPassword,
+	changePassword,
 	hashPassword,
 	verifyPassword,
 	signToken,

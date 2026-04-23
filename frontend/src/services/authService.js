@@ -106,3 +106,26 @@ export async function resetPasswordWithToken({ token, password }) {
 
 	return data?.data?.message ?? '';
 }
+
+/**
+ * Change le mot de passe de l'utilisateur connecté.
+ *
+ * @param {Object} params
+ * @param {string} params.currentPassword
+ * @param {string} params.newPassword
+ * @returns {Promise<string>}
+ */
+export async function changePassword({
+	currentPassword,
+	newPassword,
+}) {
+	const data = await internalApiRequest('/api/auth/change-password', {
+		method: 'POST',
+		body: {
+			currentPassword,
+			newPassword,
+		},
+	});
+
+	return data?.data?.message ?? '';
+}

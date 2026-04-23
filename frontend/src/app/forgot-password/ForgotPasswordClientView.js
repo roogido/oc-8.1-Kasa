@@ -1,7 +1,7 @@
 /**
- * @file src/app/forgot-password/ForgotPasswordClientView.js
+ * @file  src/app/forgot-password/ForgotPasswordClientView.js
  * @description
- *
+ * Vue cliente de la page "Mot de passe oublié".
  */
 
 'use client';
@@ -22,7 +22,7 @@ const OBVIOUSLY_FAKE_EMAIL_DOMAINS = new Set([
 ]);
 
 /**
- * Retourne le domaine normalise d'une adresse e-mail.
+ * Retourne le domaine normalisé d'une adresse e-mail.
  *
  * @param {string} email
  * @returns {string}
@@ -39,7 +39,7 @@ function getEmailDomain(email) {
 }
 
 /**
- * Detecte une adresse e-mail manifestement factice.
+ * Détecte une adresse e-mail manifestement factice.
  *
  * @param {string} email
  * @returns {boolean}
@@ -78,7 +78,7 @@ function getEmailWarningMessage(email) {
 		return '';
 	}
 
-	return "Adresse e-mail de test detectee. Vous pouvez poursuivre, mais aucun e-mail reel de reinitialisation ne pourra etre recu.";
+	return "Adresse e-mail de test détectée. Vous pouvez poursuivre, mais aucun e-mail réel de réinitialisation ne pourra être reçu.";
 }
 
 export default function ForgotPasswordClientView() {
@@ -125,13 +125,13 @@ export default function ForgotPasswordClientView() {
 			setSuccessMessage(
 				message !== ''
 					? message
-					: "Si cette adresse existe, un lien de reinitialisation a ete envoye.",
+					: "Si cette adresse existe, un lien de réinitialisation a été envoyé.",
 			);
 		} catch (error) {
 			setErrorMessage(
 				error instanceof Error
 					? error.message
-					: 'Impossible de traiter la demande de reinitialisation.',
+					: 'Impossible de traiter la demande de réinitialisation.',
 			);
 		} finally {
 			setIsSubmitting(false);
@@ -149,13 +149,13 @@ export default function ForgotPasswordClientView() {
 						id="forgot-password-title"
 						className={styles.title}
 					>
-						Mot de passe oublie
+						Mot de passe oublié
 					</h1>
 
 					<p className={styles.description}>
-						Renseigne l&apos;adresse e-mail associee a ton compte.
-						Si elle existe, nous t&apos;enverrons un lien de
-						reinitialisation.
+						Renseignez l&apos;adresse e-mail associée à votre compte.
+						Si elle existe, nous vous enverrons un lien de
+						réinitialisation.
 					</p>
 				</header>
 
@@ -221,7 +221,7 @@ export default function ForgotPasswordClientView() {
 
 						<div className={styles.links}>
 							<Link href="/login" className={styles.textLink}>
-								Retour a la connexion
+								Retour à la connexion
 							</Link>
 						</div>
 					</div>

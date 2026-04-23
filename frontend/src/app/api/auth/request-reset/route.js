@@ -1,7 +1,7 @@
 /**
- * @file src/app/api/auth/request-reset/route.js
+ * @file  src/app/api/auth/request-reset/route.js
  * @description
- *
+ * Route interne Next.js pour demander une réinitialisation du mot de passe.
  */
 
 import { NextResponse } from 'next/server';

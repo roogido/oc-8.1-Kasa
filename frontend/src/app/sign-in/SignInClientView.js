@@ -12,14 +12,13 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { registerUser } from '@/services/authService';
+import {
+	PASSWORD_MIN_LENGTH,
+	PASSWORD_REQUIREMENTS_TEXT,
+	getPasswordValidationError,
+} from '@/lib/passwordValidation';
 
 import styles from './page.module.css';
-
-const PASSWORD_MIN_LENGTH = 8;
-const LOWERCASE_PATTERN = /[a-z]/;
-const UPPERCASE_PATTERN = /[A-Z]/;
-const DIGIT_PATTERN = /\d/;
-const SPECIAL_CHARACTER_PATTERN = /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/;
 
 const OBVIOUSLY_FAKE_EMAIL_DOMAINS = new Set([
 	'example.com',
@@ -61,37 +60,6 @@ function getSafeNextPath(nextPath) {
  */
 function normalizeRole(role) {
 	return role === 'owner' ? 'owner' : 'client';
-}
-
-/**
- * Retourne un message d'erreur clair si le mot de passe
- * ne respecte pas la politique de robustesse attendue.
- *
- * @param {string} password
- * @returns {string}
- */
-function getPasswordValidationError(password) {
-	if (password.length < PASSWORD_MIN_LENGTH) {
-		return `Le mot de passe doit contenir au moins ${PASSWORD_MIN_LENGTH} caractères.`;
-	}
-
-	if (!LOWERCASE_PATTERN.test(password)) {
-		return 'Le mot de passe doit contenir au moins une lettre minuscule.';
-	}
-
-	if (!UPPERCASE_PATTERN.test(password)) {
-		return 'Le mot de passe doit contenir au moins une lettre majuscule.';
-	}
-
-	if (!DIGIT_PATTERN.test(password)) {
-		return 'Le mot de passe doit contenir au moins un chiffre.';
-	}
-
-	if (!SPECIAL_CHARACTER_PATTERN.test(password)) {
-		return 'Le mot de passe doit contenir au moins un caractère spécial, par exemple : ! @ # $ % & * ?';
-	}
-
-	return '';
 }
 
 /**
@@ -466,12 +434,7 @@ export default function SignInPage() {
 							id="password-requirements"
 							className={styles.passwordHint}
 						>
-							Le mot de passe doit contenir au moins
-							<strong> 8 caractères</strong>, avec au moins
-							<strong> une minuscule</strong>,
-							<strong> une majuscule</strong>,
-							<strong> un chiffre</strong> et
-							<strong> un caractère spécial</strong>.
+							<strong>{PASSWORD_REQUIREMENTS_TEXT}</strong>
 						</p>
 					</div>
 
@@ -495,9 +458,7 @@ export default function SignInPage() {
 									/>
 
 									<div className={styles.roleOptionContent}>
-										<span
-											className={styles.roleOptionTitle}
-										>
+										<span className={styles.roleOptionTitle}>
 											Vous êtes locataire / client
 										</span>
 										<span className={styles.roleOptionText}>
@@ -520,9 +481,7 @@ export default function SignInPage() {
 									/>
 
 									<div className={styles.roleOptionContent}>
-										<span
-											className={styles.roleOptionTitle}
-										>
+										<span className={styles.roleOptionTitle}>
 											Vous êtes propriétaire
 										</span>
 										<span className={styles.roleOptionText}>
