@@ -33,7 +33,10 @@ function getRequestResetErrorMessage(message) {
 			return "L'adresse e-mail est requise.";
 
 		case 'password reset email send failed':
-			return 'Le service de réinitialisation par e-mail est temporairement indisponible. Merci de réessayer plus tard.';
+			return "Le service de réinitialisation par e-mail est temporairement indisponible. Merci de réessayer plus tard.";
+
+		case 'Trop de demandes de réinitialisation ont été effectuées. Veuillez réessayer dans quelques minutes.':
+			return 'Trop de demandes de réinitialisation ont été effectuées. Veuillez réessayer dans quelques minutes.';
 
 		default:
 			return message;

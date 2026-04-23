@@ -1,3 +1,7 @@
+/**
+ * @file controllers/authController.js
+ */
+
 const {
 	register,
 	login,

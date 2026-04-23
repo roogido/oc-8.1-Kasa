@@ -52,6 +52,9 @@ function getResetPasswordErrorMessage(message) {
 		case 'password must contain at least one special character':
 			return 'Le mot de passe doit contenir au moins un caractère spécial.';
 
+		case 'Trop de tentatives de réinitialisation ont été effectuées. Veuillez réessayer dans quelques minutes.':
+			return 'Trop de tentatives de réinitialisation ont été effectuées. Veuillez réessayer dans quelques minutes.';
+
 		default:
 			return message;
 	}

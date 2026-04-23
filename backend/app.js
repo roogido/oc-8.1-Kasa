@@ -1,3 +1,15 @@
+/**
+ * @file app.js
+ * @description
+ * Point d'entrée principal de l'application Express Kasa.
+ *
+ * Ce fichier configure :
+ *      - les middlewares globaux ;
+ *      - l'initialisation de la base SQLite ;
+ *      - les routes publiques, API et authentification ;
+ *      - la gestion du reverse proxy en production.
+ */
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
