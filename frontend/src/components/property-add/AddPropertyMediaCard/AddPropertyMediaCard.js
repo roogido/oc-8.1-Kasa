@@ -27,6 +27,8 @@ import styles from './AddPropertyMediaCard.module.css';
  * @param {boolean} [props.isUploadingCover=false]
  * @param {boolean} [props.isUploadingGallery=false]
  * @param {boolean} [props.isDisabled=false]
+ * @param {string} [props.coverHelperText='']
+ * @param {string} [props.galleryHelperText='']
  * @returns {JSX.Element}
  */
 export default function AddPropertyMediaCard({
@@ -41,6 +43,8 @@ export default function AddPropertyMediaCard({
 	isUploadingCover = false,
 	isUploadingGallery = false,
 	isDisabled = false,
+	coverHelperText = '',
+	galleryHelperText = '',
 }) {
 	const normalizedCoverPreviewUrl =
 		typeof coverPreviewUrl === 'string' && coverPreviewUrl.trim() !== ''
@@ -57,11 +61,7 @@ export default function AddPropertyMediaCard({
 					onFileSelect={onCoverUpload}
 					isUploading={isUploadingCover}
 					disabled={isDisabled}
-					helperText={
-						isDisabled
-							? "Renseignez d'abord le titre pour activer l'ajout d'images."
-							: ''
-					}
+					helperText={coverHelperText}
 				/>
 
 				{normalizedCoverPreviewUrl !== '' ? (
@@ -101,6 +101,7 @@ export default function AddPropertyMediaCard({
 					onFileSelect={onGalleryUpload}
 					isUploading={isUploadingGallery}
 					disabled={isDisabled}
+					helperText={galleryHelperText}
 				/>
 
 				{galleryImages.length > 0 ? (

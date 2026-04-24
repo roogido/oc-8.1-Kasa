@@ -128,8 +128,70 @@
 	stroke-width: 1.9;
 }
 
-.roleFieldset {
+.passwordHint {
 	margin: 0;
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-regular);
+	line-height: 1.5;
+}
+
+.passwordHint strong {
+	color: var(--color-text-strong);
+	font-weight: var(--font-weight-medium);
+}
+
+.emailWarning {
+	margin: 0;
+	color: var(--color-accent);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-regular);
+	line-height: 1.5;
+}
+
+.dataNotice {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-top: 6px;
+	padding: 14px 16px;
+	background-color: var(--color-surface-alt);
+	border: 1px solid var(--color-border-muted);
+	border-left: 4px solid var(--color-primary);
+	border-radius: var(--radius-lg);
+}
+
+.dataNoticeHeader {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.dataNoticeIcon {
+	width: 16px;
+	height: 16px;
+	color: var(--color-primary);
+	stroke-width: 1.9;
+	flex: 0 0 auto;
+}
+
+.dataNoticeTitle {
+	color: var(--color-text-strong);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	line-height: var(--line-height-sm);
+}
+
+.dataNoticeText {
+	margin: 0;
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-regular);
+	line-height: 1.5;
+}
+
+.roleFieldset {
+	margin-top: 12px;
 	padding: 0;
 	border: 0;
 	display: flex;
@@ -210,7 +272,7 @@
 	align-items: center;
 	gap: 8px;
 	min-height: 25px;
-	margin-top: 6px;
+	margin-top: 16px;
 }
 
 .checkbox {

@@ -23,6 +23,16 @@ import {
 
 import styles from './page.module.css';
 
+const PROPERTY_MAX_IMAGES = Number.parseInt(
+	process.env.NEXT_PUBLIC_PROPERTY_MAX_IMAGES || '10',
+	10,
+);
+
+const UPLOAD_MAX_FILE_SIZE_BYTES = Number.parseInt(
+	process.env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE_BYTES || String(5 * 1024 * 1024),
+	10,
+);
+
 /**
  * Retourne un état initial neuf du formulaire.
  *
@@ -41,6 +51,26 @@ function createInitialFormState() {
 		tags: [],
 		customCategory: '',
 	};
+}
+
+/**
+ * Retourne le nombre total d'images actuellement sélectionnées.
+ *
+ * @param {Object} formData
+ * @returns {number}
+ */
+function getTotalImagesCount(formData) {
+	return (formData.cover !== '' ? 1 : 0) + formData.pictures.length;
+}
+
+/**
+ * Retourne une taille en mégaoctets lisible.
+ *
+ * @param {number} bytes
+ * @returns {string}
+ */
+function formatMegabytes(bytes) {
+	return String(Math.round((bytes / (1024 * 1024)) * 10) / 10);
 }
 
 /**
@@ -86,6 +116,19 @@ export default function AddPropertyClientPage({ currentUser }) {
 	const hasTitle = formData.title.trim() !== '';
 	const canSubmit = hasTitle && !isBusy;
 	const isMediaDisabled = !hasTitle || isBusy;
+	const totalImagesCount = getTotalImagesCount(formData);
+	const remainingImagesCount = Math.max(
+		0,
+		PROPERTY_MAX_IMAGES - totalImagesCount,
+	);
+
+	const coverHelperText = isMediaDisabled
+		? "Renseignez d'abord le titre pour activer l'ajout d'images."
+		: `Maximum ${PROPERTY_MAX_IMAGES} image(s) au total, couverture incluse. Taille maximale : ${formatMegabytes(UPLOAD_MAX_FILE_SIZE_BYTES)} Mo par fichier.`;
+
+	const galleryHelperText = isMediaDisabled
+		? "Renseignez d'abord le titre pour activer l'ajout d'images."
+		: `${totalImagesCount} / ${PROPERTY_MAX_IMAGES} image(s). ${remainingImagesCount} emplacement(s) restant(s). Taille maximale : ${formatMegabytes(UPLOAD_MAX_FILE_SIZE_BYTES)} Mo par fichier.`;
 
 	const galleryDisplayValue = useMemo(() => {
 		if (formData.pictures.length === 0) {
@@ -123,13 +166,6 @@ export default function AddPropertyClientPage({ currentUser }) {
 		};
 	}, []);
 
-	/**
-	 * Met à jour un champ simple du formulaire.
-	 *
-	 * @param {string} fieldName
-	 * @param {string} value
-	 * @returns {void}
-	 */
 	function handleFieldChange(fieldName, value) {
 		setSubmitErrorMessage('');
 		setSubmitSuccessMessage('');
@@ -140,12 +176,6 @@ export default function AddPropertyClientPage({ currentUser }) {
 		}));
 	}
 
-	/**
-	 * Bascule un équipement.
-	 *
-	 * @param {string} equipment
-	 * @returns {void}
-	 */
 	function handleToggleEquipment(equipment) {
 		setSubmitErrorMessage('');
 		setSubmitSuccessMessage('');
@@ -162,12 +192,6 @@ export default function AddPropertyClientPage({ currentUser }) {
 		});
 	}
 
-	/**
-	 * Bascule une catégorie.
-	 *
-	 * @param {string} tag
-	 * @returns {void}
-	 */
 	function handleToggleTag(tag) {
 		setSubmitErrorMessage('');
 		setSubmitSuccessMessage('');
@@ -184,11 +208,6 @@ export default function AddPropertyClientPage({ currentUser }) {
 		});
 	}
 
-	/**
-	 * Ajoute une catégorie personnalisée.
-	 *
-	 * @returns {void}
-	 */
 	function handleAddCustomCategory() {
 		const nextCategory = formData.customCategory.trim();
 
@@ -215,12 +234,6 @@ export default function AddPropertyClientPage({ currentUser }) {
 		});
 	}
 
-	/**
-	 * Upload l'image de couverture.
-	 *
-	 * @param {File} file
-	 * @returns {Promise<void>}
-	 */
 	async function handleCoverUpload(file) {
 		if (!hasTitle) {
 			setSubmitErrorMessage(
@@ -229,7 +242,25 @@ export default function AddPropertyClientPage({ currentUser }) {
 			return;
 		}
 
+		if (file.size > UPLOAD_MAX_FILE_SIZE_BYTES) {
+			setSubmitErrorMessage(
+				`L'image de couverture dépasse la taille maximale autorisée de ${formatMegabytes(UPLOAD_MAX_FILE_SIZE_BYTES)} Mo.`,
+			);
+			return;
+		}
+
 		const previousCover = formData.cover;
+		const canReplaceExistingCover = previousCover !== '';
+		const wouldExceedMaxImages =
+			!canReplaceExistingCover &&
+			getTotalImagesCount(formData) >= PROPERTY_MAX_IMAGES;
+
+		if (wouldExceedMaxImages) {
+			setSubmitErrorMessage(
+				`Vous pouvez ajouter au maximum ${PROPERTY_MAX_IMAGES} image(s) par propriété, couverture incluse.`,
+			);
+			return;
+		}
 
 		setSubmitErrorMessage('');
 		setSubmitSuccessMessage('');
@@ -275,11 +306,6 @@ export default function AddPropertyClientPage({ currentUser }) {
 		}
 	}
 
-	/**
-	 * Supprime l'image de couverture du brouillon.
-	 *
-	 * @returns {Promise<void>}
-	 */
 	async function handleRemoveCover() {
 		const coverToDelete = formData.cover.trim();
 
@@ -304,16 +330,24 @@ export default function AddPropertyClientPage({ currentUser }) {
 		}));
 	}
 
-	/**
-	 * Upload une image de galerie.
-	 *
-	 * @param {File} file
-	 * @returns {Promise<void>}
-	 */
 	async function handleGalleryUpload(file) {
 		if (!hasTitle) {
 			setSubmitErrorMessage(
 				"Renseignez d'abord le titre de la propriété avant d'ajouter des images.",
+			);
+			return;
+		}
+
+		if (file.size > UPLOAD_MAX_FILE_SIZE_BYTES) {
+			setSubmitErrorMessage(
+				`L'image dépasse la taille maximale autorisée de ${formatMegabytes(UPLOAD_MAX_FILE_SIZE_BYTES)} Mo.`,
+			);
+			return;
+		}
+
+		if (getTotalImagesCount(formData) >= PROPERTY_MAX_IMAGES) {
+			setSubmitErrorMessage(
+				`Vous pouvez ajouter au maximum ${PROPERTY_MAX_IMAGES} image(s) par propriété, couverture incluse.`,
 			);
 			return;
 		}
@@ -352,12 +386,6 @@ export default function AddPropertyClientPage({ currentUser }) {
 		}
 	}
 
-	/**
-	 * Retire une image de galerie du brouillon.
-	 *
-	 * @param {string} pictureUrl
-	 * @returns {Promise<void>}
-	 */
 	async function handleRemoveGalleryImage(pictureUrl) {
 		const normalizedUrl =
 			typeof pictureUrl === 'string' ? pictureUrl.trim() : '';
@@ -385,12 +413,6 @@ export default function AddPropertyClientPage({ currentUser }) {
 		}));
 	}
 
-	/**
-	 * Soumet le formulaire.
-	 *
-	 * @param {React.FormEvent<HTMLFormElement>} event
-	 * @returns {Promise<void>}
-	 */
 	async function handleSubmit(event) {
 		event.preventDefault();
 
@@ -408,6 +430,7 @@ export default function AddPropertyClientPage({ currentUser }) {
 		const normalizedDescription = formData.description.trim();
 		const normalizedLocation = formData.location.trim();
 		const normalizedPrice = Number(formData.pricePerNight);
+		const totalImages = getTotalImagesCount(formData);
 
 		if (currentUserId === '') {
 			setSubmitErrorMessage(
@@ -424,6 +447,13 @@ export default function AddPropertyClientPage({ currentUser }) {
 		if (!Number.isFinite(normalizedPrice) || normalizedPrice <= 0) {
 			setSubmitErrorMessage(
 				'Le prix par nuit doit être supérieur à 0.',
+			);
+			return;
+		}
+
+		if (totalImages > PROPERTY_MAX_IMAGES) {
+			setSubmitErrorMessage(
+				`Vous pouvez ajouter au maximum ${PROPERTY_MAX_IMAGES} image(s) par propriété, couverture incluse.`,
 			);
 			return;
 		}
@@ -526,6 +556,8 @@ export default function AddPropertyClientPage({ currentUser }) {
 								isUploadingCover={isUploadingCover}
 								isUploadingGallery={isUploadingGallery}
 								isDisabled={isMediaDisabled}
+								coverHelperText={coverHelperText}
+								galleryHelperText={galleryHelperText}
 							/>
 
 							<AddPropertyHostCard

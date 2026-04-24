@@ -2,11 +2,11 @@
  * @file src/components/property/HostContactActions/HostContactActions.js
  * @description
  * Actions de contact de l'hôte :
- * - non connecté :
+ * - non connecte :
  *   redirige vers /login avec retour sur la fiche et intention
  *   d'ouverture de la messagerie
- * - connecté :
- *   - desktop : ouvre la modale de messagerie
+ * - connecte :
+ *   - desktop : ouvre la modale de messagerie sur la propriete courante
  *   - mobile : redirige vers la page /messages
  */
 
@@ -34,20 +34,36 @@ function isDesktopViewport() {
 }
 
 /**
+ * Normalise un identifiant de propriete.
+ *
+ * @param {string|null|undefined} value
+ * @returns {string}
+ */
+function normalizePropertyId(value) {
+	return typeof value === 'string' ? value.trim() : '';
+}
+
+/**
  * Actions de contact de l'hôte.
  *
  * @param {Object} props
  * @param {boolean} [props.isAuthenticated=false]
+ * @param {string} [props.propertyId='']
  * @returns {JSX.Element}
  */
 export default function HostContactActions({
 	isAuthenticated = false,
+	propertyId = '',
 }) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
 	const [isMessagesModalOpen, setIsMessagesModalOpen] = useState(false);
+
+	const normalizedPropertyId = useMemo(() => {
+		return normalizePropertyId(propertyId);
+	}, [propertyId]);
 
 	const loginMessagesHref = useMemo(() => {
 		return buildLoginMessagesHref(pathname, searchParams.toString());
@@ -90,6 +106,7 @@ export default function HostContactActions({
 			{isMessagesModalOpen ? (
 				<MessagesDesktopModal
 					onClose={() => setIsMessagesModalOpen(false)}
+					initialPropertyId={normalizedPropertyId}
 				/>
 			) : null}
 		</>

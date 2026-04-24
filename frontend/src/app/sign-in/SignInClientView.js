@@ -6,14 +6,27 @@
 
 'use client';
 
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { registerUser } from '@/services/authService';
+import {
+	PASSWORD_MIN_LENGTH,
+	PASSWORD_REQUIREMENTS_TEXT,
+	getPasswordValidationError,
+} from '@/lib/passwordValidation';
 
 import styles from './page.module.css';
+
+const OBVIOUSLY_FAKE_EMAIL_DOMAINS = new Set([
+	'example.com',
+	'example.net',
+	'example.org',
+	'invalid',
+	'localhost',
+]);
 
 /**
  * Retourne une destination interne sûre après authentification.
@@ -50,6 +63,110 @@ function normalizeRole(role) {
 }
 
 /**
+ * Retourne le domaine normalisé d'une adresse e-mail.
+ *
+ * @param {string} email
+ * @returns {string}
+ */
+function getEmailDomain(email) {
+	const normalizedEmail = String(email || '')
+		.trim()
+		.toLowerCase();
+	const atIndex = normalizedEmail.lastIndexOf('@');
+
+	if (atIndex === -1) {
+		return '';
+	}
+
+	return normalizedEmail.slice(atIndex + 1);
+}
+
+/**
+ * Détecte une adresse e-mail manifestement factice.
+ *
+ * @param {string} email
+ * @returns {boolean}
+ */
+function isObviouslyFakeEmailAddress(email) {
+	const domain = getEmailDomain(email);
+
+	if (domain === '') {
+		return false;
+	}
+
+	if (OBVIOUSLY_FAKE_EMAIL_DOMAINS.has(domain)) {
+		return true;
+	}
+
+	if (domain.endsWith('.test')) {
+		return true;
+	}
+
+	if (domain.endsWith('.localhost')) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Retourne un message d'avertissement non bloquant
+ * si l'adresse e-mail semble factice.
+ *
+ * @param {string} email
+ * @returns {string}
+ */
+function getEmailWarningMessage(email) {
+	if (!isObviouslyFakeEmailAddress(email)) {
+		return '';
+	}
+
+	return "Adresse e-mail de test détectée. Vous pouvez poursuivre l'inscription, mais vous ne recevrez pas les e-mails de confirmation ou d'information.";
+}
+
+/**
+ * Traduit les messages d'erreur backend connus
+ * en messages français lisibles pour l'utilisateur.
+ *
+ * @param {unknown} error
+ * @returns {string}
+ */
+function getRegistrationErrorMessage(error) {
+	if (!(error instanceof Error)) {
+		return 'Impossible de créer le compte.';
+	}
+
+	switch (error.message) {
+		case 'name is required':
+			return 'Le nom est requis.';
+
+		case 'email is required':
+			return "L'adresse e-mail est requise.";
+
+		case 'email already registered':
+			return 'Cette adresse e-mail est déjà utilisée.';
+
+		case 'password must be at least 8 characters':
+			return 'Le mot de passe doit contenir au moins 8 caractères.';
+
+		case 'password must contain at least one lowercase letter':
+			return 'Le mot de passe doit contenir au moins une lettre minuscule.';
+
+		case 'password must contain at least one uppercase letter':
+			return 'Le mot de passe doit contenir au moins une lettre majuscule.';
+
+		case 'password must contain at least one digit':
+			return 'Le mot de passe doit contenir au moins un chiffre.';
+
+		case 'password must contain at least one special character':
+			return 'Le mot de passe doit contenir au moins un caractère spécial.';
+
+		default:
+			return error.message;
+	}
+}
+
+/**
  * Page d'inscription.
  *
  * @returns {JSX.Element}
@@ -72,6 +189,38 @@ export default function SignInPage() {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
+	const emailWarningMessage = useMemo(() => {
+		return getEmailWarningMessage(email);
+	}, [email]);
+
+	/**
+	 * Met à jour l'adresse e-mail et efface le message d'erreur courant.
+	 *
+	 * @param {React.ChangeEvent<HTMLInputElement>} event
+	 * @returns {void}
+	 */
+	function handleEmailChange(event) {
+		setEmail(event.target.value);
+
+		if (errorMessage !== '') {
+			setErrorMessage('');
+		}
+	}
+
+	/**
+	 * Met à jour le mot de passe et efface le message d'erreur courant.
+	 *
+	 * @param {React.ChangeEvent<HTMLInputElement>} event
+	 * @returns {void}
+	 */
+	function handlePasswordChange(event) {
+		setPassword(event.target.value);
+
+		if (errorMessage !== '') {
+			setErrorMessage('');
+		}
+	}
+
 	async function handleSubmit(event) {
 		event.preventDefault();
 
@@ -91,11 +240,29 @@ export default function SignInPage() {
 			return;
 		}
 
+		const passwordValidationError =
+			getPasswordValidationError(normalizedPassword);
+
+		if (passwordValidationError !== '') {
+			setErrorMessage(passwordValidationError);
+			return;
+		}
+
 		if (!hasAcceptedTerms) {
 			setErrorMessage(
 				"Vous devez accepter les conditions générales d'utilisation.",
 			);
 			return;
+		}
+
+		if (
+			process.env.NODE_ENV !== 'production' &&
+			isObviouslyFakeEmailAddress(normalizedEmail)
+		) {
+			console.warn(
+				"Adresse e-mail de test détectée à l'inscription :",
+				normalizedEmail,
+			);
 		}
 
 		setIsSubmitting(true);
@@ -113,11 +280,7 @@ export default function SignInPage() {
 			router.replace(redirectPath);
 			router.refresh();
 		} catch (error) {
-			setErrorMessage(
-				error instanceof Error
-					? error.message
-					: 'Impossible de créer le compte.',
-			);
+			setErrorMessage(getRegistrationErrorMessage(error));
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -199,9 +362,24 @@ export default function SignInPage() {
 							autoComplete="email"
 							className={styles.input}
 							value={email}
-							onChange={(event) => setEmail(event.target.value)}
+							onChange={handleEmailChange}
 							aria-invalid={errorMessage !== ''}
+							aria-describedby={
+								emailWarningMessage !== ''
+									? 'email-warning'
+									: undefined
+							}
 						/>
+
+						{emailWarningMessage !== '' ? (
+							<p
+								id="email-warning"
+								className={styles.emailWarning}
+								role="status"
+							>
+								{emailWarningMessage}
+							</p>
+						) : null}
 					</div>
 
 					<div className={styles.field}>
@@ -217,10 +395,10 @@ export default function SignInPage() {
 								autoComplete="new-password"
 								className={`${styles.input} ${styles.passwordInput}`}
 								value={password}
-								onChange={(event) =>
-									setPassword(event.target.value)
-								}
+								onChange={handlePasswordChange}
+								minLength={PASSWORD_MIN_LENGTH}
 								aria-invalid={errorMessage !== ''}
+								aria-describedby="password-requirements"
 							/>
 
 							<button
@@ -233,7 +411,9 @@ export default function SignInPage() {
 								}
 								aria-pressed={isPasswordVisible}
 								onClick={() =>
-									setIsPasswordVisible((previousState) => !previousState)
+									setIsPasswordVisible(
+										(previousState) => !previousState,
+									)
 								}
 							>
 								{isPasswordVisible ? (
@@ -249,6 +429,13 @@ export default function SignInPage() {
 								)}
 							</button>
 						</div>
+
+						<p
+							id="password-requirements"
+							className={styles.passwordHint}
+						>
+							<strong>{PASSWORD_REQUIREMENTS_TEXT}</strong>
+						</p>
 					</div>
 
 					<fieldset className={styles.roleFieldset}>
@@ -306,6 +493,32 @@ export default function SignInPage() {
 							</div>
 						</div>
 					</fieldset>
+
+					<div
+						className={styles.dataNotice}
+						role="note"
+						aria-label="Information sur l'utilisation de vos données"
+					>
+						<div className={styles.dataNoticeHeader}>
+							<ShieldCheck
+								className={styles.dataNoticeIcon}
+								aria-hidden="true"
+							/>
+							<span className={styles.dataNoticeTitle}>
+								Information sur vos données
+							</span>
+						</div>
+
+						<p className={styles.dataNoticeText}>
+							Les données recueillies sur ce formulaire sont
+							utilisées pour créer et gérer votre compte Kasa. Les
+							champs obligatoires sont nécessaires à
+							l&apos;inscription. Vous pouvez demander
+							l&apos;accès, la rectification ou la suppression de
+							vos données conformément à la réglementation
+							applicable.
+						</p>
+					</div>
 
 					<div className={styles.checkboxRow}>
 						<input

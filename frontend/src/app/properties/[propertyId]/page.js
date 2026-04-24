@@ -121,8 +121,7 @@ export async function generateMetadata({ params }) {
 	if (property === null) {
 		return {
 			title: 'Logement introuvable',
-			description:
-				'Le logement demandé est introuvable sur Kasa.',
+			description: 'Le logement demandé est introuvable sur Kasa.',
 			robots: {
 				index: false,
 				follow: false,
@@ -207,10 +206,15 @@ export default async function PropertyDetailPage({ params }) {
 					aria-labelledby="property-error-title"
 				>
 					<div className={styles.feedbackCard}>
-						<h1 id="property-error-title" className={styles.feedbackTitle}>
+						<h1
+							id="property-error-title"
+							className={styles.feedbackTitle}
+						>
 							Impossible de charger ce logement
 						</h1>
-						<p className={styles.feedbackText}>{propertyErrorMessage}</p>
+						<p className={styles.feedbackText}>
+							{propertyErrorMessage}
+						</p>
 					</div>
 				</section>
 			</div>
@@ -280,6 +284,7 @@ export default async function PropertyDetailPage({ params }) {
 						rating={property.host.rating}
 						avatar={property.host.avatar}
 						avatarAlt={property.host.avatarAlt}
+						propertyId={property.id}
 						isAuthenticated={isAuthenticated}
 					/>
 				</div>
@@ -301,6 +306,7 @@ export default async function PropertyDetailPage({ params }) {
 						rating={property.host.rating}
 						avatar={property.host.avatar}
 						avatarAlt={property.host.avatarAlt}
+						propertyId={property.id}
 						isAuthenticated={isAuthenticated}
 					/>
 				</div>

@@ -6,16 +6,15 @@
 
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import defaultAvatarNeutral from '@/assets/images/profile/default-avatar-neutral.png';
 import { normalizeBackendImageUrl } from '@/lib/imageUrl';
 import { updateCurrentProfile } from '@/services/profileService';
-import {
-	deleteUploadedImages,
-	uploadImage,
-} from '@/services/uploadService';
+import { deleteUploadedImages, uploadImage } from '@/services/uploadService';
 
 import styles from './page.module.css';
 
@@ -60,6 +59,8 @@ export default function ProfileClientPage({ currentUser }) {
 			? currentUser.role.trim()
 			: 'client';
 
+	const isClientRole = currentRole === 'client';
+
 	const [savedName, setSavedName] = useState(initialName);
 	const [savedPicture, setSavedPicture] = useState(initialPicture);
 
@@ -75,35 +76,51 @@ export default function ProfileClientPage({ currentUser }) {
 	const pendingPictureRef = useRef('');
 
 	const previewImageUrl = useMemo(() => {
-		if (picture === '') {
-			return '';
+		if (picture !== '') {
+			return normalizeBackendImageUrl(
+				picture,
+				isClientRole ? defaultAvatarNeutral.src : '',
+			);
 		}
 
-		return normalizeBackendImageUrl(picture, '');
-	}, [picture]);
+		if (isClientRole) {
+			return defaultAvatarNeutral.src;
+		}
+
+		return '';
+	}, [isClientRole, picture]);
+
+	const isFormDirty = useMemo(() => {
+		return (
+			name.trim() !== savedName.trim() ||
+			picture.trim() !== savedPicture.trim()
+		);
+	}, [name, picture, savedName, savedPicture]);
 
 	useEffect(() => {
 		savedPictureRef.current = savedPicture;
 	}, [savedPicture]);
 
 	useEffect(() => {
+		if (isClientRole) {
+			pendingPictureRef.current = '';
+			return;
+		}
+
 		if (picture !== '' && picture !== savedPicture) {
 			pendingPictureRef.current = picture;
 			return;
 		}
 
 		pendingPictureRef.current = '';
-	}, [picture, savedPicture]);
+	}, [isClientRole, picture, savedPicture]);
 
 	useEffect(() => {
 		return () => {
 			const pendingPicture = pendingPictureRef.current;
 			const committedPicture = savedPictureRef.current;
 
-			if (
-				pendingPicture !== '' &&
-				pendingPicture !== committedPicture
-			) {
+			if (pendingPicture !== '' && pendingPicture !== committedPicture) {
 				void deleteUploadedImages({
 					urls: [pendingPicture],
 					keepalive: true,
@@ -113,6 +130,10 @@ export default function ProfileClientPage({ currentUser }) {
 	}, []);
 
 	async function handlePictureUpload(file) {
+		if (isClientRole) {
+			return;
+		}
+
 		const previousDraftPicture = picture.trim();
 		const committedPicture = savedPicture.trim();
 
@@ -195,6 +216,7 @@ export default function ProfileClientPage({ currentUser }) {
 					: nextPicture;
 
 			if (
+				!isClientRole &&
 				previousSavedPicture !== '' &&
 				updatedPicture !== '' &&
 				previousSavedPicture !== updatedPicture
@@ -217,6 +239,7 @@ export default function ProfileClientPage({ currentUser }) {
 			router.refresh();
 		} catch (error) {
 			if (
+				!isClientRole &&
 				nextPicture !== '' &&
 				nextPicture !== savedPicture
 			) {
@@ -255,7 +278,12 @@ export default function ProfileClientPage({ currentUser }) {
 					</p>
 				</header>
 
-				<form className={styles.form} onSubmit={handleSubmit} noValidate>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmit}
+					noValidate
+					autoComplete="off"
+				>
 					<div className={styles.field}>
 						<label htmlFor="profile-name" className={styles.label}>
 							Nom
@@ -295,31 +323,40 @@ export default function ProfileClientPage({ currentUser }) {
 									Photo de profil
 								</h2>
 								<p className={styles.avatarDescription}>
-									Ajoutez ou remplacez votre photo actuelle.
+									{isClientRole
+										? "Les comptes client utilisent actuellement un avatar standard si aucune photo n'est déjà enregistrée."
+										: 'Ajoutez ou remplacez votre photo actuelle.'}
 								</p>
 							</div>
 
-							<label className={styles.uploadButton}>
-								<input
-									type="file"
-									accept="image/*"
-									className={styles.hiddenInput}
-									onChange={(event) => {
-										const file =
-											event.target.files?.[0] ?? null;
+							{!isClientRole ? (
+								<label className={styles.uploadButton}>
+									<input
+										type="file"
+										accept="image/*"
+										className={styles.hiddenInput}
+										onChange={(event) => {
+											const file =
+												event.target.files?.[0] ?? null;
 
-										if (file !== null) {
-											handlePictureUpload(file);
-										}
+											if (file !== null) {
+												handlePictureUpload(file);
+											}
 
-										event.target.value = '';
-									}}
-									disabled={isUploadingPicture}
-								/>
-								{isUploadingPicture
-									? 'Téléchargement...'
-									: 'Modifier la photo'}
-							</label>
+											event.target.value = '';
+										}}
+										disabled={isUploadingPicture}
+									/>
+									{isUploadingPicture
+										? 'Téléchargement...'
+										: 'Modifier la photo'}
+								</label>
+							) : (
+								<p className={styles.avatarNotice}>
+									Modification non disponible pour ce type de
+									compte.
+								</p>
+							)}
 						</div>
 
 						{previewImageUrl !== '' ? (
@@ -334,6 +371,7 @@ export default function ProfileClientPage({ currentUser }) {
 									}`}
 									width={96}
 									height={96}
+                                    loading="eager"
 									className={styles.avatarImage}
 								/>
 							</div>
@@ -360,10 +398,21 @@ export default function ProfileClientPage({ currentUser }) {
 						<button
 							type="submit"
 							className={styles.submitButton}
-							disabled={isSubmitting || isUploadingPicture}
+							disabled={
+								!isFormDirty ||
+								isSubmitting ||
+								isUploadingPicture
+							}
 						>
 							{isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
 						</button>
+
+						<Link
+							href="/profile/change-password"
+							className={styles.secondaryLink}
+						>
+							Changer mon mot de passe
+						</Link>
 					</div>
 				</form>
 			</div>
