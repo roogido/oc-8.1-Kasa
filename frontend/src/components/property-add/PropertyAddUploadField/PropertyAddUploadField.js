@@ -37,6 +37,10 @@ export default function PropertyAddUploadField({
 }) {
 	const fileInputRef = useRef(null);
 
+	const displayInputId = `${id}-display`;
+	const fileInputId = `${id}-file`;
+	const labelId = `${id}-label`;
+
 	/**
 	 * Ouvre le sélecteur de fichier.
 	 *
@@ -69,20 +73,24 @@ export default function PropertyAddUploadField({
 
 	return (
 		<div className={styles.field}>
-			<label className={styles.label} htmlFor={id}>
+			<label
+				id={labelId}
+				className={styles.label}
+				htmlFor={displayInputId}
+			>
 				{label}
 			</label>
 
 			<div className={styles.row}>
 				<input
-					id={id}
-					name={id}
+					id={displayInputId}
+					name={displayInputId}
 					type="text"
 					className={styles.control}
-					aria-label={label}
 					value={value}
 					readOnly
 					disabled={disabled}
+					aria-labelledby={labelId}
 				/>
 
 				<button
@@ -98,12 +106,15 @@ export default function PropertyAddUploadField({
 
 			<input
 				ref={fileInputRef}
+				id={fileInputId}
+				name={fileInputId}
 				type="file"
 				accept="image/*"
 				className={styles.srOnlyInput}
 				onChange={handleFileChange}
 				tabIndex={-1}
 				disabled={disabled}
+				aria-label={label}
 			/>
 
 			{helperText !== '' ? (
