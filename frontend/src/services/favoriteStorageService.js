@@ -126,6 +126,7 @@ export function getFavoriteIds(storageScope = 'guest') {
 	}
 
 	return [
+		// Supprime les doublons et retourne un tableau
 		...new Set(
 			rawFavorites
 				.map((propertyId) => normalizePropertyId(propertyId))
@@ -186,10 +187,7 @@ export function addFavorite(propertyId, storageScope = 'guest') {
 	}
 
 	const nextFavoriteIds = [
-		...new Set([
-			...getFavoriteIds(storageScope),
-			normalizedPropertyId,
-		]),
+		...new Set([...getFavoriteIds(storageScope), normalizedPropertyId]),
 	];
 
 	saveFavoriteIds(nextFavoriteIds, storageScope);

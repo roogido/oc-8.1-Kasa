@@ -21,9 +21,7 @@ export default function AppFooter() {
 					<Logo variant="footer" />
 				</div>
 
-				<p className={styles.text}>
-					© 2025 Kasa. All rights reserved
-				</p>
+				<p className={styles.text}>© 2026 Kasa. All rights reserved</p>
 			</div>
 		</footer>
 	);
